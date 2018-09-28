@@ -1,9 +1,8 @@
 import Base from './Base'
+import { pick } from '../utils/obj'
 
 // only for Scene!!
 export default class ViewAdapter extends Base {
-  name = 'ViewAdapter'
-
   width = 1500
   height = 750
 
@@ -11,9 +10,17 @@ export default class ViewAdapter extends Base {
 
   mode = 'none' // TODO cover contain ?
 
+  orientation = 'landscape' // auto, portrait, landscape
+
   visiableRect = {}
 
-  orientation = 'landscape' // auto, portrait, landscape
+  constructor(node) {
+    super(node)
+    if (node.view) {
+      const args = pick(node.view, ['width', 'height', 'fix', 'mode', 'orientation'], true)
+      Object.assign(this, args)
+    }
+  }
 
   // call by director
   updateView = (director) => {

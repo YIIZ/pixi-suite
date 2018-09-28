@@ -10,8 +10,8 @@ export default class Button extends Base {
     this.node.off('tap', this.handleClick, this)
   }
 
-  handleClick() {
-    if (this.onClick) this.onClick()
+  handleClick(evt) {
+    if (this.node.onClick) this.node.onClick(evt)
   }
 
 }

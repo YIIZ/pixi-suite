@@ -48,12 +48,13 @@ export default class Capture extends Base {
       director.container.appendChild(img)
     }
     img.className = 'capture'
-    img.style.position = 'absolete'
+    img.style.position = 'absolute'
     img.style.top = '0'
     img.style.left = '0'
     img.style.transformOrigin = `0 0 0`
     img.style.webkitTransformOrigin = `0 0 0`
     img.style.display = 'none'
+    img.style.zIndex = '9'
     this.img = img
   }
 }

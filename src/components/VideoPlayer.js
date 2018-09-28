@@ -50,10 +50,13 @@ export default class VideoPlayer extends Base {
   removeElement() {
     if (!this.video) return
     director.container.removeChild(this.video)
+    this.video = null
   }
 
   play() {
     if (!this.video.src) return
+    this.lastTime = this.video.currentTime
+    this.checkStart()
     this.video.play()
   }
 
@@ -62,6 +65,15 @@ export default class VideoPlayer extends Base {
   }
 
   handleEnded = () => {
-    this.node.emit('ended')
+    this.node.emit('videoend')
+  }
+
+  checkStart = () => {
+    if (!this.video) return
+    if (this.video.currentTime > this.lastTime) {
+      this.node.emit('videostart')
+      return
+    }
+    requestAnimationFrame(this.checkStart)
   }
 }

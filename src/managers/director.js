@@ -3,12 +3,11 @@ import EventEmitter from 'eventemitter3'
 import ViewAdapter from '../components/ViewAdapter'
 
 class Director extends EventEmitter {
-  init(container) {
+  init(container, params) {
     this.container = container
     const view = container.querySelector('canvas')
-    const app = new PIXI.Application({
-      view,
-    })
+    const _params = Object.assign({ view }, params)
+    const app = new PIXI.Application(_params)
     this.app = app
     this.scenes = {}
     app.stage.isRoot = true
@@ -26,12 +25,10 @@ class Director extends EventEmitter {
     const lastScene = this.scene
 
     const Scene = this.scenes[name]
-    this.scene = new Scene()
+    this.scene = new Scene(this)
     this.scene.handleCreate()
-    this.scene.director = this
-    const va = this.scene.getComponent(ViewAdapter)
-    va.updateView(this)
-    this.viewAdapter = va
+    this.viewAdapter = this.scene.getComponent(ViewAdapter)
+    this.viewAdapter.updateView(this)
     stage.addChild(this.scene)
 
     if (lastScene) {
@@ -39,7 +36,6 @@ class Director extends EventEmitter {
       stage.removeChild(lastScene)
       lastScene.destroy({ children: true })
     }
-    this.updateView()
   }
 
    updateView() {
