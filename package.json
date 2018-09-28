@@ -1,0 +1,37 @@
+{
+  "name": "pixi-suite",
+  "version": "0.0.1",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "start": "watch 'yarn lib' ./src",
+    "lib": "rm -rf lib && babel src --out-dir lib",
+    "update:index": "./scripts/exporter.js"
+  },
+  "main": "lib/index.js",
+  "devDependencies": {
+    "@babel/cli": "latest",
+    "@babel/core": "latest",
+    "@babel/plugin-proposal-class-properties": "latest",
+    "@babel/plugin-proposal-decorators": "latest",
+    "@babel/plugin-proposal-do-expressions": "latest",
+    "@babel/plugin-proposal-logical-assignment-operators": "latest",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "latest",
+    "@babel/plugin-proposal-pipeline-operator": "latest",
+    "@babel/plugin-syntax-object-rest-spread": "latest",
+    "@babel/plugin-transform-react-jsx": "^7.0.0",
+    "@babel/plugin-transform-runtime": "latest",
+    "@babel/preset-env": "latest",
+    "watch": "^1.0.2"
+  },
+  "peerDependencies": {
+    "@babel/runtime": "latest",
+    "eventemitter3": "latest",
+    "pixi.js": "^4.8.2",
+    "popmotion": "latest"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
