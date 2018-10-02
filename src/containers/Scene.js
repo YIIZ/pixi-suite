@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js'
 import Node from './Node'
 import ViewAdapter from '../components/ViewAdapter'
 
