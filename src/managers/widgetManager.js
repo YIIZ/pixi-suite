@@ -1,16 +1,17 @@
+import * as PIXI from 'pixi.js'
 import director from './director'
 
 export const AlignFlag = {
-  TOP: 1<<0,
-  RIGHT: 1<<1,
-  BOTTOM: 1<<2,
-  LEFT: 1<<3,
+  TOP: 1 << 0,
+  RIGHT: 1 << 1,
+  BOTTOM: 1 << 2,
+  LEFT: 1 << 3,
 }
 
 export const AlignMode = {
-  ONCE: 1<<0,
-  RESIZE: 1<<1,
-  AWAYS: 1<<2,
+  ONCE: 1 << 0,
+  RESIZE: 1 << 1,
+  AWAYS: 1 << 2,
 }
 
 class WidgetManager {
@@ -36,22 +37,17 @@ class WidgetManager {
   }
 
   handleReize() {
-    this.widgets
-    .filter(v => v.alignMode & AlignMode.RESIZE)
-    .forEach(v => {
+    this.widgets.filter(v => v.alignMode & AlignMode.RESIZE).forEach(v => {
       v.update()
     })
   }
 
   handleTick() {
-    const ts = this.widgets
-    .filter(v => v.alignMode & AlignMode.AWAYS)
-    .forEach(v => {
+    this.widgets.filter(v => v.alignMode & AlignMode.AWAYS).forEach(v => {
       v.update()
     })
   }
 }
 
-console.log(director)
 const widgetManager = new WidgetManager()
 export default widgetManager
