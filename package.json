@@ -6,7 +6,7 @@
   "scripts": {
     "start": "watch 'yarn lib' ./src",
     "lib": "rm -rf lib && babel src --out-dir lib",
-    "update:index": "./scripts/exporter.js"
+    "update:module-entry": "./scripts/generate-module-entry.js"
   },
   "main": "lib/index.js",
   "devDependencies": {

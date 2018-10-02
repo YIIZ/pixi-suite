@@ -3,10 +3,7 @@ export default class {
     this.node = node
   }
 
-  onEnable() {
+  onEnable() {}
 
-  }
-
-  onDisable() {
-  }
+  onDisable() {}
 }
