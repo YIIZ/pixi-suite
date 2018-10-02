@@ -4,15 +4,18 @@ import ViewAdapter from '../components/ViewAdapter'
 
 class Director extends EventEmitter {
   init(selector, options) {
-    this.container = document.querySelector(selector)
     const app = new PIXI.Application(options)
-    this.container.appendChild(app.view)
     this.app = app
-    this.scenes = {}
+
+    this.container = document.querySelector(selector)
+    this.container.appendChild(app.view)
+
     app.stage.isRoot = true
 
     this.updateView()
     window.addEventListener('resize', this.handleResize)
+
+    this.scenes = {}
   }
 
   addScene(key, cls) {
@@ -39,17 +42,18 @@ class Director extends EventEmitter {
 
   updateView() {
     const { app } = this
-    //const { innerWidth, innerHeight, devicePixelRatio = 1 } = window
+
     const { devicePixelRatio = 1 } = window
-    // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
+    this.devicePixelRatio = devicePixelRatio
     const {
       clientWidth: innerWidth,
       clientHeight: innerHeight,
     } = document.documentElement
+
     app.width = app.view.width = innerWidth * devicePixelRatio
     app.height = app.view.height = innerHeight * devicePixelRatio
+    app.renderer.autoResize = false
     app.renderer.resize(app.width, app.height)
-    this.devicePixelRatio = devicePixelRatio
   }
 
   handleResize = () => {
