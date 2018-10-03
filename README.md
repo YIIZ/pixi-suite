@@ -16,8 +16,8 @@ Components 的容器。
 
 ### Node 生命周期
 
-- `initChildren(children)`：Node 实例化时触发；
-- `onCreate()`：所有 Children 创建完毕后触发；
+- `initChildren(children)`：Node 实例化完成后触发，用于初始化子 Node；
+- `onInit()`：Node 及其所有 Children 初始化完毕后触发；
 - `onAdd()`：当 Node 被添加到 Stage，且 Node 中所包含 Components 的 `onEnable()` 都已执行完毕后触发；
 - `onRemove()`：当前 Node 从 Stage 移除后触发；
 

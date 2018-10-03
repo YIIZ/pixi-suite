@@ -41,6 +41,7 @@ export default class Node extends PIXI.Container {
     super()
     // indicate that current displayObject is created by pixi-suite
     this.isSuite = true
+    this.initialized = true
     this.components = []
     this.on('added', this.handleAdd, this)
     this.on('removed', this.handleRemove, this)
@@ -71,20 +72,16 @@ export default class Node extends PIXI.Container {
     return false
   }
 
-  handleCreate(cr) {
-    if (this.initialized) {
-      throw new Error('Current container has been initialized.')
-    }
-    this.initialized = true
-    const children = this.initChildren(cr)
-    if (Array.isArray(children)) {
-      this.addChild(...children)
+  handleCreate(children) {
+    const $children = this.initChildren(children)
+    if (Array.isArray($children) && $children.length > 0) {
+      this.addChild(...$children)
     }
 
-    this.onCreate()
+    this.onInit()
   }
 
-  onCreate() {}
+  onInit() {}
 
   // FIXME if node's parent is not a Node, handleAdd maybe not trigger
   handleAdd() {
