@@ -3,9 +3,9 @@ import * as PIXI from 'pixi.js'
 export default class Node extends PIXI.Container {
   static createChildren = createChildren
 
-  components = []
   constructor() {
     super()
+    this.components = []
     this.on('added', this.handleAdd, this)
     this.on('removed', this.handleRemove, this)
   }
@@ -23,39 +23,44 @@ export default class Node extends PIXI.Container {
 
   get inStage() {
     let node = this
-    while(node) {
+    while (node) {
       if (node.isRoot) return true
       node = node.parent
     }
+
+    return false
   }
 
   handleCreate(cr) {
-    if (this.inited) {
-      throw new Error('this is inited')
+    if (this.initialized) {
+      throw new Error('Current container has been initialized.')
     }
-    this.inited = true
+    this.initialized = true
     const children = this.initChildren(cr)
-    if (Array.isArray(children)) {
-      children.length > 0 && this.addChild(...children)
+    if (Array.isArray(children) && children.length > 0) {
+      this.addChild(...children)
     } else if (children) {
       this.addChild(children)
     }
+
     this.onCreate()
   }
 
-  initChildren(children) { return children }
+  initChildren(children) {
+    return children
+  }
 
   onCreate() {}
 
   // FIXME if node's parent is not a Node, handleAdd maybe not trigger
   handleAdd() {
-    if (!this.inited) {
-      throw new Error('not inited')
+    if (!this.initialized) {
+      throw new Error("Current container hasn't been initialized.")
     }
     if (!this.inStage) return
     this.isAdded = true
 
-    this.components.forEach((c) => {
+    this.components.forEach(c => {
       c.onEnable()
     })
 
@@ -75,7 +80,7 @@ export default class Node extends PIXI.Container {
 
   handleRemove() {
     this.isAdded = false
-    this.components.forEach((c) => {
+    this.components.forEach(c => {
       c.onDisable()
     })
     this.onRemove()
@@ -84,7 +89,7 @@ export default class Node extends PIXI.Container {
   onRemove() {}
 
   findChild(namePath) {
-    const names =  namePath.split('/')
+    const names = namePath.split('/')
     let item = null
     let children = this.children
     let name = ''
@@ -102,7 +107,6 @@ export default class Node extends PIXI.Container {
     }
     return item
   }
-
 }
 
 function createChildren(Item, props, ...children) {
@@ -112,7 +116,10 @@ function createChildren(Item, props, ...children) {
   if (props) {
     item = props.args ? new Item(...props.args) : new Item()
     delete props.args
-    if (props.components) props.components = props.components.map(Comp => new Comp(item))
+    if (props.components) {
+      props.components = props.components.map(Comp => new Comp(item))
+    }
+
     Object.assign(item, props)
   } else {
     item = new Item()
