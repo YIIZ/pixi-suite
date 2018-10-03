@@ -3,6 +3,6 @@ root: true
 parser: babel-eslint
 extends:
   - eslint:recommended
-globals:
-  window: true
-  document: true
+env:
+  browser: true
+  es6: true
