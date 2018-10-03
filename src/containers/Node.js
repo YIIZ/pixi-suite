@@ -19,9 +19,10 @@ export default class Node extends PIXI.Container {
       }
 
       if (props.components) {
-        props.components = props.components.map(Comp => new Comp(displayObject))
+        props.components = props.components.map(
+          Component => new Component(displayObject)
+        )
       }
-
       Object.assign(displayObject, props)
     } else {
       displayObject = new DisplayObject()
@@ -41,6 +42,10 @@ export default class Node extends PIXI.Container {
     this.components = []
     this.on('added', this.handleAdd, this)
     this.on('removed', this.handleRemove, this)
+  }
+
+  initChildren(children) {
+    return children
   }
 
   addComponent(Component) {
@@ -70,17 +75,11 @@ export default class Node extends PIXI.Container {
     }
     this.initialized = true
     const children = this.initChildren(cr)
-    if (Array.isArray(children) && children.length > 0) {
+    if (Array.isArray(children)) {
       this.addChild(...children)
-    } else if (children) {
-      this.addChild(children)
     }
 
     this.onCreate()
-  }
-
-  initChildren(children) {
-    return children
   }
 
   onCreate() {}
