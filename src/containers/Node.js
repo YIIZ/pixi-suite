@@ -28,9 +28,9 @@ export default class Node extends PIXI.Container {
       displayObject = new DisplayObject()
     }
 
-    if (displayObject.handleCreate) {
+    if (displayObject.isSuite) {
       displayObject.handleCreate(children)
-    } else if (children && children.length > 0) {
+    } else if (Array.isArray(children) && children.length > 0) {
       displayObject.addChild(...children)
     }
 
@@ -39,6 +39,8 @@ export default class Node extends PIXI.Container {
 
   constructor() {
     super()
+    // indicate that current displayObject is created by pixi-suite
+    this.isSuite = true
     this.components = []
     this.on('added', this.handleAdd, this)
     this.on('removed', this.handleRemove, this)
