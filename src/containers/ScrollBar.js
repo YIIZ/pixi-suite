@@ -11,14 +11,16 @@ const NineSlicePlane = PIXI.mesh.NineSlicePlane
 
 export default class ScrollBar extends Node {
   initChildren() {
-    return (<>
-      <NineSlicePlane name='bg' args={[bg.texture, 3, 3, 6, 6]} >
-        <NineSlicePlane name='bar' args={[bar.texture, 3, 3, 6, 6]} />
-      </NineSlicePlane>
-    </>)
+    return (
+      <>
+        <NineSlicePlane name="bg" args={[bg.texture, 3, 3, 6, 6]}>
+          <NineSlicePlane name="bar" args={[bar.texture, 3, 3, 6, 6]} />
+        </NineSlicePlane>
+      </>
+    )
   }
 
-  onCreate() {
+  onInit() {
     const barCtrl = this.addComponent(ScrollBarCtrl)
     const pBg = this.getChildByName('bg')
     barCtrl.bg = pBg

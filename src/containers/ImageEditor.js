@@ -1,31 +1,44 @@
 import * as PIXI from 'pixi.js'
 import Node from './Node'
-import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, EditorFlip } from '../components/ImageEditorCtrl'
+import ImageEditorCtrl, {
+  EditorCmd,
+  EditorRemove,
+  EditorRotate,
+  EditorScale,
+  EditorFlip,
+} from '../components/ImageEditorCtrl'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
 
-const { Sprite, Text, Point, Texture: { WHITE } } = PIXI
+const {
+  Sprite,
+  Text,
+  Point,
+  Texture: { WHITE },
+} = PIXI
 
 export default class Editor extends Node {
   initChildren() {
-    return (<>
-      <Node name='body' />
-      <Node name='remove' x={-20} y={-20} components={[EditorRemove]}>
-        <Sprite width={40} height={40} texture={WHITE} />
-      </Node>
-      <Node name='rotate' components={[EditorRotate]}>
-        <Sprite width={40} height={40} tint={0xFF0000} texture={WHITE} />
-      </Node>
-      <Node name='scale' components={[EditorScale]}>
-        <Sprite width={40} height={40} tint={0x00FF00} texture={WHITE} />
-      </Node>
-      <Node name='flip' components={[EditorFlip]}>
-        <Sprite width={40} height={40} tint={0x0000FF} texture={WHITE} />
-      </Node>
-    </>)
+    return (
+      <>
+        <Node name="body" />
+        <Node name="remove" x={-20} y={-20} components={[EditorRemove]}>
+          <Sprite width={40} height={40} texture={WHITE} />
+        </Node>
+        <Node name="rotate" components={[EditorRotate]}>
+          <Sprite width={40} height={40} tint={0xff0000} texture={WHITE} />
+        </Node>
+        <Node name="scale" components={[EditorScale]}>
+          <Sprite width={40} height={40} tint={0x00ff00} texture={WHITE} />
+        </Node>
+        <Node name="flip" components={[EditorFlip]}>
+          <Sprite width={40} height={40} tint={0x0000ff} texture={WHITE} />
+        </Node>
+      </>
+    )
   }
 
-  onCreate() {
+  onInit() {
     const editorCtrl = this.addComponent(ImageEditorCtrl)
     const body = this.getChildByName('body')
     editorCtrl.body = body

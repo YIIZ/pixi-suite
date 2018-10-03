@@ -1,8 +1,12 @@
 ---
 root: true
-parser: babel-eslint
+parserOptions:
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
 extends:
   - eslint:recommended
 env:
-  browser: true
   es6: true
+  commonjs: true
+  browser: true

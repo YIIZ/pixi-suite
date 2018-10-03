@@ -8,20 +8,21 @@ import Layout from '../components/Layout'
 
 export default class ScrollView extends Node {
   initChildren() {
-    return (<>
-      <ScrollBar name='bar' />
-      <Node name='view' >
-        <Node name='content' components={[Layout]} />
-      </Node>
-    </>)
+    return (
+      <>
+        <ScrollBar name="bar" />
+        <Node name="view">
+          <Node name="content" components={[Layout]} />
+        </Node>
+      </>
+    )
   }
 
-  onCreate() {
+  onInit() {
     const viewCtrl = this.addComponent(ScrollViewCtrl)
     const bar = this.getChildByName('bar')
     viewCtrl.view = this.getChildByName('view')
     viewCtrl.content = viewCtrl.view.getChildByName('content')
     viewCtrl.scroller = bar.getComponent(ScrollBarCtrl)
   }
-
 }

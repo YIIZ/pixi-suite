@@ -13,6 +13,4 @@ export default class Button extends Base {
   handleClick(evt) {
     if (this.node.onClick) this.node.onClick(evt)
   }
-
 }
-
