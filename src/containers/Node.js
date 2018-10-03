@@ -1,7 +1,34 @@
 import * as PIXI from 'pixi.js'
 
 export default class Node extends PIXI.Container {
-  static createChildren = createChildren
+  static Fragment = Symbol('NODE_FRAGMENT')
+
+  static createChildren(Item, props, ...children) {
+    if (Item === Node.Fragment) {
+      return children
+    }
+
+    let item
+    if (props) {
+      item = props.args ? new Item(...props.args) : new Item()
+      delete props.args
+      if (props.components) {
+        props.components = props.components.map(Comp => new Comp(item))
+      }
+
+      Object.assign(item, props)
+    } else {
+      item = new Item()
+    }
+
+    if (item.handleCreate) {
+      item.handleCreate(children)
+    } else if (children && children.length > 0) {
+      item.addChild(...children)
+    }
+
+    return item
+  }
 
   constructor() {
     super()
@@ -107,29 +134,4 @@ export default class Node extends PIXI.Container {
     }
     return item
   }
-}
-
-function createChildren(Item, props, ...children) {
-  if (!Item) return children
-
-  let item
-  if (props) {
-    item = props.args ? new Item(...props.args) : new Item()
-    delete props.args
-    if (props.components) {
-      props.components = props.components.map(Comp => new Comp(item))
-    }
-
-    Object.assign(item, props)
-  } else {
-    item = new Item()
-  }
-
-  if (item.handleCreate) {
-    item.handleCreate(children)
-  } else if (children && children.length > 0) {
-    item.addChild(...children)
-  }
-
-  return item
 }

@@ -7,7 +7,7 @@
       '@babel/plugin-transform-react-jsx',
       {
         pragma: 'Node.createChildren',
-        pragmaFrag: 'Node.createFrag',
+        pragmaFrag: 'Node.Fragment',
       },
     ],
   ],
