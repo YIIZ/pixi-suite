@@ -25,3 +25,7 @@ Components 的容器。
 
 - `onEnable()`：Component 所属 Node 被添加到 Stage 后触发；
 - `onDisable()`：Component 所属 Node 被从 Stage 移除后触发；
+
+## JSX 支持
+
+通过 `@babel/plugin-transform-react-jsx` 将 JSX 标签转译为 `Node.createChildren` 与 `Node.Fragment` 的调用。
