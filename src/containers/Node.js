@@ -3,31 +3,37 @@ import * as PIXI from 'pixi.js'
 export default class Node extends PIXI.Container {
   static Fragment = Symbol('NODE_FRAGMENT')
 
-  static createChildren(Item, props, ...children) {
-    if (Item === Node.Fragment) {
+  static createChildren(DisplayObject, props, ...children) {
+    if (DisplayObject === Node.Fragment) {
       return children
     }
 
-    let item
+    let displayObject
+
     if (props) {
-      item = props.args ? new Item(...props.args) : new Item()
-      delete props.args
-      if (props.components) {
-        props.components = props.components.map(Comp => new Comp(item))
+      if (props.args) {
+        displayObject = new DisplayObject(...props.args)
+        delete props.args
+      } else {
+        displayObject = new DisplayObject()
       }
 
-      Object.assign(item, props)
+      if (props.components) {
+        props.components = props.components.map(Comp => new Comp(displayObject))
+      }
+
+      Object.assign(displayObject, props)
     } else {
-      item = new Item()
+      displayObject = new DisplayObject()
     }
 
-    if (item.handleCreate) {
-      item.handleCreate(children)
+    if (displayObject.handleCreate) {
+      displayObject.handleCreate(children)
     } else if (children && children.length > 0) {
-      item.addChild(...children)
+      displayObject.addChild(...children)
     }
 
-    return item
+    return displayObject
   }
 
   constructor() {
