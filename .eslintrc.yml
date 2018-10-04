@@ -1,11 +1,12 @@
 ---
 root: true
-parserOptions:
-  sourceType: module
-  ecmaFeatures:
-    jsx: true
 extends:
   - eslint:recommended
+parser: babel-eslint
+plugins:
+  - react
+rules:
+  'react/jsx-uses-vars': 'error'
 env:
   es6: true
   commonjs: true
