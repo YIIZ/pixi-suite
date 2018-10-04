@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { Deferred } from 'lib'
+import { Deferred } from '../utils/obj'
 
 const loader = PIXI.loader
 export const preload = (key) => {

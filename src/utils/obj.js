@@ -9,3 +9,12 @@ export const pick = (obj, keys, onlyDefined) => {
   }
   return val
 }
+
+export class Deferred {
+  constructor() {
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = resolve
+      this.reject = reject
+    })
+  }
+}
