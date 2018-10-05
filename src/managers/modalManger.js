@@ -8,12 +8,15 @@ class ModalManager {
   background = null
   guard = null
   // !! scale alpha will be reset
-  show(node) {
+  show(Modal) {
     if (this.guard) {
       throw new Error('another modal action is in progress')
     }
     this.guard = new Deferred()
     this.showBackground()
+
+    const node = new Modal()
+    node.handleCreate()
 
     this.modals.push(node)
     node.scale.set(0)
@@ -75,6 +78,7 @@ class ModalManager {
         this.hideBackground()
         this.guard.resolve()
         this.guard = null
+        node.parent.removeChild(node)
         node.destroy({ children: true })
       }
     })
