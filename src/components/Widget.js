@@ -17,6 +17,9 @@ export default class Widget extends Base {
 
   onEnable() {
     if (!this.target) this.target = widgetManager.defaultTarget
+    if (this.node.widget) {
+      Object.assign(this, this.node.widget)
+    }
     widgetManager.add(this)
     this.update()
   }
