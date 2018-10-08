@@ -4,6 +4,7 @@ import { Deferred } from '../utils/obj'
 import { tween } from 'popmotion'
 
 class ModalManager {
+  withoutBackground = false
   modals = []
   background = null
   guard = null
@@ -13,7 +14,7 @@ class ModalManager {
       throw new Error('another modal action is in progress')
     }
     this.guard = new Deferred()
-    this.showBackground()
+    if (!this.withoutBackground) this.showBackground()
 
     const node = new Modal()
     node.handleCreate()
@@ -25,7 +26,6 @@ class ModalManager {
 
     node.interactive = true
     node.on('tap', evt => {
-      console.log('node tap')
       evt.stopPropagation()
     })
 
@@ -45,9 +45,7 @@ class ModalManager {
       }
     })
 
-    return () => {
-      this.hide(node)
-    }
+    return node
   }
 
   hide(node) {
@@ -97,7 +95,6 @@ class ModalManager {
 
     background.interactive = true
     background.on('tap', (evt) => {
-      console.log('background tap')
       this.hide(this.modals[this.modals.length - 1])
     })
     director.scene.addChild(background)
@@ -112,6 +109,7 @@ class ModalManager {
 
   hideBackground() {
     if (this.modals.length > 0) return
+    if (!this.background) return
 
     const { background } = this
     this.background = null

@@ -52,6 +52,5 @@ class WidgetManager {
   }
 }
 
-console.log(director)
 const widgetManager = new WidgetManager()
 export default widgetManager
