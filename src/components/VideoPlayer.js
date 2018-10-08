@@ -53,6 +53,10 @@ export default class VideoPlayer extends Base {
     this.video = null
   }
 
+  updateOpacity(v) {
+    this.video.style.opacity = v
+  }
+
   play() {
     if (!this.video.src) return
     this.lastTime = this.video.currentTime

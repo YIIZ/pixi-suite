@@ -13,4 +13,5 @@ function updateIndex(dir) {
 updateIndex(`${__dirname}/../src/containers`)
 updateIndex(`${__dirname}/../src/components`)
 updateIndex(`${__dirname}/../src/managers`)
+updateIndex(`${__dirname}/../src/transtions`)
 updateIndex(`${__dirname}/../src/utils`)
