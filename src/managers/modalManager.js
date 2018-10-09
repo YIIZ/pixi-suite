@@ -1,7 +1,7 @@
 import { Sprite, Texture, Point } from 'pixi.js'
 import director from './director'
 import { Deferred } from '../utils/obj'
-import { tween } from 'popmotion'
+import { tween, easing } from 'popmotion'
 
 class ModalManager {
   withoutBackground = false
@@ -49,18 +49,14 @@ class ModalManager {
   }
 
   hide(node) {
-    if (this.guard) {
-      throw new Error('another modal action is in progress')
-    }
     const index = this.modals.findIndex(v => v === node)
     if (index <0) return
-
-    this.guard = new Deferred()
 
     tween({
       from: { y: node.y, alpha: node.alpha },
       to: { y: node.y - 200, alpha: 0 },
       duration: 300,
+      ease: easing.easeOut,
     })
     .start({
       update: v => {
@@ -74,8 +70,6 @@ class ModalManager {
         }
         this.modals.splice(index, 1)
         this.hideBackground()
-        this.guard.resolve()
-        this.guard = null
         node.parent.removeChild(node)
         node.destroy({ children: true })
       }
