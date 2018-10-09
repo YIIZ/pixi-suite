@@ -9,12 +9,13 @@ class ModalManager {
   background = null
   guard = null
   // !! scale alpha will be reset
-  show(Modal) {
+  show(Modal, option = {}) {
     if (this.guard) {
       throw new Error('another modal action is in progress')
     }
     this.guard = new Deferred()
-    if (!this.withoutBackground) this.showBackground()
+    const { withoutBackground } = option
+    if (!withoutBackground) this.showBackground()
 
     const node = new Modal()
     node.handleCreate()
