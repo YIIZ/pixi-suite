@@ -3,24 +3,39 @@ import Node from './Node'
 import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, EditorFlip } from '../components/ImageEditorCtrl'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
+import { preload } from '../managers/loader'
 
-const { Sprite, Text, Point, Texture: { WHITE } } = PIXI
+const { Point, Sprite, mesh: { NineSlicePlane } } = PIXI
+
+const sRemove = preload(require('../../assets/remove.png'))
+const sRotate = preload(require('../../assets/rotate.png'))
+const sScale = preload(require('../../assets/scale.png'))
+const sFlip = preload(require('../../assets/flip.png'))
+const sCircle = preload(require('../../assets/circle.png'))
+const sBoard = preload(require('../../assets/border.png'))
 
 export default class Editor extends Node {
   initChildren() {
+    const center = new Point(0.5, 0.5)
+    const size = 50
     return (<>
       <Node name='body' />
+      <NineSlicePlane name='border' args={[sBoard.texture, 8, 8, 8, 8]} />
       <Node name='remove' x={-20} y={-20} components={[EditorRemove]}>
-        <Sprite width={40} height={40} texture={WHITE} />
+        <Sprite width={size} height={size} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} anchor={center} texture={sRemove.texture} />
       </Node>
       <Node name='rotate' components={[EditorRotate]}>
-        <Sprite width={40} height={40} tint={0xFF0000} texture={WHITE} />
+        <Sprite width={size} height={size} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} anchor={center} texture={sRotate.texture} />
       </Node>
       <Node name='scale' components={[EditorScale]}>
-        <Sprite width={40} height={40} tint={0x00FF00} texture={WHITE} />
+        <Sprite width={size} height={size} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} anchor={center} texture={sScale.texture} />
       </Node>
       <Node name='flip' components={[EditorFlip]}>
-        <Sprite width={40} height={40} tint={0x0000FF} texture={WHITE} />
+        <Sprite width={size} height={size} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} anchor={center} texture={sFlip.texture} />
       </Node>
     </>)
   }
@@ -28,7 +43,9 @@ export default class Editor extends Node {
   onCreate() {
     const editorCtrl = this.addComponent(ImageEditorCtrl)
     const body = this.getChildByName('body')
+    const border = this.getChildByName('border')
     editorCtrl.body = body
+    editorCtrl.border = border
 
     const remove = this.getChildByName('remove')
     const rotate = this.getChildByName('rotate')

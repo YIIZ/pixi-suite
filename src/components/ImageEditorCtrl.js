@@ -38,6 +38,7 @@ export default class ImageEditorCtrl extends Base {
     if (!this.touching) return
     if (this.editorHandle) {
       this.editorHandle(evt)
+      this.updateBorder()
     } else {
       const p = this.node.parent.toLocal(evt.data.global)
       this.node.position.set(this.originPoint.x + p.x - this.startPoint.x, this.originPoint.y + p.y - this.startPoint.y)
@@ -48,6 +49,13 @@ export default class ImageEditorCtrl extends Base {
     this.touching = false
     this.editorType = 'move'
     this.editorHandle = null
+  }
+
+  updateBorder() {
+    const { width, height } = this.current
+    this.border.width = width
+    this.border.height = height
+    this.node.emit('editor.change', this)
   }
 
   editItem(item) {
@@ -70,6 +78,8 @@ export default class ImageEditorCtrl extends Base {
     item.rotation = 0
     item.pivot.set(rect.width/2, rect.height/2)
     item.position.copy(node.pivot)
+
+    this.updateBorder()
   }
 
   putbackItem() {
@@ -162,8 +172,13 @@ export class EditorScale extends EditorCmd {
     const p = evt.data.global
     const offset = v2.distance(this.center, p)
     const { current, body, node } = this.editor
-    current.scale.set(this.scale.x * offset / this.startOffset, this.scale.y * offset / this.startOffset)
-    current.position.set(current.width / 2, current.height / 2)
+    const { width, height } = current
+    const sX = this.scale.x * offset / this.startOffset
+    const sY = this.scale.y * offset / this.startOffset
+    if (width < 60 && sX < current.scale.x) return
+    if (height < 60 && sY < current.scale.Y) return
+    current.scale.set(sX, sY)
+    current.position.set(width / 2, height / 2)
     node.pivot.copy(current.position)
   }
 
