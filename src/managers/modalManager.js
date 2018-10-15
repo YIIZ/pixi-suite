@@ -4,7 +4,6 @@ import { Deferred } from '../utils/obj'
 import { tween, easing } from 'popmotion'
 
 class ModalManager {
-  withoutBackground = false
   modals = []
   background = null
   guard = null
