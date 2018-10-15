@@ -38,8 +38,8 @@ export default class VideoPlayer extends Base {
     video.setAttribute('playsinline', '')
 
     // Stupid tencent x5 adaptation
-    video.setAttribute('x5-playsinline', '')
-    video.setAttribute('x5-video-player-type', 'h5')
+    //video.setAttribute('x5-playsinline', '')
+    //video.setAttribute('x5-video-player-type', 'h5')
     //const orientation = cc.winSize.width > cc.winSize.height ? 'landscape' : 'portrait'
     //video.setAttribute('x5-video-orientation', orientation)
 
