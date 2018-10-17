@@ -7,7 +7,7 @@ const { Texture: { WHITE } } = PIXI
 export default class ScrollViewCtrl extends Base {
   content = null
   view = null
-  direction = 'vertical'
+  direction = 'vertical' // horizontal
 
   onEnable() {
     this.view.interactive = true
@@ -42,13 +42,13 @@ export default class ScrollViewCtrl extends Base {
 
     // TODO only support one direction
     if (this.direction === 'vertical') {
-      this.scroller.node.x = w - this.scroller.node.width
       this.scroller.updateParams({
         len: this.content.height,
         visibleLen: h,
         setter: v => this.content.y = v,
         getter: () => this.content.y,
       })
+      this.scroller.node.x = w - this.scroller.node.width
     } else {
       this.scroller.updateParams({
         len: this.content.width,
@@ -56,6 +56,7 @@ export default class ScrollViewCtrl extends Base {
         setter: v => this.content.x = v,
         getter: () => this.content.x,
       })
+      this.scroller.node.y = h + this.scroller.node.width + 5
     }
   }
 
@@ -63,14 +64,14 @@ export default class ScrollViewCtrl extends Base {
     this.isScrolling = true
 
     const p = evt.data.getLocalPosition(this.view)
-    this.scroller.handleStart(p.y, evt.data.originalEvent.timeStamp)
+    this.scroller.handleStart(this.direction === 'vertical' ? p.y : p.x, evt.data.originalEvent.timeStamp)
   }
 
   handleTouchMove(evt) {
     if (!this.isScrolling) return
 
     const p = evt.data.getLocalPosition(this.view)
-    this.scroller.handleMove(p.y, evt.data.originalEvent.timeStamp)
+    this.scroller.handleMove(this.direction === 'vertical' ? p.y : p.x, evt.data.originalEvent.timeStamp)
   }
 
   handleTouchEnd(evt) {

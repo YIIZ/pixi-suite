@@ -43,6 +43,7 @@ export default class ImageEditorCtrl extends Base {
       const p = this.node.parent.toLocal(evt.data.global)
       this.node.position.set(this.originPoint.x + p.x - this.startPoint.x, this.originPoint.y + p.y - this.startPoint.y)
     }
+    this.node.emit('editor.change', evt)
   }
 
   handleTouchEnd(evt) {
@@ -55,7 +56,6 @@ export default class ImageEditorCtrl extends Base {
     const { width, height } = this.current
     this.border.width = Math.abs(width)
     this.border.height = Math.abs(height)
-    this.node.emit('editor.change', this)
   }
 
   editItem(item) {

@@ -16,7 +16,7 @@ export const AlignMode = {
 class WidgetManager {
   widgets = []
   get defaultTarget() {
-    return this.director.viewAdapter.visiableRect
+    return this.director.viewAdapter.visibleRect
   }
 
   constructor() {

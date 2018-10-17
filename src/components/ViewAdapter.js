@@ -12,7 +12,7 @@ export default class ViewAdapter extends Base {
 
   orientation = 'landscape' // auto, portrait, landscape
 
-  visiableRect = {}
+  visibleRect = {}
 
   constructor(node) {
     super(node)
@@ -57,7 +57,7 @@ export default class ViewAdapter extends Base {
     stage.scale.set(scale, scale)
 
     const innerY = - (height - h / scale) / 2
-    this.visiableRect = Object.assign(this.visiableRect, {
+    this.visibleRect = Object.assign(this.visibleRect, {
       x: 0,
       y: -innerY,
       width: this.width,
@@ -73,7 +73,7 @@ export default class ViewAdapter extends Base {
     stage.scale.set(scale, scale)
 
     const innerX = - (width - w / scale) / 2
-    this.visiableRect = Object.assign(this.visiableRect, {
+    this.visibleRect = Object.assign(this.visibleRect, {
       x: -innerX,
       y: 0,
       width: this.width + 2 * innerX,

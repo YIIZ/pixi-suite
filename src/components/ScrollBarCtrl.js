@@ -33,18 +33,17 @@ export default class ScrollBarCtrl extends Base {
       set: this.setter,
       get: this.getter,
     })
-    window.vs = this
-
     this.updateView()
   }
 
   // TODO where to update view ?
   updateView() {
     const { visibleLen, len, scrollable } = this
-    if (this.direction === 'vertical') {
-      this.bg.height = visibleLen
-      this.bar.height = visibleLen / len * visibleLen
+    if (this.direction !== 'vertical') {
+      this.node.rotation =  Math.PI * -0.5
     }
+    this.bg.height = visibleLen
+    this.bar.height = visibleLen / len * visibleLen
 
     if (!this.node.mask) {
       const m = new PIXI.Sprite(PIXI.Texture.WHITE)
@@ -61,9 +60,7 @@ export default class ScrollBarCtrl extends Base {
 
   updateBar() {
     if (!this.scrollable) return
-    if (this.direction === 'vertical') {
-      this.bar.y = this.offset / this.relativeOffset
-    }
+    this.bar.y = this.offset / this.relativeOffset
   }
 
   handleStart(v, time) {
@@ -136,6 +133,16 @@ export default class ScrollBarCtrl extends Base {
       duration: 500
     })
     .start(this.setter)
+  }
+
+  scrollTo(percent, isAuto) {
+    const { visibleLen, len, scrollable } = this
+    const offset = -1 * (len - visibleLen) * percent
+    if (isAuto) {
+      this.autoScroll(offset)
+    } else{
+      this.setter(offset)
+    }
   }
 
   get overstep() {

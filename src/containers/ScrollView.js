@@ -9,10 +9,10 @@ import Layout from '../components/Layout'
 export default class ScrollView extends Node {
   initChildren() {
     return (<>
-      <ScrollBar name='bar' />
       <Node name='view' >
         <Node name='content' components={[Layout]} />
       </Node>
+      <ScrollBar name='bar' />
     </>)
   }
 

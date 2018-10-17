@@ -24,17 +24,17 @@ export default class Layout extends Base {
     let vCursor = null
     //let hCursor = null
     children.forEach(c => {
+      c.x = cursor.x
+      c.y = cursor.y
+
       const { width, height } = c
       if (!vCursor) vCursor = new PIXI.Point(cursor.x, cursor.y + height + spaceY)
+
+      cursor.x += width + spaceX
       if (cursor.x + width > w) {
         cursor.set(vCursor.x, vCursor.y)
         vCursor.y += height + spaceY
       }
-
-      c.x = cursor.x
-      c.y = cursor.y
-
-      cursor.x += width + spaceX
     })
   }
 }

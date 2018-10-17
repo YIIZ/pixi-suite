@@ -16,8 +16,8 @@ class Director extends EventEmitter {
     window.addEventListener('resize', this.handleResize)
   }
 
-  get visiableRect() {
-    return this.viewAdapter.visiableRect
+  get visibleRect() {
+    return this.viewAdapter.visibleRect
   }
 
   addScene(key, cls) {
