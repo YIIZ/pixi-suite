@@ -4,6 +4,7 @@ import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
 export default class Capture extends Base {
+  target = null
   scale = 2
 
   onEnable() {
@@ -17,18 +18,19 @@ export default class Capture extends Base {
   }
 
   capture() {
+    const { target = this.node } = this
     const { width, height } = this.node
     const { scale, img } = this
     const { renderer } = director.app
     const texture = PIXI.RenderTexture.create(width * scale, height * scale)
 
-    const t1 = this.node.position.clone()
-    const t2 = this.node.scale.clone()
-    const t3 = this.node.pivot.clone()
+    const t1 = target.position.clone()
+    const t2 = target.scale.clone()
+    const t3 = target.pivot.clone()
 
-    this.node.setTransform(0, 0, scale, scale)
-    renderer.render(this.node, texture)
-    this.node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
+    target.setTransform(0, 0, scale, scale)
+    renderer.render(target, texture)
+    target.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
 
     img.src = renderer.extract.base64(texture)
 
