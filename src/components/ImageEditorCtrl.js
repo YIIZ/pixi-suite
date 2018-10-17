@@ -53,8 +53,8 @@ export default class ImageEditorCtrl extends Base {
 
   updateBorder() {
     const { width, height } = this.current
-    this.border.width = width
-    this.border.height = height
+    this.border.width = Math.abs(width)
+    this.border.height = Math.abs(height)
     this.node.emit('editor.change', this)
   }
 
@@ -72,12 +72,12 @@ export default class ImageEditorCtrl extends Base {
     node.visible = true
     node.rotation = item.rotation
     node.position.copy(item.position)
-    node.pivot.set(item.width/2, item.height/2)
 
     const rect = item.getLocalBounds()
     item.rotation = 0
-    item.pivot.set(rect.width/2, rect.height/2)
-    item.position.copy(node.pivot)
+    item.pivot.set(rect.width / 2, rect.height / 2)
+    item.position.set(Math.abs(item.width) / 2, item.height / 2)
+    node.pivot.copy(item.position)
 
     this.updateBorder()
   }
@@ -93,6 +93,8 @@ export default class ImageEditorCtrl extends Base {
     item.interactive = true
     item.on('touchstart', this.handleSelect, this)
     container.addChild(item)
+
+    node.visible = false
   }
 
   removeItem() {
@@ -175,10 +177,10 @@ export class EditorScale extends EditorCmd {
     const { width, height } = current
     const sX = this.scale.x * offset / this.startOffset
     const sY = this.scale.y * offset / this.startOffset
-    if (width < 60 && sX < current.scale.x) return
-    if (height < 60 && sY < current.scale.Y) return
+    if (Math.abs(width) < 60 && sX < current.scale.x) return
+    if (Math.abs(height) < 60 && sY < current.scale.Y) return
     current.scale.set(sX, sY)
-    current.position.set(width / 2, height / 2)
+    current.position.set(Math.abs(width) / 2, height / 2)
     node.pivot.copy(current.position)
   }
 
