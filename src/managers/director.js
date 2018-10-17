@@ -30,9 +30,9 @@ class Director extends EventEmitter {
 
     const Scene = this.scenes[name]
     this.scene = new Scene(this)
-    this.scene.handleCreate()
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
     this.viewAdapter.updateView(this)
+    this.scene.handleCreate()
     stage.addChild(this.scene)
 
     if (transfor) {

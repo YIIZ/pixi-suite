@@ -13,6 +13,9 @@ export default class Layout extends Base {
   height = 0
 
   onEnable() {
+    if (this.node.layout) {
+      Object.assign(this, this.node.layout)
+    }
     this.update()
   }
 

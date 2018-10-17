@@ -7,10 +7,6 @@ export default class Scene extends Node {
     super()
     this.director = director
     this.view = director.view
-  }
-
-  handleCreate() {
-    super.handleCreate()
     this.addComponent(ViewAdapter)
   }
 }
