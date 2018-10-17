@@ -4,12 +4,11 @@ import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
 export default class Capture extends Base {
-  target = null
+  target = undefined
   scale = 2
 
   onEnable() {
     this.initCaptureElement()
-    director.on('resize', this.updateTransform, this)
   }
 
   onDisable() {
@@ -17,29 +16,30 @@ export default class Capture extends Base {
     director.off('resize', this.updateTransform, this)
   }
 
-  capture() {
-    const { target = this.node } = this
-    const { width, height } = this.node
+  capture({ width, height } = this.node) {
+    const { node } = this
     const { scale, img } = this
     const { renderer } = director.app
     const texture = PIXI.RenderTexture.create(width * scale, height * scale)
 
-    const t1 = target.position.clone()
-    const t2 = target.scale.clone()
-    const t3 = target.pivot.clone()
+    const t1 = node.position.clone()
+    const t2 = node.scale.clone()
+    const t3 = node.pivot.clone()
 
-    target.setTransform(0, 0, scale, scale)
-    renderer.render(target, texture)
-    target.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
+    node.setTransform(0, 0, scale, scale)
+    renderer.render(node, texture)
+    node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
 
     img.src = renderer.extract.base64(texture)
 
     this.updateTransform()
+    director.on('resize', this.updateTransform, this)
   }
 
   updateTransform() {
-    const { node, img } = this
-    updateDOMTransform(node, img, director.devicePixelRatio)
+    const { target, node, img } = this
+    console.log(target)
+    updateDOMTransform(target || node, img, director.devicePixelRatio)
     img.style.display = 'block'
   }
 
@@ -57,6 +57,7 @@ export default class Capture extends Base {
     img.style.webkitTransformOrigin = `0 0 0`
     img.style.display = 'none'
     img.style.zIndex = '9'
+    img.style.opacity = '0.0001'
     this.img = img
   }
 }

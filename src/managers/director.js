@@ -19,6 +19,9 @@ class Director extends EventEmitter {
   get visibleRect() {
     return this.viewAdapter.visibleRect
   }
+  get isRotated() {
+    return this.app.stage.rotation != 0
+  }
 
   addScene(key, cls) {
     this.scenes[key] = cls
@@ -61,6 +64,15 @@ class Director extends EventEmitter {
     this.updateView()
 
     if (!this.viewAdapter) return
+    this.viewAdapter.updateView(this)
+    this.emit('resize')
+  }
+
+  resizeTo(width, height) {
+    const { app } = this
+     app.width = app.view.width = width
+     app.height = app.view.height = height
+     app.renderer.resize(app.width, app.height)
     this.viewAdapter.updateView(this)
     this.emit('resize')
   }
