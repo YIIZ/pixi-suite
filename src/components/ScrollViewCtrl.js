@@ -12,10 +12,6 @@ export default class ScrollViewCtrl extends Base {
   onEnable() {
     this.view.interactive = true
     this.view.on('touchstart', this.handleTouchStart, this)
-    this.view.on('touchmove', this.handleTouchMove, this)
-    this.view.on('touchend', this.handleTouchEnd, this)
-    this.view.on('touchcancel', this.handleTouchEnd, this)
-    this.view.on('touchendoutside', this.handleTouchEnd, this)
 
     const m = new PIXI.Sprite(WHITE)
     this.view.mask = m
@@ -24,10 +20,6 @@ export default class ScrollViewCtrl extends Base {
 
   onDisable() {
     this.view.off('touchstart', this.handleTouchStart, this)
-    this.view.off('touchmove', this.handleTouchMove, this)
-    this.view.off('touchend', this.handleTouchEnd, this)
-    this.view.off('touchcancel', this.handleTouchEnd, this)
-    this.view.off('touchendoutside', this.handleTouchEnd, this)
     this.view.removeChild(this.view.mask)
     this.view.mask = null
   }
@@ -60,23 +52,32 @@ export default class ScrollViewCtrl extends Base {
     }
   }
 
-  handleTouchStart(evt) {
+  handleTouchStart = (evt) => {
     this.isScrolling = true
 
     const p = evt.data.getLocalPosition(this.view)
     this.scroller.handleStart(this.direction === 'vertical' ? p.y : p.x, evt.data.originalEvent.timeStamp)
+
+    this.view.on('touchmove', this.handleTouchMove, this)
+    this.view.on('touchend', this.handleTouchEnd, this)
+    this.view.on('touchcancel', this.handleTouchEnd, this)
+    this.view.on('touchendoutside', this.handleTouchEnd, this)
   }
 
-  handleTouchMove(evt) {
+  handleTouchMove = (evt) => {
     if (!this.isScrolling) return
 
     const p = evt.data.getLocalPosition(this.view)
     this.scroller.handleMove(this.direction === 'vertical' ? p.y : p.x, evt.data.originalEvent.timeStamp)
   }
 
-  handleTouchEnd(evt) {
+  handleTouchEnd = (evt) => {
     this.isScrolling = false
     this.scroller.handleEnd()
-  }
 
+    this.view.off('touchmove', this.handleTouchMove, this)
+    this.view.off('touchend', this.handleTouchEnd, this)
+    this.view.off('touchcancel', this.handleTouchEnd, this)
+    this.view.off('touchendoutside', this.handleTouchEnd, this)
+  }
 }
