@@ -62,9 +62,9 @@ export default class Editor extends Node {
     wf.alignFlag = Widget.AlignFlag.LEFT | Widget.AlignFlag.BOTTOM
     wf.left = wf.bottom = -20
 
-    wr.target = body
-    ws.target = body
-    wf.target = body
+    wr.target = border
+    ws.target = border
+    wf.target = border
     wr.alignMode = Widget.AlignMode.AWAYS
     ws.alignMode = Widget.AlignMode.AWAYS
     wf.alignMode = Widget.AlignMode.AWAYS
