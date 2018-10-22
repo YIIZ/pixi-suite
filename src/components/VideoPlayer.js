@@ -3,6 +3,27 @@ import { Point } from 'pixi.js'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
+
+const video = document.createElement('video')
+video.style.position = 'absolute'
+video.style.top = '0'
+video.style.left = '0'
+video.className = 'video'
+video.setAttribute('preload', 'auto')
+video.setAttribute('webkit-playsinline', '')
+video.setAttribute('playsinline', '')
+
+const unlock = () => {
+  const { paused } = video
+  video.play()
+  if (paused) {
+    video.pause()
+  }
+  window.removeEventListener('touchend', unlock)
+}
+window.addEventListener('touchend', unlock)
+
+
 export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
@@ -28,21 +49,11 @@ export default class VideoPlayer extends Base {
   }
 
   initElement() {
-    const video = document.createElement('video')
-    video.style.position = 'absolute'
-    video.style.top = '0'
-    video.style.left = '0'
-    video.className = 'video'
-    video.setAttribute('preload', 'auto')
-    video.setAttribute('webkit-playsinline', '')
-    video.setAttribute('playsinline', '')
-
     // Stupid tencent x5 adaptation
     //video.setAttribute('x5-playsinline', '')
     //video.setAttribute('x5-video-player-type', 'h5')
     //const orientation = cc.winSize.width > cc.winSize.height ? 'landscape' : 'portrait'
     //video.setAttribute('x5-video-orientation', orientation)
-
     this.video = video
     director.container.appendChild(video)
   }
