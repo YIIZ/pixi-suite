@@ -7,6 +7,11 @@ export const AlignFlag = {
   LEFT: 1<<3,
 }
 
+AlignFlag.TOP_LEFT = AlignFlag.TOP | AlignFlag.LEFT
+AlignFlag.TOP_RIGHT = AlignFlag.TOP | AlignFlag.RIGHT
+AlignFlag.BOTTOM_LEFT = AlignFlag.BOTTOM | AlignFlag.LEFT
+AlignFlag.BOTTOM_RIGHT = AlignFlag.BOTTOM | AlignFlag.RIGHT
+
 export const AlignMode = {
   ONCE: 1<<0,
   RESIZE: 1<<1,
