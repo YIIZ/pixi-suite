@@ -20,7 +20,7 @@ export default class ViewAdapter extends Base {
 
   onEnable() {
     if (this.node.view) {
-      const args = pick(this.node.view, ['width', 'height', 'fix', 'mode', 'orientation'], true)
+      const args = pick(this.node.view, ['width', 'height', 'fix', 'mode', 'orientation'])
       Object.assign(this, args)
     }
     this.updateView()
