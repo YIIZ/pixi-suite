@@ -1,8 +1,12 @@
 import Base from './Base'
 import { pick } from '../utils/obj'
+import director from '../managers/director'
 
 // only for Scene!!
 export default class ViewAdapter extends Base {
+  static Portrait = { width: 750, height: 1500, fix: 'width', mode: 'none', orientation: 'portrait' }
+  static Landscape = { width: 1500, height: 750, fix: 'height', mode: 'none', orientation: 'landscape' }
+
   width = 1500
   height = 750
 
@@ -14,16 +18,16 @@ export default class ViewAdapter extends Base {
 
   visibleRect = {}
 
-  constructor(node) {
-    super(node)
-    if (node.view) {
-      const args = pick(node.view, ['width', 'height', 'fix', 'mode', 'orientation'], true)
+  onEnable() {
+    if (this.node.view) {
+      const args = pick(this.node.view, ['width', 'height', 'fix', 'mode', 'orientation'], true)
       Object.assign(this, args)
     }
+    this.updateView()
   }
 
   // call by director
-  updateView = (director) => {
+  updateView = () => {
     const rect = this.handleOrientation(director)
     if (this.fix === 'width') this.handleFixWidth(director, rect)
     if (this.fix === 'height') this.handleFixHeight(director, rect)
@@ -39,7 +43,6 @@ export default class ViewAdapter extends Base {
 
     if (this.orientation === 'landscape' && w < h
       || this.orientation === 'portrait' && w > h) {
-      console.log('rotation')
       stage.rotation = Math.PI * 2 * 0.25
       return { w: h, h: w }
     } else {
@@ -50,7 +53,6 @@ export default class ViewAdapter extends Base {
   }
 
   handleFixWidth(director, { w, h }) {
-    console.log('fixWidth')
     const { stage } = director.app
     const { width, height } = this
     const scale = w / width
@@ -66,7 +68,6 @@ export default class ViewAdapter extends Base {
   }
 
   handleFixHeight(director, { w, h }) {
-    console.log('fixHeight')
     const { stage } = director.app
     const { width, height } = this
     const scale = h / height
