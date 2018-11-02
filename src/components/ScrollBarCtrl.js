@@ -145,6 +145,11 @@ export default class ScrollBarCtrl extends Base {
     }
   }
 
+  reset() {
+    if (this.action) this.action.stop()
+    this.setter(0)
+  }
+
   get overstep() {
     const { offset, len, visibleLen } = this
     if (offset > 0) return offset
