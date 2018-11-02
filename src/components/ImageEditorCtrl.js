@@ -5,6 +5,7 @@ export default class ImageEditorCtrl extends Base {
   body = null
   container = null
   editType = 'move'
+  padding = 50
 
   onEnable() {
     window.editor = this
@@ -54,8 +55,9 @@ export default class ImageEditorCtrl extends Base {
 
   updateBorder() {
     const { width, height } = this.current
-    this.border.width = Math.abs(width)
-    this.border.height = Math.abs(height)
+    this.border.x = this.border.y = -this.padding / 2
+    this.border.width = Math.abs(width + this.padding)
+    this.border.height = Math.abs(height + this.padding)
   }
 
   editItem(item) {

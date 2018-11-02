@@ -25,12 +25,15 @@ export default class ScrollViewCtrl extends Base {
   }
 
   setContentSize(w, h) {
-    this.view.mask.width = w
-    this.view.mask.height = h
     const layout = this.content.getComponent(Layout)
     layout.width = w
     layout.height = h
     layout.update()
+  }
+
+  setSize(w, h) {
+    this.view.mask.width = w
+    this.view.mask.height = h
 
     // TODO only support one direction
     if (this.direction === 'vertical') {

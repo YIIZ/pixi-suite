@@ -15,27 +15,31 @@ const sCircle = preload(require('../../assets/circle.png'))
 const sBoard = preload(require('../../assets/border.png'))
 
 export default class Editor extends Node {
+  circleTint = 0xffffff
+  iconTint = 0xffffff
+  borderTint = 0xffffff
+
   initChildren() {
     const center = new Point(0.5, 0.5)
     const size = 50
     return (<>
       <Node name='body' />
-      <NineSlicePlane name='border' args={[sBoard.texture, 8, 8, 8, 8]} />
+      <NineSlicePlane name='border' tint={this.borderTint} args={[sBoard.texture, 8, 8, 8, 8]} />
       <Node name='remove' x={-20} y={-20} components={[EditorRemove]}>
-        <Sprite width={size} height={size} texture={sCircle.texture} />
-        <Sprite x={size/2} y={size/2} anchor={center} texture={sRemove.texture} />
+        <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sRemove.texture} />
       </Node>
       <Node name='rotate' components={[EditorRotate]}>
-        <Sprite width={size} height={size} texture={sCircle.texture} />
-        <Sprite x={size/2} y={size/2} anchor={center} texture={sRotate.texture} />
+        <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sRotate.texture} />
       </Node>
       <Node name='scale' components={[EditorScale]}>
-        <Sprite width={size} height={size} texture={sCircle.texture} />
-        <Sprite x={size/2} y={size/2} anchor={center} texture={sScale.texture} />
+        <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sScale.texture} />
       </Node>
       <Node name='flip' components={[EditorFlip]}>
-        <Sprite width={size} height={size} texture={sCircle.texture} />
-        <Sprite x={size/2} y={size/2} anchor={center} texture={sFlip.texture} />
+        <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
+        <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sFlip.texture} />
       </Node>
     </>)
   }
@@ -52,6 +56,9 @@ export default class Editor extends Node {
     const scale = this.getChildByName('scale')
     const flip = this.getChildByName('flip')
 
+    const wrm = remove.addComponent(Widget)
+    wrm.alignFlag = Widget.AlignFlag.LEFT | Widget.AlignFlag.TOP
+    wrm.left = wrm.top = -20
     const wr = rotate.addComponent(Widget)
     wr.alignFlag = Widget.AlignFlag.RIGHT | Widget.AlignFlag.TOP
     wr.right = wr.top = -20
@@ -62,9 +69,11 @@ export default class Editor extends Node {
     wf.alignFlag = Widget.AlignFlag.LEFT | Widget.AlignFlag.BOTTOM
     wf.left = wf.bottom = -20
 
+    wrm.target = border
     wr.target = border
     ws.target = border
     wf.target = border
+    wrm.alignMode = Widget.AlignMode.AWAYS
     wr.alignMode = Widget.AlignMode.AWAYS
     ws.alignMode = Widget.AlignMode.AWAYS
     wf.alignMode = Widget.AlignMode.AWAYS
