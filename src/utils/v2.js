@@ -1,4 +1,5 @@
 // https://github.com/cocos-creator/engine/blob/4f734a806d1fd7c4073fb064fddc961384fe67af/cocos2d/core/value-types/vec2.js#L526
+import { Point } from 'pixi.js'
 
 export function singleAngle(p1, p2) {
   const ag = angle(p1, p2)
@@ -7,6 +8,18 @@ export function singleAngle(p1, p2) {
 
 export function magSqr(p) {
   return p.x * p.x + p.y * p.y
+}
+
+export function scale(p, r) {
+  return new Point(p.x * r, p.y * r)
+}
+
+export function add(p1, p2) {
+  return new Point(p1.x + p2.x, p1.y + p2.y)
+}
+
+export function subtract(p1, p2) {
+  return new Point(p1.x - p2.x, p1.y - p2.y)
 }
 
 export function angle(p1, p2) {
@@ -41,4 +54,8 @@ export function distance(p1, p2) {
   const x = p1.x - p2.x
   const y = p1.y - p2.y
   return Math.sqrt(x * x + y * y)
+}
+
+export function gravity(p1, p2) {
+  return new Point((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5)
 }

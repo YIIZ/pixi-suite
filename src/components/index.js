@@ -1,6 +1,7 @@
 export { default as Base } from './Base.js'
 export { default as Button } from './Button.js'
 export { default as Capture } from './Capture.js'
+export { default as Crop } from './Crop.js'
 export { default as DrawerCtrl } from './DrawerCtrl.js'
 export { default as ImageEditorCtrl } from './ImageEditorCtrl.js'
 export { default as Input } from './Input.js'
