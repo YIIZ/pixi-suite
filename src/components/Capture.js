@@ -4,7 +4,7 @@ import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
 export default class Capture extends Base {
-  target = undefined
+  positionTarget = undefined
   scale = 2
 
   onEnable() {
@@ -37,9 +37,8 @@ export default class Capture extends Base {
   }
 
   updateTransform() {
-    const { target, node, img } = this
-    console.log(target)
-    updateDOMTransform(target || node, img, director.devicePixelRatio)
+    const { positionTarget, node, img } = this
+    updateDOMTransform(positionTarget || node, img, director.devicePixelRatio)
     img.style.display = 'block'
   }
 
