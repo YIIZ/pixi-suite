@@ -35,6 +35,7 @@ class Director extends EventEmitter {
     const Scene = this.scenes[name]
     this.scene = new Scene(this)
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
+    this.viewAdapter.enable()
     this.scene.handleCreate()
     stage.addChild(this.scene)
 

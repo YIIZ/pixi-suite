@@ -18,7 +18,7 @@ export default class ViewAdapter extends Base {
 
   visibleRect = {}
 
-  onEnable() {
+  enable() {
     if (this.node.view) {
       const args = pick(this.node.view, ['width', 'height', 'fix', 'mode', 'orientation'])
       Object.assign(this, args)
