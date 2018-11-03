@@ -46,7 +46,8 @@ export default class ScrollViewCtrl extends Base {
       this.scroller.node.x = w - this.scroller.node.width
     } else {
       this.scroller.updateParams({
-        len: this.content.width,
+        // FIXME width 数值不对, 需要在加某些值
+        len: this.content.width + 60,
         visibleLen: w,
         setter: v => this.content.x = v,
         getter: () => this.content.x,

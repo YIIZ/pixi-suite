@@ -53,7 +53,7 @@ export default class ScrollBarCtrl extends Base {
     this.node.visible = this.scrollable
     this.node.mask.width = this.bg.width
     this.node.mask.height = this.bg.height
-    this.relativeOffset = (this.minOffset - this.visibleLen) / this.visibleLen
+    this.relativeOffset = (- this.len) / this.visibleLen
     this.offset = Math.min(0, Math.max(this.minOffset, this.offset))
     this.bar.y = Math.max(0, Math.min(this.minOffset / this.relativeOffset, this.bar.y))
   }
