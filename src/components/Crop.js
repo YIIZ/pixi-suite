@@ -3,12 +3,10 @@ import Base from './Base'
 import * as v2 from '../utils/v2'
 import director from '../managers/director'
 
-    console.log(v2.subtract)
 export default class Crop extends Base {
   target = this.node
 
   onEnable() {
-    console.log('crop')
     this.viewportRatio = 1 / director.app.stage.scale.x * director.devicePixelRatio
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
@@ -19,7 +17,6 @@ export default class Crop extends Base {
   }
 
   handleTouchStart(evt) {
-    console.log('start')
     const { touches } = evt.data.originalEvent
     const [t0, t1 = {}] = touches
     const isMulti = touches.length > 1
