@@ -13,15 +13,14 @@ export default class ScrollBar extends Node {
   initChildren() {
     return (<>
       <NineSlicePlane name='bg' args={[bg.texture, 3, 3, 6, 6]} >
-        <NineSlicePlane name='bar' args={[bar.texture, 3, 3, 6, 6]} />
       </NineSlicePlane>
+      <NineSlicePlane name='bar' args={[bar.texture, 3, 3, 6, 6]} />
     </>)
   }
 
   onCreate() {
     const barCtrl = this.addComponent(ScrollBarCtrl)
-    const pBg = this.getChildByName('bg')
-    barCtrl.bg = pBg
-    barCtrl.bar = pBg.getChildByName('bar')
+    barCtrl.bg = this.findChild('bg')
+    barCtrl.bar = this.findChild('bar')
   }
 }
