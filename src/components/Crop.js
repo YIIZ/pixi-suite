@@ -5,6 +5,7 @@ import director from '../managers/director'
 
 export default class Crop extends Base {
   target = this.node
+  minScale = 0.1
 
   onEnable() {
     this.viewportRatio = 1 / director.app.stage.scale.x * director.devicePixelRatio
@@ -26,9 +27,9 @@ export default class Crop extends Base {
 
     this.startPosition = this.target.position.clone()
     this.startGravity = isMulti ? v2.gravity(p0, p1) : p0
+    this.startScale = this.target.scale.x
 
     if (isMulti) {
-      this.startScale = this.target.scale.x
       this.startDis = v2.distance(p0, p1)
     }
 
@@ -54,6 +55,15 @@ export default class Crop extends Base {
     let offset = v2.subtract(gravity, this.startGravity)
     offset = v2.scale(offset, this.viewportRatio)
     this.target.position = v2.add(offset, this.startPosition)
+
+    const { x, y } = this.target.position
+    this.target.position.x = Math.min((this.target.width - 750) / 2, Math.abs(x)) * Math.sign(x)
+    this.target.position.y = Math.min((this.target.height - 1000) / 2, Math.abs(y)) * Math.sign(y)
+    //const scale = Math.max(this.startScale + offset.x * 0.001, this.minScale)
+    //console.log(offset.x, scale)
+    //this.target.scale.set(scale, scale)
+
+    // FIXME reletive of target
   }
 
   handleScale(evt) {
@@ -68,7 +78,7 @@ export default class Crop extends Base {
     const dis = v2.distance(p0, p1)
 
     const offset = (dis - this.startDis) * 0.01
-    const scale = Math.max(this.startScale + offset, 0.1)
+    const scale = Math.max(this.startScale + offset, this.minScale)
     // FIXME must same scale for x, y
     this.target.scale.set(scale, scale)
   }
