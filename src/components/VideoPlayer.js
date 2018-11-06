@@ -8,6 +8,8 @@ const video = document.createElement('video')
 video.style.position = 'absolute'
 video.style.top = '0'
 video.style.left = '0'
+video.style.width = '1px'
+video.style.height = '1px'
 video.className = 'video'
 video.setAttribute('preload', 'auto')
 video.setAttribute('webkit-playsinline', '')
@@ -29,11 +31,9 @@ export default class VideoPlayer extends Base {
   autoPlay = true
 
   onEnable() {
-    window.vp = this
     this.initElement()
     this.video.src = this.node.videoSrc
     this.video.addEventListener('ended', this.handleEnded)
-    this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
 
@@ -70,8 +70,7 @@ export default class VideoPlayer extends Base {
 
   play() {
     if (!this.video.src) return
-    this.lastTime = this.video.currentTime
-    this.checkStart()
+    if (!this.isStarted && !this.inCheck) this.checkStart()
     this.video.play()
   }
 
@@ -84,8 +83,10 @@ export default class VideoPlayer extends Base {
   }
 
   checkStart = () => {
-    if (!this.video) return
-    if (this.video.currentTime > this.lastTime) {
+    this.inCheck = true
+    if (this.video.currentTime > 0) {
+      this.isStarted = true
+      this.updateTransform()
       this.node.emit('videostart')
       return
     }
