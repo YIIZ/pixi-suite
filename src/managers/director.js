@@ -28,7 +28,7 @@ class Director extends EventEmitter {
     this.scenes[key] = cls
   }
 
-  async loadScene(name, transfor) {
+  async loadScene(name, transfer) {
     const { stage } = this.app
     const lastScene = this.scene
 
@@ -37,10 +37,10 @@ class Director extends EventEmitter {
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
     this.viewAdapter.enable()
     this.scene.handleCreate()
-    stage.addChild(this.scene)
+    stage.addChildAt(this.scene, 0)
 
-    if (transfor) {
-      await transfor(lastScene, this.scene)
+    if (transfer) {
+      await transfer(lastScene, this.scene)
     }
 
     if (!lastScene) return
