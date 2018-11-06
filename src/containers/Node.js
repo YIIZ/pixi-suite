@@ -17,6 +17,15 @@ export default class Node extends PIXI.Container {
     return c
   }
 
+  removeComponent(Component) {
+    const c = this.getComponent(Component)
+    if (!c) return
+    c.onDisable()
+    const index = this.components.indexOf(c)
+    this.components.splice(index, 1)
+    return c
+  }
+
   getComponent(Component) {
     return this.components.find(c => c instanceof Component)
   }
