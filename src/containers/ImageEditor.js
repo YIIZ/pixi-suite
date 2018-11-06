@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import Node from './Node'
 import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, EditorFlip } from '../components/ImageEditorCtrl'
+import TouchScale from '../components/TouchScale'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
 import { preload } from '../managers/loader'
@@ -45,6 +46,11 @@ export default class Editor extends Node {
   }
 
   onCreate() {
+    if (this.multiTouch) {
+      console.log('multiTouch')
+      this.addComponent(TouchScale)
+    }
+
     const editorCtrl = this.addComponent(ImageEditorCtrl)
     const body = this.getChildByName('body')
     const border = this.getChildByName('border')

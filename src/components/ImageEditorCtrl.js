@@ -1,5 +1,6 @@
 import Base from './Base'
 import * as v2 from '../utils/v2'
+import TouchScale from './TouchScale'
 
 export default class ImageEditorCtrl extends Base {
   body = null
@@ -16,6 +17,13 @@ export default class ImageEditorCtrl extends Base {
     this.node.on('touchend', this.handleTouchEnd, this)
     this.node.on('touchcancel', this.handleTouchEnd, this)
     this.node.on('touchendoutside', this.handleTouchEnd, this)
+
+    this.touchScale = this.node.getComponent(TouchScale)
+    if (this.touchScale) {
+      this.touchScale.getter = () => this.current?.scale.x
+      this.touchScale.setter = this.handleMultiTouchScale
+    }
+
     //this.container.interactive = true
     //this.container.on('tap', this.putbackItem, this)
   }
@@ -40,6 +48,8 @@ export default class ImageEditorCtrl extends Base {
     if (this.editorHandle) {
       this.editorHandle(evt)
       this.updateBorder()
+    } else if (this.touchScale && this.touchScale.isDoing) {
+      // null
     } else {
       const p = this.node.parent.toLocal(evt.data.global)
       this.node.position.set(this.originPoint.x + p.x - this.startPoint.x, this.originPoint.y + p.y - this.startPoint.y)
@@ -51,6 +61,12 @@ export default class ImageEditorCtrl extends Base {
     this.touching = false
     this.editorType = 'move'
     this.editorHandle = null
+  }
+
+  handleMultiTouchScale = (scale) => {
+    if (this.editorHandle) return
+    EditorScale.edit(this.current, scale, this.node)
+    this.updateBorder()
   }
 
   updateBorder() {
@@ -163,35 +179,40 @@ export class EditorRotate extends EditorCmd {
 }
 
 export class EditorScale extends EditorCmd {
+  static edit(item, newScale, node) {
+    const rect = item.getLocalBounds()
+    const oldScale = item.scale.x
+    const height = newScale * rect.height
+    const width = newScale * rect.width;
+    if (Math.abs(width) < 60 && newScale < oldScale) return
+    if (Math.abs(height) < 60 && newScale < oldScale) return
+    item.scale.set(newScale)
+    item.position.set(Math.abs(width) / 2, height / 2)
+    item.pivot.set(rect.width / 2, rect.height / 2)
+    node.pivot.copy(item.position)
+  }
+
   center = new PIXI.Point()
   scale = new PIXI.Point()
 
   handleTouchStart(evt) {
     super.handleTouchStart(evt)
-    const { current, body } = this.editor
-    this.scale.copy(current.scale)
+    const { current } = this.editor
     this.center.copy(current.toGlobal(current.pivot))
     const p = evt.data.global
     this.startOffset = v2.distance(this.center, p)
+    this.startScale = current.scale.x
   }
 
   handleChange(evt) {
-    const { current, body, node } = this.editor
+    const { current, node } = this.editor
     const p = evt.data.global
     const offset = v2.distance(this.center, p)
 
     const rect = current.getLocalBounds()
 
-    const sX = this.scale.x * offset / this.startOffset
-    const sY = this.scale.y * offset / this.startOffset
-    current.scale.set(sX, sY)
-    const height = current.scale.y * rect.height
-    const width = current.scale.x * rect.width;
-    if (Math.abs(width) < 60 && sX < current.scale.x) return
-    if (Math.abs(height) < 60 && sY < current.scale.Y) return
-    current.position.set(Math.abs(width) / 2, height / 2)
-    current.pivot.set(rect.width / 2, rect.height / 2)
-    node.pivot.copy(current.position)
+    const newScale = this.startScale * offset / this.startOffset
+    EditorScale.edit(current, newScale, node)
   }
 
 }
