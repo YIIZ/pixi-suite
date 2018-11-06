@@ -54,8 +54,10 @@ export default class ImageEditorCtrl extends Base {
   }
 
   updateBorder() {
-    const { width, height } = this.current
-    this.border.x = this.border.y = -this.padding / 2
+    const { current } = this
+    const rect = current.getLocalBounds()
+    const height = current.scale.y * rect.height
+    const width = current.scale.x * rect.width;
     this.border.width = Math.abs(width + this.padding)
     this.border.height = Math.abs(height + this.padding)
   }
@@ -76,9 +78,11 @@ export default class ImageEditorCtrl extends Base {
     node.position.copy(item.position)
 
     const rect = item.getLocalBounds()
+    const height = item.scale.y * rect.height
+    const width = item.scale.x * rect.width;
     item.rotation = 0
     item.pivot.set(rect.width / 2, rect.height / 2)
-    item.position.set(Math.abs(item.width) / 2, item.height / 2)
+    item.position.set(Math.abs(width) / 2, height / 2)
     node.pivot.copy(item.position)
 
     this.updateBorder()
@@ -90,7 +94,6 @@ export default class ImageEditorCtrl extends Base {
 
     item.rotation = node.rotation
     item.position.copy(node.position)
-    //item.pivot.copy(node.pivot)
 
     item.interactive = true
     item.on('touchstart', this.handleSelect, this)
@@ -173,16 +176,21 @@ export class EditorScale extends EditorCmd {
   }
 
   handleChange(evt) {
+    const { current, body, node } = this.editor
     const p = evt.data.global
     const offset = v2.distance(this.center, p)
-    const { current, body, node } = this.editor
-    const { width, height } = current
+
+    const rect = current.getLocalBounds()
+
     const sX = this.scale.x * offset / this.startOffset
     const sY = this.scale.y * offset / this.startOffset
+    current.scale.set(sX, sY)
+    const height = current.scale.y * rect.height
+    const width = current.scale.x * rect.width;
     if (Math.abs(width) < 60 && sX < current.scale.x) return
     if (Math.abs(height) < 60 && sY < current.scale.Y) return
-    current.scale.set(sX, sY)
     current.position.set(Math.abs(width) / 2, height / 2)
+    current.pivot.set(rect.width / 2, rect.height / 2)
     node.pivot.copy(current.position)
   }
 
