@@ -42,6 +42,7 @@ class ModalManager {
       complete: v => {
         this.guard.resolve()
         this.guard = null
+        node.emit('modalshow')
       }
     })
 
@@ -70,6 +71,7 @@ class ModalManager {
         }
         this.modals.splice(index, 1)
         this.hideBackground()
+        node.emit('modalhide')
         node.parent.removeChild(node)
         node.destroy({ children: true })
       }
@@ -79,10 +81,12 @@ class ModalManager {
   showBackground() {
     if (this.background) return
 
-    const { width, height } = director.scene
+    const { x, y, width, height } = director.visibleRect
     const background = new Sprite(Texture.WHITE)
     background.width = width
     background.height = height
+    background.x = x
+    background.y = y
     background.tint = 0x000000
     background.alpha = 0
     this.background = background
