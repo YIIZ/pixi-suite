@@ -83,8 +83,6 @@ export default class ImageEditorCtrl extends Base {
       this.putbackItem()
     }
     this.current = item
-    item.interactive = false
-    item.off('touchstart', this.handleSelect, this)
 
     const { node, current, body } = this
     body.addChildAt(item, 0)
@@ -107,14 +105,12 @@ export default class ImageEditorCtrl extends Base {
   putbackItem() {
     const { container, node, current: item } = this
     this.current = null
+    if (!item) return
 
     item.rotation = node.rotation
     item.position.copy(node.position)
 
-    item.interactive = true
-    item.on('touchstart', this.handleSelect, this)
     container.addChild(item)
-
     node.visible = false
   }
 
@@ -122,12 +118,6 @@ export default class ImageEditorCtrl extends Base {
     this.body.removeChild(this.current)
     this.current = null
     this.node.visible = false
-  }
-
-  handleSelect(evt) {
-    const item = evt.currentTarget
-    this.editItem(item)
-    this.handleTouchStart(evt)
   }
 }
 

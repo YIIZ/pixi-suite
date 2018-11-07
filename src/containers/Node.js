@@ -14,6 +14,7 @@ export default class Node extends PIXI.Container {
     // TODO check exist
     const c = new Component(this)
     this.components.push(c)
+    if (this.inStage) c.onEnable()
     return c
   }
 
