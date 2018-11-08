@@ -92,7 +92,7 @@ export default class Crop extends Base {
     const p1 = { x: t1.pageX, y: t1.pageY }
     const dis = v2.distance(p0, p1)
 
-    const offset = (dis - this.startDis) * 0.01
+    const offset = (dis - this.startDis) * 0.005
     const scale = this.startScale + offset
     // FIXME must same scale for x, y
     target.scale.set(scale, scale)
@@ -118,10 +118,10 @@ export default class Crop extends Base {
     const rect = target.getLocalBounds()
     const { w, h } = this.minRect
     const { height, width } = rect
-    const { x, y } = target
+    const { x, y, rotation } = target
     const cropValue = { x, y, rotation: target.rotation, scale: target.scale.x }
 
-    const a = target.rotation % a90
+    const a = rotation % a90
     if (a > a45) {
       cropValue.rotation += (a90 - a45)
     } else {
@@ -146,8 +146,7 @@ export default class Crop extends Base {
     }
     target.cropValue = cropValue
 
-    console.log('end', cropValue.rotation/Math.PI)
-    this.action = tween({ from: { x, y, rotation: target.rotation, scale: target.scale.x }, to: cropValue, duration: 300 })
+    this.action = tween({ from: { x, y, rotation, scale: target.scale.x }, to: cropValue, duration: 300 })
     .start(v => {
       target.scale.set(v.scale)
       target.rotation = v.rotation
