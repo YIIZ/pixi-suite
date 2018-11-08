@@ -122,10 +122,9 @@ export default class Crop extends Base {
     const cropValue = { x, y, rotation: target.rotation, scale: target.scale.x }
 
     const a = rotation % a90
-    if (a > a45) {
-      cropValue.rotation += (a90 - a45)
-    } else {
-      cropValue.rotation -= a
+    cropValue.rotation -= a
+    if (a > a45 || a < -a45) {
+      cropValue.rotation += Math.sign(a) * a90
     }
 
     const isLandscape = Math.abs(cropValue.rotation % a180) > 0.01
@@ -146,6 +145,7 @@ export default class Crop extends Base {
     }
     target.cropValue = cropValue
 
+    console.log(a / Math.PI, rotation/Math.PI, cropValue.rotation / Math.PI)
     this.action = tween({ from: { x, y, rotation, scale: target.scale.x }, to: cropValue, duration: 300 })
     .start(v => {
       target.scale.set(v.scale)
