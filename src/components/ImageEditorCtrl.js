@@ -171,12 +171,12 @@ export class EditorRotate extends EditorCmd {
 export class EditorScale extends EditorCmd {
   static edit(item, newScale, node) {
     const rect = item.getLocalBounds()
-    const oldScale = item.scale.x
+    const oldScale = item.scale.y
     const height = newScale * rect.height
     const width = newScale * rect.width;
     if (Math.abs(width) < 60 && newScale < oldScale) return
     if (Math.abs(height) < 60 && newScale < oldScale) return
-    item.scale.set(newScale)
+    item.scale.set(newScale * Math.sign(item.scale.x), newScale)
     item.position.set(Math.abs(width) / 2, height / 2)
     item.pivot.set(rect.width / 2, rect.height / 2)
     node.pivot.copy(item.position)
@@ -191,7 +191,7 @@ export class EditorScale extends EditorCmd {
     this.center.copy(current.toGlobal(current.pivot))
     const p = evt.data.global
     this.startOffset = v2.distance(this.center, p)
-    this.startScale = current.scale.x
+    this.startScale = current.scale.y
   }
 
   handleChange(evt) {
