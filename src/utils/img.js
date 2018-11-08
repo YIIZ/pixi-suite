@@ -65,7 +65,6 @@ export const normalizeImage = async (file,
   // parallel
   let deg = await pDeg
   const img = await pImg
-  deg = 90
 
   const { naturalWidth: w, naturalHeight: h } = img
   const scale = Math.min(1, maxWidth / w, maxHeight / h)
