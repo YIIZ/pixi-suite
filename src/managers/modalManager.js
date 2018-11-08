@@ -13,8 +13,8 @@ class ModalManager {
       throw new Error('another modal action is in progress')
     }
     this.guard = new Deferred()
-    const { withoutBackground } = option
-    if (!withoutBackground) this.showBackground()
+    const { backdrop = true } = option
+    if (backdrop) this.showBackground(backdrop)
 
     const node = new Modal()
     node.handleCreate()
@@ -78,7 +78,7 @@ class ModalManager {
     })
   }
 
-  showBackground() {
+  showBackground(backdrop) {
     if (this.background) return
 
     const { x, y, width, height } = director.visibleRect
@@ -91,10 +91,12 @@ class ModalManager {
     background.alpha = 0
     this.background = background
 
-    background.interactive = true
-    background.on('tap', (evt) => {
-      this.hide(this.modals[this.modals.length - 1])
-    })
+    if (backdrop && backdrop !== 'static') {
+      background.interactive = true
+      background.on('tap', (evt) => {
+        this.hide(this.modals[this.modals.length - 1])
+      })
+    }
     director.scene.addChild(background)
 
     tween({
