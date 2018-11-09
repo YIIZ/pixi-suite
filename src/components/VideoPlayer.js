@@ -5,6 +5,7 @@ import { updateDOMTransform } from '../utils/dom'
 
 
 const video = document.createElement('video')
+video.className = 'IIV'
 video.style.position = 'absolute'
 video.style.top = '0'
 video.style.left = '0'
@@ -29,6 +30,10 @@ window.addEventListener('touchend', unlock)
 export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
+
+  static preload(src) {
+    video.src = src
+  }
 
   onEnable() {
     this.initElement()
