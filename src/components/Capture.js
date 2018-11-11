@@ -30,7 +30,7 @@ export default class Capture extends Base {
     renderer.render(node, texture)
     node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
 
-    img.src = renderer.extract.base64(texture)
+    img.src = renderer.extract.canvas(texture).toDataURL('image/jpeg')
 
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
