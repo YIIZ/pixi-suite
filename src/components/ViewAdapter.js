@@ -7,14 +7,11 @@ export default class ViewAdapter extends Base {
   static Portrait = { width: 750, height: 1500, fix: 'width', mode: 'none', orientation: 'portrait' }
   static Landscape = { width: 1500, height: 750, fix: 'height', mode: 'none', orientation: 'landscape' }
 
-  width = 1500
-  height = 750
-
-  fix = 'height'
-
+  width = 750
+  height = 1500
+  fix = 'width'
+  orientation = 'portrait' // auto, portrait, landscape
   mode = 'none' // TODO cover contain ?
-
-  orientation = 'landscape' // auto, portrait, landscape
 
   visibleRect = {}
 
