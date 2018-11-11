@@ -34,6 +34,14 @@ export default class HTMLInput extends Base {
     }
   }
 
+  readyonly(v) {
+    if (v) {
+      this.elem.setAttribute('readonly', '')
+    } else {
+      this.elem.removeAttribute('readonly')
+    }
+  }
+
   updateTransform() {
     const { node, elem } = this
     updateDOMTransform(node, elem, director.devicePixelRatio)
@@ -43,7 +51,7 @@ export default class HTMLInput extends Base {
     const elem = document.createElement('input')
     Object.assign(elem.style, {
       opacity: '0.0001',
-      zIndex: '3',
+      zIndex: '4',
       border: 'none',
       webkitAppearance: 'none',
       background: 'transparent',

@@ -55,7 +55,7 @@ export default class Capture extends Base {
     img.style.transformOrigin = `0 0 0`
     img.style.webkitTransformOrigin = `0 0 0`
     img.style.display = 'none'
-    img.style.zIndex = '9'
+    img.style.zIndex = '3'
     img.style.opacity = '0.0001'
     this.img = img
   }
