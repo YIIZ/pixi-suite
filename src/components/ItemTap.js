@@ -47,7 +47,6 @@ export default class ItemTap extends Base {
 
   handleTap(evt) {
     const { children } = this.node
-    const obj = interaction.hitTest(evt.data.global, this.node)
     for (let i = children.length - 1; i >= 0; i--) {
       children[i].interactive = true
       const obj = interaction.hitTest(evt.data.global, children[i])

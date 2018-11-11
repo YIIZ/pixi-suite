@@ -4,20 +4,21 @@ import Base from './Base'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
-export default class Input extends Base {
-  type = 'file'
+export default class HTMLInput extends Base {
+  type = 'text'
   style = {}
-  onChange = () => false
 
   onEnable() {
     if (this.node.input) {
-      const args = pick(this.node.input, ['type', 'style', 'onChange'])
+      const args = pick(this.node.input, ['type', 'className', 'style', 'placeholder'])
       Object.assign(this, args)
     }
-    const { style, type, onChange } = this
+    const { style, type, className, placeholder } = this
     this.initElement(style)
     this.elem.setAttribute('type', type)
-    this.elem.addEventListener('change', onChange)
+    this.elem.setAttribute('class', className)
+    this.elem.setAttribute('placeholder', placeholder)
+    this.elem.addEventListener('change', this.handleChange)
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
@@ -25,6 +26,12 @@ export default class Input extends Base {
   onDisable() {
     this.elem.parentNode.removeChild(this.elem)
     director.off('resize', this.updateTransform, this)
+  }
+
+  handleChange = (evt) => {
+    if (this.node.onChange) {
+      this.node.onChange(evt)
+    }
   }
 
   updateTransform() {
