@@ -5,16 +5,15 @@ export const updateDOMTransform = (node, elem, devicePixelRatio = 2) => {
     wt.scale(1/devicePixelRatio, 1/devicePixelRatio)
 
     // FIXME when pivot is not 0
-    const matrix = `matrix(${wt.a}, ${wt.b}, ${wt.c}, ${wt.d}, ${wt.tx}, ${wt.ty})`
+    const rect = wt.apply({ x: node.width, y: node.height })
+    const pos = wt.apply({ x: 0, y: 0 })
+    console.log(wt)
+
     Object.assign(elem.style, {
-      width: `${node.width}px`,
-      height: `${node.height}px`,
+      width: `${rect.x - pos.x}px`,
+      height: `${rect.y - pos.y}px`,
       position: 'absolute',
-      top: '0',
-      left: '0',
-      webkitTransformOrigin: `0 0 0`,
-      transformOrigin: `0 0 0`,
-      webkitTransform: matrix,
-      transform: matrix,
+      top: `${pos.y}px`,
+      left: `${pos.x}px`,
     })
 }
