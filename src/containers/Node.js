@@ -45,10 +45,14 @@ export default class Node extends PIXI.Container {
     }
     this.inited = true
     const children = this.initChildren(cr)
-    if (Array.isArray(children)) {
-      children.length > 0 && this.addChild(...children)
-    } else if (children) {
+    if (!Array.isArray(children)) {
       this.addChild(children)
+    } else if (children.length > 0) {
+      if (Array.isArray(children[0])) {
+        this.addChild(...children[0])
+      } else {
+        this.addChild(...children)
+      }
     }
     this.onCreate()
   }
@@ -88,7 +92,13 @@ export default class Node extends PIXI.Container {
     this.components.forEach((c) => {
       c.onDisable()
     })
+    this.components.length = 0
+    this.childrenHandleRemove()
     this.onRemove()
+  }
+
+  childrenHandleRemove() {
+
   }
 
   onRemove() {}
