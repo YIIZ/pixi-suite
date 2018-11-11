@@ -4,7 +4,7 @@ export default class StatusSwitch extends Base {
   onEnable() {
     this.off = this.node.children.find(c => c.status === 'off')
     this.on = this.node.children.find(c => c.status === 'on')
-    this.switch('off')
+    this.switch(this.node.defaultStatus || 'off')
   }
 
   switch(status) {
