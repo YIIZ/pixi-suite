@@ -24,7 +24,10 @@ export default class HTMLInput extends Base {
   }
 
   onDisable() {
-    this.elem.parentNode.removeChild(this.elem)
+    if (this.elem) {
+      this.elem.parentNode.removeChild(this.elem)
+      this.elem = null
+    }
     director.off('resize', this.updateTransform, this)
   }
 
