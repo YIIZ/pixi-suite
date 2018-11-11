@@ -8,7 +8,7 @@ class ModalManager {
   background = null
   guard = null
   // !! scale alpha will be reset
-  show(Modal, option = {}) {
+  show(node, option = {}) {
     if (this.guard) {
       throw new Error('another modal action is in progress')
     }
@@ -16,19 +16,17 @@ class ModalManager {
     const { backdrop = true } = option
     if (backdrop) this.showBackground(backdrop)
 
-    const node = new Modal()
-    node.handleCreate()
-
     this.modals.push(node)
     node.scale.set(0)
     node.alpha = 0
-    director.scene.addChild(node)
+    director.app.stage.addChild(node)
 
     node.interactive = true
     node.on('tap', evt => {
       evt.stopPropagation()
     })
 
+    node.emit('modal.show')
     tween({
       from: 0,
       to: 1,
@@ -42,7 +40,7 @@ class ModalManager {
       complete: v => {
         this.guard.resolve()
         this.guard = null
-        node.emit('modalshow')
+        node.emit('modal.shown')
       }
     })
 
@@ -53,6 +51,7 @@ class ModalManager {
     const index = this.modals.findIndex(v => v === node)
     if (index <0) return
 
+    node.emit('modal.hide')
     tween({
       from: { y: node.y, alpha: node.alpha },
       to: { y: node.y - 200, alpha: 0 },
@@ -70,9 +69,9 @@ class ModalManager {
           throw new Error('has removed')
         }
         this.modals.splice(index, 1)
-        this.hideBackground()
-        node.emit('modalhide')
         node.parent.removeChild(node)
+        this.hideBackground()
+        node.emit('modal.hidden')
         node.destroy({ children: true })
       }
     })
@@ -94,10 +93,12 @@ class ModalManager {
     if (backdrop && backdrop !== 'static') {
       background.interactive = true
       background.on('tap', (evt) => {
-        this.hide(this.modals[this.modals.length - 1])
+        const node = this.modals[this.modals.length - 1]
+        node.emit('modal.close')
+        this.hide(node)
       })
     }
-    director.scene.addChild(background)
+    director.app.stage.addChild(background)
 
     tween({
       from: 0,
