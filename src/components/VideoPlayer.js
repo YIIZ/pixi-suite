@@ -39,6 +39,9 @@ export default class VideoPlayer extends Base {
     this.initElement()
     this.video.src = this.node.videoSrc
     this.video.addEventListener('ended', this.handleEnded)
+    if (this.node.x5) {
+      this.video.setAttribute('x5-playsinline', '')
+    }
     director.on('resize', this.updateTransform, this)
   }
 
