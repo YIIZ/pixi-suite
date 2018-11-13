@@ -42,7 +42,7 @@ export default class ItemTap extends Base {
   handleTouchEnd(evt) {
     this.node.off('touchmove', this.handleTouchMove)
     this.node.off('touchend', this.handleTouchEnd)
-    if (!this.isMove(evt)) this.handleTap(evt)
+    this.handleTap(evt)
   }
 
   handleTap(evt) {
