@@ -4,24 +4,20 @@ import director from './director'
 import { Deferred } from '../utils/obj'
 import { tween, easing, delay } from 'popmotion'
 
-import { LoadingToast } from '../containers/Toast'
-
-const toasts = {
-  loading: LoadingToast,
-}
+import toasts from '../containers/Toast'
 
 class ToastManager {
   backdropCount = 0
 
   show({ type, title, duration, backdrop }) {
     if (!this.container) this.initContainer()
-    if (backdrop) {
-      this.showBackdrop()
-    }
     const Toast = toasts[type]
     const { width, height } = director.visibleRect
     const node = <Toast x={width/2} y={height/2} title={title} backdrop={true} />
     node.pivot = new Point(node.width / 2, node.height / 2)
+    if (backdrop) {
+      this.showBackdrop(node, backdrop)
+    }
     this.container.addChild(node)
     if (duration) {
       delay(duration).start({ complete: () => this.hide(node) })
@@ -30,7 +26,8 @@ class ToastManager {
   }
 
   hide(node) {
-    this.container.removeChild(node)
+    const removed = this.container.removeChild(node)
+    if (!removed) return
     if (node.backdrop) this.hideBackdrop()
     node.destroy({ children: true })
   }
@@ -39,31 +36,39 @@ class ToastManager {
     this.container = director.app.stage.addChild(<Node name='toasts' />)
   }
 
-  showBackdrop() {
+  showBackdrop(node, backdropType) {
     this.backdropCount += 1
-    if (this.backdrop) return
 
-    const { x, y, width, height } = director.visibleRect
-    const backdrop = new Sprite(Texture.WHITE)
-    backdrop.width = width
-    backdrop.height = height
-    backdrop.x = x
-    backdrop.y = y
-    backdrop.tint = 0x000000
-    backdrop.alpha = 0
-    this.backdrop = backdrop
+    if (!this.backdrop) {
+      const { x, y, width, height } = director.visibleRect
+      const backdrop = new Sprite(Texture.WHITE)
+      backdrop.width = width
+      backdrop.height = height
+      backdrop.x = x
+      backdrop.y = y
+      backdrop.tint = 0x000000
+      backdrop.alpha = 0
 
-    backdrop.interactive = true
-    backdrop.on('tap', (evt) => {
-      evt.stopPropagation()
-    })
-    this.container.addChildAt(backdrop, 0)
-    tween({
-      from: 0,
-      to: 0.5,
-      duration: 300,
-    })
-    .start((v) => backdrop.alpha = v)
+      backdrop.interactive = true
+      backdrop.on('tap', (evt) => {
+        evt.stopPropagation()
+      })
+
+      this.container.addChildAt(backdrop, 0)
+      tween({
+        from: 0,
+        to: 0.5,
+        duration: 300,
+      })
+      .start((v) => backdrop.alpha = v)
+      this.backdrop = backdrop
+    }
+
+    if (backdropType !== 'static') {
+      this.backdrop.on('tap', (evt) => {
+        this.hide(node)
+      })
+    }
   }
 
   hideBackdrop() {

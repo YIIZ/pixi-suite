@@ -6,18 +6,23 @@ import { preload } from '../managers/loader'
 const { Sprite, Text, Point, Texture: { WHITE } } = PIXI
 
 const loading = preload(require('../../assets/loading.png'))
+const warning = preload(require('../../assets/warning.png'))
 const center = new Point(0.5, 0.5)
 
-export class LoadingToast extends Node {
+export class WarningToast extends Node {
+  icon = warning
   initChildren() {
-    const style = { fontSize: 28, fill: '#ffffff' }
+    const style = { fontSize: 24, fill: '#ffffff' }
     return (<>
       <Sprite name='bg' texture={new BG()} />
-      <Sprite name='icon' x={150} y={this.title ? 80 : 100} anchor={center} texture={loading.texture} />
+      <Sprite name='icon' x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
       <Text x={150} y={160} anchor={center} text={this.title} style={style} />
     </>)
   }
+}
 
+export class LoadingToast extends WarningToast {
+  icon = loading
   onAdd() {
     const icon = this.findChild('icon')
     this.action = tween({
@@ -51,5 +56,6 @@ class BG {
 }
 
 export default {
-  LoadingToast,
+  warning: WarningToast,
+  loading: LoadingToast,
 }
