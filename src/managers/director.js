@@ -13,6 +13,7 @@ class Director extends EventEmitter {
     this.devicePixelRatio = devicePixelRatio
     app.stage.isRoot = true
 
+    this.detectVisibility()
     this.updateView()
     window.addEventListener('resize', this.handleResize)
   }
@@ -78,6 +79,26 @@ class Director extends EventEmitter {
      app.renderer.resize(app.width, app.height)
     this.viewAdapter.updateView(this)
     this.emit('resize')
+  }
+
+  detectVisibility() {
+    let hiddenField = 'hidden'
+    let visibilityEvent
+
+    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+      hiddenField = 'hidden'
+      visibilityEvent = 'visibilitychange'
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      hiddenField = 'webkitHidden'
+      visibilityEvent = 'webkitvisibilitychange'
+    }
+
+    this.hidden = document[hiddenField]
+    const handleVisibilityChange = () => {
+      this.hidden = document[hiddenField]
+      this.emit('visibilitychange', this.hidden)
+    }
+    document.addEventListener(visibilityEvent, handleVisibilityChange, false)
   }
 }
 
