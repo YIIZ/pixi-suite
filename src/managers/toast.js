@@ -8,12 +8,13 @@ import toasts from '../containers/Toast'
 
 class ToastManager {
   backdropCount = 0
+  offset = { x: 0, y: 0 }
 
   show({ type, title, duration, backdrop }) {
     if (!this.container) this.initContainer()
     const Toast = toasts[type]
-    const { width, height } = director.visibleRect
-    const node = <Toast x={width/2} y={height/2} title={title} backdrop={true} />
+    const { x, y, width, height } = director.visibleRect
+    const node = <Toast x={x + width/2 + this.offset.x} y={y + height/2 + this.offset.y} title={title} backdrop={true} />
     node.pivot = new Point(node.width / 2, node.height / 2)
     if (backdrop) {
       this.showBackdrop(node, backdrop)
