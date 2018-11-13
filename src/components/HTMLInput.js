@@ -18,6 +18,7 @@ export default class HTMLInput extends Base {
     this.elem.setAttribute('type', type)
     this.elem.setAttribute('class', className)
     this.elem.setAttribute('placeholder', placeholder)
+    this.elem.addEventListener('input', this.handleInput)
     this.elem.addEventListener('change', this.handleChange)
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
@@ -34,6 +35,12 @@ export default class HTMLInput extends Base {
   handleChange = (evt) => {
     if (this.node.onChange) {
       this.node.onChange(evt)
+    }
+  }
+
+  handleInput = (evt) => {
+    if (this.node.onInput) {
+      this.node.onInput(evt)
     }
   }
 
