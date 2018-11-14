@@ -78,7 +78,7 @@ export default class VideoPlayer extends Base {
 
   play() {
     if (!this.video.src) return
-    if (!this.isStarted && !this.inCheck) this.checkStart()
+    if (!this.started && !this.inCheck) this.checkStart()
     this.video.play()
   }
 
@@ -93,7 +93,7 @@ export default class VideoPlayer extends Base {
   checkStart = () => {
     this.inCheck = true
     if (this.video.currentTime > 0) {
-      this.isStarted = true
+      this.started = true
       this.updateTransform()
       this.node.emit('videostart')
       return
