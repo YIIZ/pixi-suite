@@ -1,10 +1,10 @@
 import Base from './Base'
 
 export default class Layout extends Base {
-  top = 15
-  right = 15
-  bottom = 15
-  left = 15
+  top = 0
+  right = 0
+  bottom = 0
+  left = 0
 
   spaceX = 15
   spaceY = 15

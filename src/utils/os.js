@@ -9,7 +9,7 @@ function detectIOS() {
 }
 
 function detectWechat() {
-  return /MicroMessenger/i.test('micromessenger')
+  return /MicroMessenger/i.test(ua)
 }
 
 function detectQQ() {
@@ -28,5 +28,5 @@ export default {
   isQQ,
   isWechat,
   isAndroid,
-  isQQ,
+  isIOS,
 }

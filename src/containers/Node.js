@@ -93,12 +93,7 @@ export default class Node extends PIXI.Container {
       c.onDisable()
     })
     this.components.length = 0
-    this.childrenHandleRemove()
     this.onRemove()
-  }
-
-  childrenHandleRemove() {
-
   }
 
   onRemove() {}

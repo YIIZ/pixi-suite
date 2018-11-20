@@ -22,7 +22,7 @@ export default class TouchScale extends Base {
 
   handleTouchStart(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches.length > 1
+    const isMulti = touches && (touches.length > 1)
     this.isDoing = isMulti
     if (!isMulti) return
 
@@ -42,7 +42,7 @@ export default class TouchScale extends Base {
 
   handleTouchMove(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches.length > 1
+    const isMulti = touches && (touches.length > 1)
     if (!isMulti) return
 
     const [t0, t1] = touches

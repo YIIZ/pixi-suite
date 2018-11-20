@@ -35,6 +35,7 @@ export default class Crop extends Base {
     if(this.action) this.action.stop()
 
     const { touches } = evt.data.originalEvent
+    if (!touches) return
     const [t0, t1 = {}] = touches
     const isMulti = touches.length > 1
 
@@ -67,6 +68,7 @@ export default class Crop extends Base {
 
   handleMove(evt) {
     const { touches } = evt.data.originalEvent
+    if (!touches) return
     const [t0, t1] = touches
     const isMulti = touches.length > 1
     const { target } = this
@@ -82,7 +84,7 @@ export default class Crop extends Base {
 
   handleScale(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches.length > 1
+    const isMulti = touches && (touches.length > 1)
     if (!isMulti) return
 
     const { target } = this
@@ -100,7 +102,7 @@ export default class Crop extends Base {
 
   handleRotate(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches.length > 1
+    const isMulti = touches && (touches.length > 1)
     if (!isMulti) return
 
     const { target } = this
