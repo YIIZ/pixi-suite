@@ -6,10 +6,9 @@ export default class ImageEditorCtrl extends Base {
   body = null
   container = null
   editType = 'move'
-  padding = 50
+  padding = 25
 
   onEnable() {
-    window.editor = this
     this.node.visible = false
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
@@ -69,13 +68,16 @@ export default class ImageEditorCtrl extends Base {
     this.updateBorder()
   }
 
+  // FIXME 镜像后，边界不对，缩放到很小，位置也不对
   updateBorder() {
     const { current } = this
     const rect = current.getLocalBounds()
     const height = current.scale.y * rect.height
     const width = current.scale.x * rect.width;
-    this.border.width = Math.abs(width + this.padding)
-    this.border.height = Math.abs(height + this.padding)
+    this.border.x = -this.padding
+    this.border.y = -this.padding
+    this.border.width = Math.abs(width) + this.padding * 2
+    this.border.height = Math.abs(height) + this.padding * 2
   }
 
   editItem(item) {
