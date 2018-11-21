@@ -31,7 +31,6 @@ export default class Crop extends Base {
 
   // FIXME 多指触控会有两次start, end
   handleTouchStart(evt) {
-    console.log('start')
     if(this.action) this.action.stop()
 
     const { touches } = evt.data.originalEvent
@@ -147,7 +146,6 @@ export default class Crop extends Base {
     }
     target.cropValue = cropValue
 
-    console.log(a / Math.PI, rotation/Math.PI, cropValue.rotation / Math.PI)
     this.action = tween({ from: { x, y, rotation, scale: target.scale.x }, to: cropValue, duration: 300 })
     .start(v => {
       target.scale.set(v.scale)
