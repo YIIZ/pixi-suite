@@ -6,6 +6,7 @@ import * as PIXI from 'pixi.js'
 
 // https://gist.github.com/runeb/c11f864cd7ead969a5f0
 const DEGREES = {
+  0: 0,
   1: 0,
   3: 180,
   6: 90,

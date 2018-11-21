@@ -13,6 +13,7 @@ export default class ScrollBarCtrl extends Base {
   }
 
   onDisable() {
+    if (this.action) this.action.stop()
   }
 
   updateParams({ visibleLen, len, setter, getter }) {
