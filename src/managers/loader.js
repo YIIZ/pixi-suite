@@ -2,11 +2,11 @@ import * as PIXI from 'pixi.js'
 import { Deferred } from '../utils/obj'
 
 const loader = PIXI.loader
-export const preload = (key) => {
+export const preload = (key, url) => {
   if (loader.resources[key]) {
     return loader.resources[key]
   }
-  loader.add(key)
+  loader.add(key, url)
   return loader.resources[key]
 }
 
