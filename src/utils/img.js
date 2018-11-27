@@ -20,7 +20,7 @@ function getStringFromDB(buffer, start, length) {
     return outstr
 }
 
-const debug = true
+const debug = process.env.NODE_ENV === 'development'
 
 export const imageDegree = async (file) => {
   const fileReader = new FileReader
@@ -38,7 +38,7 @@ export const imageDegree = async (file) => {
   let maxBytes = scanner.byteLength
   while (idx < maxBytes - 2) {
     if (scanner.getUint8(idx) != 0xFF) {
-      if (debug) console.log('Not a valid marker at idx ' + idx + ', found: ' + dataView.getUint8(idx))
+      if (debug) console.log('Not a valid marker at idx ' + idx + ', found: ' + scanner.getUint8(idx))
       return DEGREES[0] // not a valid marker, something is wrong
     }
     let marker = scanner.getUint8(idx + 1)
