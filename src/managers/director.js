@@ -32,6 +32,7 @@ class Director extends EventEmitter {
   async loadScene(name, transfer) {
     const { stage } = this.app
     const lastScene = this.scene
+    this.lastScene = lastScene
 
     const Scene = this.scenes[name]
     this.scene = new Scene(this)

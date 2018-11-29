@@ -18,6 +18,17 @@ const resolveLoadPromise = (res, next) => {
   next()
 }
 
+export const preloadAll = (ctx, filter) => {
+  return ctx.keys().map((key) => {
+    if (filter && !filter.test(key)) {
+      ctx(key)
+      return
+    }
+    return preload(ctx(key))
+  })
+}
+
+
 lazyLoader.use(resolveLoadPromise)
 export const load = (key) => {
   let item = loader.resources[key]
@@ -37,6 +48,7 @@ export const load = (key) => {
 const run = loader.load
 loader.run = run
 loader.preload = preload
+loader.preloadAll = preloadAll
 loader.load = load
 
 export default loader

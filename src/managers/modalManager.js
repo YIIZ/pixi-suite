@@ -9,6 +9,7 @@ class ModalManager {
   modals = []
   background = null
   backgroundCount = 0
+  backgroundAlpha = 0.6
   // !! scale alpha will be reset
   show(node, option = {}) {
     if (!this.container) this.initContainer()
@@ -105,7 +106,7 @@ class ModalManager {
 
     tween({
       from: 0,
-      to: 0.5,
+      to: this.backgroundAlpha,
       duration: 300,
     })
     .start((v) => background.alpha = v)
