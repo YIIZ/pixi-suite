@@ -8,9 +8,34 @@ export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
 
+  static initElement() {
+    const video = document.createElement('video')
+    video.className = 'IIV'
+    video.style.position = 'absolute'
+    video.style.top = '0'
+    video.style.left = '0'
+    video.style.width = '1px'
+    video.style.height = '1px'
+    video.className = 'video'
+    video.setAttribute('preload', 'auto')
+    video.setAttribute('webkit-playsinline', '')
+    video.setAttribute('playsinline', '')
+
+    const unlock = () => {
+      const { paused } = video
+      video.play()
+      if (paused) video.pause()
+      window.removeEventListener('touchend', unlock)
+    }
+    window.addEventListener('touchend', unlock)
+
+    director.container.appendChild(video)
+    return video
+  }
   static preload(src) {
-    this.initElement()
-    this.video.src = src
+    const video = VideoPlayer.initElement()
+    video.src = src
+    VideoPlayer.video = video
   }
 
   onEnable() {
@@ -35,29 +60,8 @@ export default class VideoPlayer extends Base {
   }
 
   initElement() {
-    if (this.video) return
-    const video = document.createElement('video')
-    video.className = 'IIV'
-    video.style.position = 'absolute'
-    video.style.top = '0'
-    video.style.left = '0'
-    video.style.width = '1px'
-    video.style.height = '1px'
-    video.className = 'video'
-    video.setAttribute('preload', 'auto')
-    video.setAttribute('webkit-playsinline', '')
-    video.setAttribute('playsinline', '')
-
-    const unlock = () => {
-      const { paused } = video
-      video.play()
-      if (paused) video.pause()
-      window.removeEventListener('touchend', unlock)
-    }
-    window.addEventListener('touchend', unlock)
-
-    this.video = video
-    director.container.appendChild(video)
+    this.video = VideoPlayer.initElement()
+    return this.video
   }
 
   removeElement() {
