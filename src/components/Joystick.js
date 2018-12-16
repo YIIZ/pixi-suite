@@ -5,6 +5,7 @@ import Base from './Base'
 import * as v2 from '../utils/v2'
 
 const ticker = PIXI.ticker.shared
+const pointZero = { x: 0, y: 0 }
 
 export default class Joystick extends Base {
   onEnable() {
@@ -12,7 +13,8 @@ export default class Joystick extends Base {
     this.pane = this.node.findChild('pane')
     this.pane.interactive = true
     // FIXME 范围的计算
-    this.r = this.pane.width / 2 - this.point.width /2
+    //this.r = this.pane.width / 2 - this.point.width / 4
+    this.r = this.pane.width / 2 - this.point.width / 2
     this.pane.on('touchstart', this.handleDown, this)
   }
 
@@ -37,22 +39,27 @@ export default class Joystick extends Base {
   handleControl(evt) {
     if (!this.isControling) return
     const pos = evt.data.getLocalPosition(this.node)
-    if (Math.abs(pos.x) > this.r) {
-      pos.x = Math.sign(pos.x) * this.r
+
+    const dis = v2.distance(pos, pointZero)
+    if (dis > this.r) {
+      const rate = this.r / dis
+      this.point.position.set(pos.x * rate, pos.y * rate)
+      this.point.dis = this.r
+      return
     }
-    if (Math.abs(pos.y) > this.r) {
-      pos.y = Math.sign(pos.y) * this.r
-    }
+
+    this.point.dis = dis
     this.point.position.copy(pos)
   }
 
   postControl() {
-    if (!this.isControling || !this.node.onControl) return
-    this.node.onControl({ x: this.point.x / this.r, y: this.point.y / this.r })
+    if (!this.isControling || !this.node.onControl || !this.point.dis) return
+    this.node.onControl({ x: this.point.x / this.r, y: this.point.y / this.r, dis: this.point.dis / this.r })
   }
 
   handleCancel(evt) {
     this.isControling = false
+    this.point.dis = null
     const from = { x: this.point.x, y: this.point.y }
     const to = { x: 0, y: 0 }
     this.backAction = tween({ from, to, duration: 400 })
