@@ -39,22 +39,22 @@ export default class Joystick extends Base {
   handleControl(evt) {
     if (!this.isControling) return
     const pos = evt.data.getLocalPosition(this.node)
+    const r = this.r
 
-    const dis = v2.distance(pos, pointZero)
-    if (dis > this.r) {
-      const rate = this.r / dis
-      this.point.position.set(pos.x * rate, pos.y * rate)
-      this.point.dis = this.r
-      return
+    let dis = v2.distance(pos, pointZero)
+    if (dis > r) {
+      const rate = r / dis
+      pos.set(pos.x * rate, pos.y * rate)
+      dis = r
     }
 
-    this.point.dis = dis
     this.point.position.copy(pos)
+    this.pos = { x: pos.x / r, y: pos.y / r, dis: dis / r }
   }
 
   postControl() {
-    if (!this.isControling || !this.node.onControl || !this.point.dis) return
-    this.node.onControl({ x: this.point.x / this.r, y: this.point.y / this.r, dis: this.point.dis / this.r })
+    if (!this.isControling || !this.node.onControl || !this.pos) return
+    this.node.onControl(this.pos)
   }
 
   handleCancel(evt) {
