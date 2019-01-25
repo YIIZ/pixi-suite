@@ -20,6 +20,7 @@ class ToastManager {
       this.showBackdrop(node, backdrop)
     }
     this.container.addChild(node)
+    node.deferred = new Deferred()
     if (duration) {
       delay(duration).start({ complete: () => this.hide(node) })
     }
@@ -30,6 +31,7 @@ class ToastManager {
     const removed = this.container.removeChild(node)
     if (!removed) return
     if (node.backdrop) this.hideBackdrop()
+    if (node.deferred) node.deferred.resolve()
     node.destroy({ children: true })
   }
 
