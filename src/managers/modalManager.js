@@ -5,7 +5,7 @@ import Node from '../containers/Node'
 import { tween, easing } from 'popmotion'
 
 class ModalManager {
-  animationTime = 300
+  static animationTime = 300
   modals = []
   background = null
   backgroundCount = 0
@@ -13,65 +13,49 @@ class ModalManager {
   // !! scale alpha will be reset
   show(node, option = {}) {
     if (!this.container) this.initContainer()
-    const { backdrop = true } = option
+    const { backdrop = true, animate = 'scaleInUpOut' } = option
     if (backdrop) this.showBackground(node, backdrop)
 
     this.modals.push(node)
-    node.scale.set(0)
-    node.alpha = 0
     this.container.addChild(node)
 
     node.emit('modal.show')
-    node.modalAction = tween({
-      from: 0,
-      to: 1,
-      duration: this.animationTime,
-    })
-    .start({
-      update: v => {
-        node.scale.set(v)
-        node.alpha = v
-      },
-      complete: v => {
-        node.modalAction = null
-        node.emit('modal.shown')
-      }
-    })
+    node.animate = typeof animate === 'string' ? animateTypes[animate] : animate
+
+    if (node.animate && node.animate.show) {
+      node.animate.show(node)
+    }
 
     return node
   }
 
-  hide(node) {
+  hide(node, option = {}) {
     const index = this.modals.findIndex(v => v === node)
     if (index <0) return
     if (node.modalAction) return
 
+    const { animate } = option
     node.emit('modal.hide')
-    node.modalAction = tween({
-      from: { y: node.y, alpha: node.alpha },
-      to: { y: node.y - 200, alpha: 0 },
-      duration: this.animationTime,
-      ease: easing.easeOut,
-    })
-    .start({
-      update: v => {
-        node.y = v.y
-        node.alpha = v.alpha
-      },
-      complete: v => {
-        const index = this.modals.findIndex(v => v === node)
-        if (index < 0) {
-          throw new Error('has removed')
-        }
-        this.modals.splice(index, 1)
 
-        node.modalAction = null
-        node.parent.removeChild(node)
-        this.hideBackground()
-        node.emit('modal.hidden')
-        node.destroy({ children: true })
+    const handleComplete = () => {
+      const index = this.modals.findIndex(v => v === node)
+      if (index < 0) {
+        throw new Error('has removed')
       }
-    })
+      this.modals.splice(index, 1)
+
+      node.modalAction = null
+      node.parent.removeChild(node)
+      this.hideBackground()
+      node.emit('modal.hidden')
+      node.destroy({ children: true })
+    }
+
+    if (node.animate && node.animate.hide) {
+      node.animate.hide(node, handleComplete)
+    } else {
+      handleComplete()
+    }
   }
 
   initContainer() {
@@ -136,5 +120,82 @@ class ModalManager {
 
   }
 }
+
+const animateTypes = {
+  bottomUpDown: {
+    show: (node) => {
+      const { height, y } = node
+      node.alpha = 0
+      node.y = y + height
+      node.modalAction = tween({
+        from: 0,
+        to: 1,
+        duration: ModalManager.animationTime,
+      })
+      .start({
+        update: v => {
+          node.y = y + (1 - v) * height
+          node.alpha = v
+        },
+        complete: v => {
+          node.modalAction = null
+          node.emit('modal.shown')
+        }
+      })
+    },
+    hide: (node, complete) => {
+      node.modalAction = tween({
+        from: { y: node.y, alpha: node.alpha },
+        to: { y: node.y + 200, alpha: 0 },
+        duration: ModalManager.animationTime,
+        ease: easing.easeOut,
+      })
+      .start({
+        update: v => {
+          node.y = v.y
+          node.alpha = v.alpha
+        },
+        complete,
+      })
+    }
+  },
+  scaleInUpOut: {
+    show: (node) => {
+      node.scale.set(0)
+      node.alpha = 0
+      node.modalAction = tween({
+        from: 0,
+        to: 1,
+        duration: ModalManager.animationTime,
+      })
+      .start({
+        update: v => {
+          node.scale.set(v)
+          node.alpha = v
+        },
+        complete: v => {
+          node.modalAction = null
+          node.emit('modal.shown')
+        }
+      })
+    },
+    hide: (node, complete) => {
+      node.modalAction = tween({
+        from: { y: node.y, alpha: node.alpha },
+        to: { y: node.y - 200, alpha: 0 },
+        duration: ModalManager.animationTime,
+        ease: easing.easeOut,
+      })
+      .start({
+        update: v => {
+          node.y = v.y
+          node.alpha = v.alpha
+        },
+        complete,
+      })
+    }
+  },
+}
+
 
 export default new ModalManager()
