@@ -5,7 +5,7 @@ import { updateDOMTransform } from '../utils/dom'
 
 export default class Capture extends Base {
   positionTarget = undefined
-  scale = 2
+  scale = 1
 
   onEnable() {
     this.initCaptureElement()
@@ -33,7 +33,7 @@ export default class Capture extends Base {
     renderer.render(node, texture)
     node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
 
-    img.src = renderer.extract.canvas(texture).toDataURL('image/jpeg')
+    img.src = renderer.extract.canvas(texture).toDataURL(this.format || 'image/jpeg')
 
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
