@@ -1,6 +1,6 @@
 import Base from './Base'
 import { tween, physics } from 'popmotion'
-
+import { Deferred } from '../utils/obj.js'
 
 export default class ScrollBarCtrl extends Base {
   bg = null
@@ -72,6 +72,8 @@ export default class ScrollBarCtrl extends Base {
     this.start = v
     this.last = v
     this.lastTime = time
+
+    this.node.emit('scrollstart')
   }
 
   handleMove(v, time) {
@@ -90,50 +92,61 @@ export default class ScrollBarCtrl extends Base {
     }
   }
 
-  handleEnd(v, time) {
+  async handleEnd(v, time) {
     if (!this.scrollable) return
     this.orignOffset = 0
     this.start = 0
     this.last = 0
     this.lastTime = 0
 
-    this.handleOverstep()
-    this.handleMomentum()
+    await this.handleMomentum()
+    await this.handleOverstep()
+
+    this.node.emit('scrollend')
   }
 
   // 弹性
   handleOverstep() {
     const ov = this.overstep
     if (ov !== 0) {
-      this.autoScroll(ov > 0 ? 0 : this.visibleLen - this.len)
+      return this.autoScroll(ov > 0 ? 0 : this.visibleLen - this.len)
     }
   }
 
   // 冲力
   handleMomentum() {
     if (Math.abs(this.velocity) < 0.3) return
+    const deferred = new Deferred
 
-    const v = this.velocity
+    const velocity = this.velocity * 10
     this.velocity = 0
-    this.action = physics({
-      from: this.offset,
-      velocity: v * 2000,
-      friction: 0.6
+    this.action = tween({
+      from: velocity,
+      to: 0,
+      duration: Math.abs(velocity) * 20,
     })
+    .pipe(v => this.offset + v)
     .while(v => v < this.maxOffset && v > this.minOffset)
     .start({
       update: this.setter,
-      complete: () => this.handleOverstep(),
+      complete: deferred.resolve,
     })
+
+    return deferred.promise
   }
 
   autoScroll(to) {
+    const deferred = new Deferred
+
+    const dis = this.offset - to
     this.action = tween({
       from: this.offset,
       to,
-      duration: 500
+      duration: Math.abs(dis) * 10
     })
-    .start(this.setter)
+    .start({ update: this.setter, complete: deferred.resolve })
+
+    return deferred.promise
   }
 
   scrollTo(percent, isAuto) {
