@@ -2,13 +2,14 @@ import Base from './Base'
 import { Point } from 'pixi.js'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
-
+import { isQQ, isIOS } from '../utils/os'
 
 export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
 
   static initElement() {
+    if (VideoPlayer.$video) return VideoPlayer.$video
     const video = document.createElement('video')
     video.className = 'IIV'
     video.style.position = 'absolute'
@@ -20,6 +21,7 @@ export default class VideoPlayer extends Base {
     video.setAttribute('preload', 'auto')
     video.setAttribute('webkit-playsinline', '')
     video.setAttribute('playsinline', '')
+    VideoPlayer.$video = video
 
     const unlock = () => {
       const { paused } = video
@@ -35,14 +37,17 @@ export default class VideoPlayer extends Base {
   static preload(src) {
     const video = VideoPlayer.initElement()
     video.src = src
+    video.videoSrc = src
     VideoPlayer.video = video
   }
 
   onEnable() {
     this.initElement()
-    this.video.src = this.node.videoSrc
+    if (this.video.orginSrc !== this.node.videoSrc) {
+      this.video.src = this.node.videoSrc
+    }
     this.video.addEventListener('ended', this.handleEnded)
-    if (this.node.x5) {
+    if (this.node.x5 || (isQQ && isIOS)) {
       this.video.setAttribute('x5-playsinline', '')
     }
     director.on('resize', this.updateTransform, this)
