@@ -1,12 +1,13 @@
 import * as PIXI from 'pixi.js'
 import { tween, easing } from 'popmotion'
+import loader from '@teambun/loader'
+
 import Node from './Node'
-import { preload } from '../managers/loader'
 
 const { Sprite, Text, Point, Texture: { WHITE } } = PIXI
 
-const loading = preload(require('../../assets/loading.png'))
-const warning = preload(require('../../assets/warning.png'))
+const loading = loader.add(require('../../assets/loading.png'))
+const warning = loader.add(require('../../assets/warning.png'))
 const center = new Point(0.5, 0.5)
 const style = { fontSize: 24, fill: '#ffffff' }
 

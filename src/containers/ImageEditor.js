@@ -1,19 +1,20 @@
 import * as PIXI from 'pixi.js'
+import loader from '@teambun/loader'
+
 import Node from './Node'
 import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, EditorFlip } from '../components/ImageEditorCtrl'
 import TouchScale from '../components/TouchScale'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
-import { preload } from '../managers/loader'
 
 const { Point, Sprite, mesh: { NineSlicePlane } } = PIXI
 
-const sRemove = preload(require('../../assets/remove.png'))
-const sRotate = preload(require('../../assets/rotate.png'))
-const sScale = preload(require('../../assets/scale.png'))
-const sFlip = preload(require('../../assets/flip.png'))
-const sCircle = preload(require('../../assets/circle.png'))
-const sBoard = preload(require('../../assets/border.png'))
+const sRemove = loader.add(require('../../assets/remove.png'))
+const sRotate = loader.add(require('../../assets/rotate.png'))
+const sScale = loader.add(require('../../assets/scale.png'))
+const sFlip = loader.add(require('../../assets/flip.png'))
+const sCircle = loader.add(require('../../assets/circle.png'))
+const sBoard = loader.add(require('../../assets/border.png'))
 
 export default class Editor extends Node {
   circleTint = 0xffffff

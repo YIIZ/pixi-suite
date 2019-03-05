@@ -41,7 +41,7 @@ export default class Layout extends Base {
       cursor.x += width + spaceX
 
       xCursor = c.x + width
-      if (xCursor > w || index === children.length - 1) {
+      if (xCursor + spaceX >= w || index === children.length - 1) {
         cursor.set(left, yCursor + spaceY)
         breaks.push({ from: newLineIndex, to: index + 1, left, right: xCursor })
         newLineIndex = index + 1

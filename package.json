@@ -26,6 +26,7 @@
   },
   "peerDependencies": {
     "@babel/runtime": "latest",
+    "@teambun/loader": "latest",
     "eventemitter3": "latest",
     "pixi.js": "^4.8.2",
     "popmotion": "latest"
