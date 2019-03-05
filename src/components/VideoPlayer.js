@@ -65,6 +65,7 @@ export default class VideoPlayer extends Base {
   }
 
   initElement() {
+    console.log(this)
     this.video = VideoPlayer.initElement()
     return this.video
   }
@@ -72,6 +73,7 @@ export default class VideoPlayer extends Base {
   removeElement() {
     if (!this.video) return
     director.container.removeChild(this.video)
+    VideoPlayer.$video = null
     this.video = null
   }
 

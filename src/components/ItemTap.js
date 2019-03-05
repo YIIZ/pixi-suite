@@ -2,9 +2,6 @@ import { Point } from 'pixi.js'
 import Base from './Base'
 import director from '../managers/director'
 
-const { renderer } = director.app
-const { interaction } = renderer.plugins
-
 export default class ItemTap extends Base {
   startPoint = new Point(0, 0)
   handleItemTap = () => null
@@ -46,6 +43,9 @@ export default class ItemTap extends Base {
   }
 
   handleTap(evt) {
+    const { renderer } = director.app
+    const { interaction } = renderer.plugins
+
     const { children } = this.node
     for (let i = children.length - 1; i >= 0; i--) {
       children[i].interactive = true
