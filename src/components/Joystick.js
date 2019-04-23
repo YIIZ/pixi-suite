@@ -1,11 +1,15 @@
 import * as PIXI from 'pixi.js'
 import { tween } from 'popmotion'
+import director from '../managers/director'
 
 import Base from './Base'
 import * as v2 from '../utils/v2'
 
 const ticker = PIXI.ticker.shared
 const pointZero = { x: 0, y: 0 }
+
+const { renderer } = director.app
+const { interaction } = renderer.plugins
 
 export default class Joystick extends Base {
   onEnable() {
@@ -25,20 +29,35 @@ export default class Joystick extends Base {
     this.point = null
   }
 
-  handleDown() {
+  handleDown(evt) {
     if (this.backAction) this.backAction.stop()
     this.isControling = true
+
+    this.identifier = evt.data.identifier
+    this.localPos = new PIXI.Point()
+    this.globalPos = new PIXI.Point()
+    this.pos = {}
 
     ticker.add(this.postControl, this)
     this.pane.on('touchmove', this.handleControl, this)
     this.pane.on('touchcancel', this.handleCancel, this)
     this.pane.on('touchendoutside', this.handleCancel, this)
     this.pane.on('touchend', this.handleCancel, this)
+
+    this.handleControl(evt)
   }
 
   handleControl(evt) {
+    const touches = evt.data.originalEvent.touches
+
+    this.globalPos.copy(evt.data.global)
+    if (this.identifier !== evt.data.identifier) {
+      const touch = touches.find(t => t.identifier === identifier)
+      interaction.mapPositionToPoint(this.globalPos, touch.clientX, touch.clientY)
+    }
+
     if (!this.isControling) return
-    const pos = evt.data.getLocalPosition(this.node)
+    const pos = evt.data.getLocalPosition(this.node, this.localPos, this.globalPos)
     const r = this.r
 
     let dis = v2.distance(pos, pointZero)
@@ -49,7 +68,9 @@ export default class Joystick extends Base {
     }
 
     this.point.position.copy(pos)
-    this.pos = { x: pos.x / r, y: pos.y / r, dis: dis / r }
+    this.pos.x =  pos.x / r
+    this.pos.y = pos.y / r
+    this.pos.dis = dis / r
   }
 
   postControl() {
