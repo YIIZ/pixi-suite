@@ -48,3 +48,5 @@ export default class Widget extends Base {
     }
   }
 }
+
+Object.assign(Widget, AlignFlag, AlignMode)
