@@ -11,6 +11,8 @@ const bar = loader.add(require('../../assets/scroll_v_bar.png'))
 const NineSlicePlane = PIXI.mesh.NineSlicePlane
 
 export default class ScrollBar extends Node {
+  scrollPart = 'bar'
+
   initChildren() {
     return (<>
       <NineSlicePlane name='bg' args={[bg.texture, 3, 3, 6, 6]} >

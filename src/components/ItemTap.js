@@ -26,8 +26,8 @@ export default class ItemTap extends Base {
   handleTouchStart(evt) {
     this.startPoint.copy(evt.data.global)
 
-    this.node.once('touchmove', this.handleTouchMove, this)
-    this.node.once('touchend', this.handleTouchEnd, this)
+    this.node.on('touchmove', this.handleTouchMove, this)
+    this.node.on('touchend', this.handleTouchEnd, this)
   }
 
   handleTouchMove(evt) {
@@ -37,15 +37,16 @@ export default class ItemTap extends Base {
   }
 
   handleTouchEnd(evt) {
+    this.handleTap(evt)
     this.node.off('touchmove', this.handleTouchMove)
     this.node.off('touchend', this.handleTouchEnd)
-    this.handleTap(evt)
   }
 
   handleTap(evt) {
     const { renderer } = director.app
     const { interaction } = renderer.plugins
 
+    // FIXME when add pixi-layers
     const { children } = this.node
     for (let i = children.length - 1; i >= 0; i--) {
       children[i].interactive = true

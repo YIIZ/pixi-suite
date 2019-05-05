@@ -7,10 +7,12 @@ import Widget from '../components/Widget'
 import Layout from '../components/Layout'
 
 export default class ScrollView extends Node {
-  initChildren() {
+  initChildren(children) {
     return (<>
       <Node name='view' >
-        <Node name='content' components={[Layout]} />
+        <Node name='content' components={[Layout]} >
+          {children}
+        </Node>
       </Node>
       <ScrollBar name='bar' />
     </>)
@@ -23,5 +25,4 @@ export default class ScrollView extends Node {
     viewCtrl.content = viewCtrl.view.getChildByName('content')
     viewCtrl.scroller = bar.getComponent(ScrollBarCtrl)
   }
-
 }

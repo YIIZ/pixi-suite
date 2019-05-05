@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import Base from './Base'
 import Layout from './Layout'
+import ScrollBarCtrl from './ScrollBarCtrl.js'
 
 const { Texture: { WHITE } } = PIXI
 
@@ -10,12 +11,20 @@ export default class ScrollViewCtrl extends Base {
   direction = 'vertical' // horizontal
 
   onEnable() {
+    if (!this.view) this.view = this.node.children.find(n => n.scrollPart === 'view')
+    if (!this.scroller) this.scroller = this.node.children.find(n => n.scrollPart === 'bar').getComponent(ScrollBarCtrl)
+    if (!this.content) this.content = this.view.children.find(n => n.scrollPart === 'content')
+
     this.view.interactive = true
     this.view.on('touchstart', this.handleTouchStart, this)
 
     const m = new PIXI.Sprite(WHITE)
     this.view.mask = m
-    this.view.addChild(m)
+    this.view.addChildAt(m, 0)
+
+    const { viewSize, contentSize } = this.node
+    if (contentSize) this.setContentSize(contentSize.w, contentSize.h)
+    if (viewSize) this.setSize(viewSize.w, viewSize.h)
   }
 
   onDisable() {
@@ -26,6 +35,7 @@ export default class ScrollViewCtrl extends Base {
 
   setContentSize(w, h) {
     const layout = this.content.getComponent(Layout)
+    if (!layout) return
     layout.width = w
     layout.height = h
     layout.update()
