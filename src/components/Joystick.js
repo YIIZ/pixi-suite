@@ -1,11 +1,11 @@
-import * as PIXI from 'pixi.js'
+import { Point, Ticker } from 'pixi.js'
 import { tween } from 'popmotion'
 import director from '../managers/director'
 
 import Base from './Base'
 import * as v2 from '../utils/v2'
 
-const ticker = PIXI.ticker.shared
+const ticker = Ticker.shared
 const pointZero = { x: 0, y: 0 }
 
 const { renderer } = director.app
@@ -34,8 +34,8 @@ export default class Joystick extends Base {
     this.isControling = true
 
     this.identifier = evt.data.identifier
-    this.localPos = new PIXI.Point()
-    this.globalPos = new PIXI.Point()
+    this.localPos = new Point()
+    this.globalPos = new Point()
     this.pos = {}
 
     ticker.add(this.postControl, this)

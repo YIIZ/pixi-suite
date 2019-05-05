@@ -59,7 +59,7 @@ class BG {
     g.beginFill(0x000000, 0.7)
     g.drawRoundedRect(0, 0, width, height, 10)
     g.endFill()
-    return g.generateCanvasTexture()
+    return g
   }
 }
 

@@ -24,7 +24,7 @@ export default class ItemTap extends Base {
   }
 
   handleTouchStart(evt) {
-    this.startPoint.copy(evt.data.global)
+    this.startPoint.copyFrom(evt.data.global)
 
     this.node.on('touchmove', this.handleTouchMove, this)
     this.node.on('touchend', this.handleTouchEnd, this)
@@ -52,7 +52,7 @@ export default class ItemTap extends Base {
       children[i].interactive = true
       const obj = interaction.hitTest(evt.data.global, children[i])
       if (obj) {
-        this.handleItemTap(evt, obj)
+        this.handleItemTap(evt, obj, i)
         return
       }
     }

@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import { Point, Sprite, NineSlicePlane } from 'pixi.js'
 import loader from '@teambun/loader'
 
 import Node from './Node'
@@ -6,8 +6,6 @@ import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, Ed
 import TouchScale from '../components/TouchScale'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
-
-const { Point, Sprite, mesh: { NineSlicePlane } } = PIXI
 
 const sRemove = loader.add(require('../../assets/remove.png'))
 const sRotate = loader.add(require('../../assets/rotate.png'))

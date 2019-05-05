@@ -91,7 +91,7 @@ export default class ImageEditorCtrl extends Base {
 
     node.visible = true
     node.rotation = item.rotation
-    node.position.copy(item.position)
+    node.position.copyFrom(item.position)
 
     const rect = item.getLocalBounds()
     const height = item.scale.y * rect.height
@@ -99,7 +99,7 @@ export default class ImageEditorCtrl extends Base {
     item.rotation = 0
     item.pivot.set(rect.width / 2, rect.height / 2)
     item.position.set(Math.abs(width) / 2, height / 2)
-    node.pivot.copy(item.position)
+    node.pivot.copyFrom(item.position)
 
     this.updateBorder()
   }
@@ -110,7 +110,7 @@ export default class ImageEditorCtrl extends Base {
     if (!item) return
 
     item.rotation = node.rotation
-    item.position.copy(node.position)
+    item.position.copyFrom(node.position)
 
     container.addChild(item)
     node.visible = false
@@ -156,7 +156,7 @@ export class EditorRotate extends EditorCmd {
     super.handleTouchStart(evt)
     const { current, body } = this.editor
     const center = this.editor.body.toGlobal(current.position)
-    this.center.copy(center)
+    this.center.copyFrom(center)
 
     const p = evt.data.global
     this.startVec.set(p.x - center.x, p.y - center.y)
@@ -181,7 +181,7 @@ export class EditorScale extends EditorCmd {
     item.scale.set(newScale * Math.sign(item.scale.x), newScale)
     item.position.set(Math.abs(width) / 2, height / 2)
     item.pivot.set(rect.width / 2, rect.height / 2)
-    node.pivot.copy(item.position)
+    node.pivot.copyFrom(item.position)
   }
 
   center = new PIXI.Point()
@@ -190,7 +190,7 @@ export class EditorScale extends EditorCmd {
   handleTouchStart(evt) {
     super.handleTouchStart(evt)
     const { current } = this.editor
-    this.center.copy(current.toGlobal(current.pivot))
+    this.center.copyFrom(current.toGlobal(current.pivot))
     const p = evt.data.global
     this.startOffset = v2.distance(this.center, p)
     this.startScale = current.scale.y

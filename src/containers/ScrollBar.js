@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import { NineSlicePlane } from 'pixi.js'
 import loader from '@teambun/loader'
 
 import Node from './Node'
@@ -7,8 +7,6 @@ import Widget from '../components/Widget'
 
 const bg = loader.add(require('../../assets/scroll_v_bg.png'))
 const bar = loader.add(require('../../assets/scroll_v_bar.png'))
-
-const NineSlicePlane = PIXI.mesh.NineSlicePlane
 
 export default class ScrollBar extends Node {
   scrollPart = 'bar'

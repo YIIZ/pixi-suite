@@ -1,6 +1,6 @@
 {
   "name": "pixi-suite",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -28,7 +28,7 @@
     "@babel/runtime": "latest",
     "@teambun/loader": "latest",
     "eventemitter3": "latest",
-    "pixi.js": "^4.8.2",
+    "pixi.js": "^5.*",
     "popmotion": "latest"
   },
   "browserslist": [
