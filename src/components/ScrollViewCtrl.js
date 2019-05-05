@@ -86,6 +86,7 @@ export default class ScrollViewCtrl extends Base {
   }
 
   handleTouchEnd = (evt) => {
+    if (!this.isScrolling) return
     this.isScrolling = false
     this.scroller.handleEnd()
 
