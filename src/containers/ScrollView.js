@@ -10,7 +10,7 @@ export default class ScrollView extends Node {
   initChildren(children) {
     return (<>
       <Node name='view' >
-        <Node name='content' components={[Layout]} >
+        <Node name='content' layout={this.layout} components={[Layout]} >
           {children}
         </Node>
       </Node>
@@ -24,5 +24,10 @@ export default class ScrollView extends Node {
     viewCtrl.view = this.getChildByName('view')
     viewCtrl.content = viewCtrl.view.getChildByName('content')
     viewCtrl.scroller = bar.getComponent(ScrollBarCtrl)
+    this.$layout = viewCtrl.content.getComponent(Layout)
+  }
+
+  updateLayout() {
+    this.$layout.update()
   }
 }

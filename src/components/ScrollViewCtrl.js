@@ -9,6 +9,7 @@ export default class ScrollViewCtrl extends Base {
   content = null
   view = null
   direction = 'vertical' // horizontal
+  freezing = false
 
   onEnable() {
     if (!this.view) this.view = this.node.children.find(n => n.scrollPart === 'view')
@@ -67,6 +68,7 @@ export default class ScrollViewCtrl extends Base {
   }
 
   handleTouchStart = (evt) => {
+    if (this.freezing) return
     this.isScrolling = true
 
     const p = evt.data.getLocalPosition(this.view)
@@ -79,6 +81,7 @@ export default class ScrollViewCtrl extends Base {
   }
 
   handleTouchMove = (evt) => {
+    if (this.freezing) return
     if (!this.isScrolling) return
 
     const p = evt.data.getLocalPosition(this.view)
@@ -86,6 +89,7 @@ export default class ScrollViewCtrl extends Base {
   }
 
   handleTouchEnd = (evt) => {
+    if (this.freezing) return
     if (!this.isScrolling) return
     this.isScrolling = false
     this.scroller.handleEnd()
@@ -94,5 +98,16 @@ export default class ScrollViewCtrl extends Base {
     this.view.off('touchend', this.handleTouchEnd, this)
     this.view.off('touchcancel', this.handleTouchEnd, this)
     this.view.off('touchendoutside', this.handleTouchEnd, this)
+  }
+
+  freeze() {
+    this.freezing = true
+    this.view.off('touchmove', this.handleTouchMove, this)
+    this.view.off('touchend', this.handleTouchEnd, this)
+    this.view.off('touchcancel', this.handleTouchEnd, this)
+    this.view.off('touchendoutside', this.handleTouchEnd, this)
+  }
+  unfreeze() {
+    this.freezing = false
   }
 }
