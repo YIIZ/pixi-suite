@@ -20,6 +20,8 @@ export default class HTMLInput extends Base {
     this.elem.setAttribute('placeholder', placeholder)
     this.elem.addEventListener('input', this.handleInput)
     this.elem.addEventListener('change', this.handleChange)
+    this.elem.addEventListener('focus', this.handleFocus)
+    this.elem.addEventListener('blur', this.handleBlur)
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
@@ -41,6 +43,18 @@ export default class HTMLInput extends Base {
   handleInput = (evt) => {
     if (this.node.onInput) {
       this.node.onInput(evt)
+    }
+  }
+
+  handleFocus = (evt) => {
+    if (this.node.onFocus) {
+      this.node.onFocus(evt)
+    }
+  }
+
+  handleBlur = (evt) => {
+    if (this.node.onBlur) {
+      this.node.onBlur(evt)
     }
   }
 
