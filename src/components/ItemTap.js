@@ -1,6 +1,7 @@
 import { Point } from 'pixi.js'
 import Base from './Base'
 import director from '../managers/director'
+import ScrollViewCtrl from './ScrollViewCtrl'
 
 export default class ItemTap extends Base {
   startPoint = new Point(0, 0)
@@ -9,6 +10,7 @@ export default class ItemTap extends Base {
 
   onEnable() {
     if (this.node.onItemTap) this.handleItemTap = this.node.onItemTap
+    this.scrollViewCtrl = this.node.getComponent(ScrollViewCtrl)
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
   }
@@ -42,12 +44,18 @@ export default class ItemTap extends Base {
     this.node.off('touchend', this.handleTouchEnd)
   }
 
+  getChildren() {
+    if (this.scrollViewCtrl) {
+      return this.scrollViewCtrl.content.children
+    }
+    return this.node.children
+  }
+
   handleTap(evt) {
     const { renderer } = director.app
     const { interaction } = renderer.plugins
 
-    // FIXME when add pixi-layers
-    const { children } = this.node
+    const children = this.getChildren()
     for (let i = children.length - 1; i >= 0; i--) {
       children[i].interactive = true
       const obj = interaction.hitTest(evt.data.global, children[i])
