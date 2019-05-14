@@ -1,10 +1,10 @@
-import * as PIXI from 'pixi.js'
+import { Graphics, Sprite, Text, Point, Texture } from 'pixi.js'
 import { tween, easing } from 'popmotion'
 import loader from '@teambun/loader'
 
 import Node from './Node'
 
-const { Sprite, Text, Point, Texture: { WHITE } } = PIXI
+const { WHITE } = Texture
 
 const loading = loader.add(require('../../assets/loading.png'))
 const warning = loader.add(require('../../assets/warning.png'))
@@ -13,9 +13,12 @@ const style = { fontSize: 24, fill: '#ffffff' }
 
 export class TextToast extends Node {
   initChildren() {
+    const text = <Text y={30} anchor={center} text={this.title} style={style} />
+    const w = text.width + 80
+    text.x = w / 2
     return (<>
-      <Sprite name='bg' texture={smBG} />
-      <Text x={75} y={50} anchor={center} text={this.title} style={style} />
+      <BG args={[w, 60]} />
+      {text}
     </>)
   }
 }
@@ -24,9 +27,9 @@ export class WarningToast extends Node {
   icon = warning
   initChildren() {
     return (<>
-      <Sprite name='bg' texture={mdBG} />
+      <BG args={[300, 200]} />
       <Sprite name='icon' x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
-      <Text x={150} y={160} anchor={center} text={this.title} style={style} />
+      <Text x={150} y={167} anchor={center} text={this.title} style={style} />
     </>)
   }
 }
@@ -52,9 +55,10 @@ export class LoadingToast extends WarningToast {
   }
 }
 
-class BG {
+class BG extends Graphics {
   constructor(width = 300, height = 200) {
-    const g = new PIXI.Graphics()
+    super()
+    const g = this
     g.lineStyle(0)
     g.beginFill(0x000000, 0.7)
     g.drawRoundedRect(0, 0, width, height, 10)
@@ -62,9 +66,6 @@ class BG {
     return g
   }
 }
-
-const smBG = new BG(150, 100)
-const mdBG = new BG(300, 200)
 
 export default {
   text: TextToast,
