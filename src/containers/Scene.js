@@ -7,4 +7,6 @@ export default class Scene extends Node {
     super()
     this.addComponent(ViewAdapter)
   }
+
+  onShow(type) {}
 }

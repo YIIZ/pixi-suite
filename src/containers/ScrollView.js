@@ -25,9 +25,22 @@ export default class ScrollView extends Node {
     viewCtrl.content = viewCtrl.view.getChildByName('content')
     viewCtrl.scroller = bar.getComponent(ScrollBarCtrl)
     this.$layout = viewCtrl.content.getComponent(Layout)
+    this.content = viewCtrl.content
+    this.viewCtrl = viewCtrl
   }
 
   updateLayout() {
     this.$layout.update()
+    const { w, h } = this.viewCtrl
+    this.viewCtrl.setSize(w, h)
+  }
+
+  clearItems() {
+    this.content.removeChildren()
+  }
+
+  addItems(items) {
+    this.content.addChild(...items)
+    this.updateLayout()
   }
 }

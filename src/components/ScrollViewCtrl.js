@@ -43,6 +43,8 @@ export default class ScrollViewCtrl extends Base {
   }
 
   setSize(w, h) {
+    this.w = w
+    this.h = h
     this.view.mask.width = w
     this.view.mask.height = h
 
