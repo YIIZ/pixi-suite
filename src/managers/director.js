@@ -43,6 +43,7 @@ class Director extends EventEmitter {
 
     if (transfer) {
       await transfer(lastScene, this.scene)
+      this.scene.onShow('scene')
     }
 
     if (!lastScene) return
