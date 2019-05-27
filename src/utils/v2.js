@@ -22,6 +22,12 @@ export function subtract(p1, p2) {
   return new Point(p1.x - p2.x, p1.y - p2.y)
 }
 
+export function radianToDegree(r) {
+  const d = r / Math.PI * 180
+  if (d < 0) return 360 + d
+  return d
+}
+
 export function angle(p1, p2) {
   const magSqr1 = magSqr(p1)
   const magSqr2 = magSqr(p2)

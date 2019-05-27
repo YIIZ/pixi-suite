@@ -10,7 +10,7 @@ export default class HTMLButton extends Base {
     this.elem.addEventListener('click', this.handleClick)
     const sprite = this.node.children.find(v => v.btnImage)
     sprite.alpha = 0
-    this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.source.src})`
+    this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.resource.url})`
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
