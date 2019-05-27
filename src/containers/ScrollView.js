@@ -9,28 +9,41 @@ import Layout from '../components/Layout'
 export default class ScrollView extends Node {
   initChildren(children) {
     return (<>
-      <Node name='view' >
-        <Node name='content' layout={this.layout} components={[Layout]} >
+      <Node name='view' scrollPart='view'>
+        <Node name='content' scrollPart='content' >
           {children}
         </Node>
       </Node>
-      <ScrollBar name='bar' />
+      <ScrollBar name='bar' scrollPart='bar' />
     </>)
   }
 
   onCreate() {
+    this.view = this.findChild('view')
+    this.content = this.findChild('view/content')
+    this.bar = this.findChild('bar')
+
+    if (this.layout) {
+      this.content.layout = this.layout
+      this.$layout = this.content.addComponent(Layout)
+    }
+
     const viewCtrl = this.addComponent(ScrollViewCtrl)
-    const bar = this.getChildByName('bar')
-    viewCtrl.view = this.getChildByName('view')
-    viewCtrl.content = viewCtrl.view.getChildByName('content')
-    viewCtrl.scroller = bar.getComponent(ScrollBarCtrl)
-    this.$layout = viewCtrl.content.getComponent(Layout)
-    this.content = viewCtrl.content
     this.viewCtrl = viewCtrl
+    viewCtrl.view = this.view
+    viewCtrl.content = this.content
+    viewCtrl.scroller = this.bar.getComponent(ScrollBarCtrl)
   }
 
-  updateLayout() {
-    this.$layout.update()
+  onAdd() {
+    this.updateView()
+  }
+
+  updateView() {
+    if (this.$layout) {
+      this.$layout.update()
+    }
+
     const { w, h } = this.viewCtrl
     this.viewCtrl.setSize(w, h)
   }
@@ -41,6 +54,11 @@ export default class ScrollView extends Node {
 
   addItems(items) {
     this.content.addChild(...items)
-    this.updateLayout()
+    this.updateView()
+  }
+
+  hideBar() {
+    this.bar.visible = false
+    this.bar.renderable = false
   }
 }

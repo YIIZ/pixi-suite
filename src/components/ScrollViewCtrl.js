@@ -23,8 +23,8 @@ export default class ScrollViewCtrl extends Base {
     this.view.mask = m
     this.view.addChildAt(m, 0)
 
-    const { viewSize, contentSize } = this.node
-    if (contentSize) this.setContentSize(contentSize.w, contentSize.h)
+    const { viewSize, layout } = this.node
+    if (layout) this.setLayout(layout.w, layout.h)
     if (viewSize) this.setSize(viewSize.w, viewSize.h)
   }
 
@@ -34,12 +34,23 @@ export default class ScrollViewCtrl extends Base {
     this.view.mask = null
   }
 
-  setContentSize(w, h) {
+  setLayout(options) {
     const layout = this.content.getComponent(Layout)
     if (!layout) return
-    layout.width = w
-    layout.height = h
+    Object.assign(layout, options)
     layout.update()
+  }
+
+  get paddingX() {
+    const layout = this.content.getComponent(Layout)
+    if (!layout) return 0
+    return layout.left + layout.right
+  }
+
+  get paddingY() {
+    const layout = this.content.getComponent(Layout)
+    if (!layout) return 0
+    return layout.top + layout.bottom
   }
 
   setSize(w, h) {
@@ -51,7 +62,7 @@ export default class ScrollViewCtrl extends Base {
     // TODO only support one direction
     if (this.direction === 'vertical') {
       this.scroller.updateParams({
-        len: this.content.height,
+        len: this.content.height + this.paddingY,
         visibleLen: h,
         setter: v => this.content.y = v,
         getter: () => this.content.y,
@@ -60,7 +71,7 @@ export default class ScrollViewCtrl extends Base {
     } else {
       this.scroller.updateParams({
         // FIXME width 数值不对, 需要在加某些值
-        len: this.content.width + 60,
+        len: this.content.width + this.paddingY,
         visibleLen: w,
         setter: v => this.content.x = v,
         getter: () => this.content.x,
