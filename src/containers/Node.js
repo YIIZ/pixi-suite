@@ -43,6 +43,7 @@ export default class Node extends PIXI.Container {
     if (this.inited) {
       throw new Error('this is inited')
     }
+    this.onInit()
     this.inited = true
     const children = this.initChildren(cr)
     if (Array.isArray(children)) {
@@ -53,6 +54,8 @@ export default class Node extends PIXI.Container {
     }
     this.onCreate()
   }
+
+  onInit() {}
 
   initChildren(children) { return children }
 
@@ -89,7 +92,6 @@ export default class Node extends PIXI.Container {
     this.components.forEach((c) => {
       c.onDisable()
     })
-    this.components.length = 0
     this.onRemove()
   }
 
