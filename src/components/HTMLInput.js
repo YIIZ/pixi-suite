@@ -4,11 +4,13 @@ import Base from './Base'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
+
 export default class HTMLInput extends Base {
   type = 'text'
   style = {}
 
   onEnable() {
+		fixIOSKeyboard()
     if (this.node.input) {
       const args = pick(this.node.input, ['type', 'className', 'style', 'placeholder'])
       Object.assign(this, args)
@@ -85,3 +87,21 @@ export default class HTMLInput extends Base {
   }
 }
 
+
+let iOSKeyboardFixed = false
+
+function fixIOSKeyboard() {
+	if (iOSKeyboardFixed) return
+	iOSKeyboardFixed = true
+
+	const scrollToTop = () => {
+		if (window.Keyboard && !window.Keyboard.isVisible) return
+		window.scrollTo(0,0)
+		window.document.body.scrollTop = 0
+	}
+
+	window.addEventListener('keyboardDidHide', () => {
+		scrollToTop()
+		setTimeout(scrollToTop, 100)
+	})
+}
