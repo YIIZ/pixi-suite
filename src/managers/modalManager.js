@@ -19,6 +19,7 @@ class ModalManager {
     this.modals.push(node)
     this.container.addChild(node)
 
+    node.interactive = true
     node.emit('modal.show')
     node.animate = typeof animate === 'string' ? animateTypes[animate] : animate
 

@@ -3,6 +3,7 @@ import { pick } from '../utils/obj'
 import Base from './Base'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
+import { isIOS } from '../utils/os.js'
 
 
 export default class HTMLInput extends Base {
@@ -10,7 +11,6 @@ export default class HTMLInput extends Base {
   style = {}
 
   onEnable() {
-		fixIOSKeyboard()
     if (this.node.input) {
       const args = pick(this.node.input, ['type', 'className', 'style', 'placeholder'])
       Object.assign(this, args)
@@ -22,6 +22,7 @@ export default class HTMLInput extends Base {
     this.elem.setAttribute('placeholder', placeholder)
     this.elem.addEventListener('input', this.handleInput)
     this.elem.addEventListener('change', this.handleChange)
+    // FIXME ios focus called twice
     this.elem.addEventListener('focus', this.handleFocus)
     this.elem.addEventListener('blur', this.handleBlur)
     this.updateTransform()
@@ -55,6 +56,7 @@ export default class HTMLInput extends Base {
   }
 
   handleBlur = (evt) => {
+    if (isIOS) scrollToTop() // fix for iOS keyboard
     if (this.node.onBlur) {
       this.node.onBlur(evt)
     }
@@ -87,21 +89,7 @@ export default class HTMLInput extends Base {
   }
 }
 
-
-let iOSKeyboardFixed = false
-
-function fixIOSKeyboard() {
-	if (iOSKeyboardFixed) return
-	iOSKeyboardFixed = true
-
-	const scrollToTop = () => {
-		if (window.Keyboard && !window.Keyboard.isVisible) return
-		window.scrollTo(0,0)
-		window.document.body.scrollTop = 0
-	}
-
-	window.addEventListener('keyboardDidHide', () => {
-		scrollToTop()
-		setTimeout(scrollToTop, 100)
-	})
+const scrollToTop = () => {
+  window.scrollTo(0,0)
+  window.document.body.scrollTop = 0
 }

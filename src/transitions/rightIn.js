@@ -1,8 +1,8 @@
-import { tween } from 'popmotion'
+import { tween, easing } from 'popmotion'
 
 export default ($out, $in, option = {}) => {
   return new Promise((resolve, reject) => {
-    const arg = Object.assign({ from: 750, to: 0, duration: 600 }, option)
+    const arg = Object.assign({ from: 750, to: 0, ease: easing.easeOut, duration: 600 }, option)
     $in.x = arg.from
 
     const stage = $out.parent
