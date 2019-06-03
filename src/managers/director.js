@@ -53,13 +53,13 @@ class Director extends EventEmitter {
   }
 
    updateView() {
-     const { app } = this
+     const { app, container } = this
      //const { innerWidth, innerHeight, devicePixelRatio = 1 } = window
      const { devicePixelRatio } = this
      // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
      const { clientWidth: innerWidth, clientHeight: innerHeight } = document.documentElement
-     app.view.style.width = innerWidth + 'px'
-     app.view.style.height = innerHeight + 'px'
+     container.style.width = app.view.style.width = innerWidth + 'px'
+     container.style.height = app.view.style.height = innerHeight + 'px'
      app.width = app.view.width = innerWidth * devicePixelRatio
      app.height = app.view.height = innerHeight * devicePixelRatio
      app.renderer.resize(app.width, app.height)

@@ -72,7 +72,7 @@ export default class HTMLInput extends Base {
 
   updateTransform() {
     const { node, elem } = this
-    updateDOMTransform(node, elem, director.devicePixelRatio)
+    updateDOMTransform(node, elem, director.visibleRect.scale, director.devicePixelRatio)
   }
 
   initElement(style) {

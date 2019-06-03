@@ -41,7 +41,7 @@ export default class Capture extends Base {
 
   updateTransform() {
     const { positionTarget, node, img } = this
-    updateDOMTransform(positionTarget || node, img, director.devicePixelRatio)
+    updateDOMTransform(positionTarget || node, img, director.visibleRect.scale, director.devicePixelRatio)
     img.style.display = 'block'
   }
 

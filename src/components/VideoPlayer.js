@@ -61,11 +61,10 @@ export default class VideoPlayer extends Base {
 
   updateTransform() {
     const { boundTarget, node, video } = this
-    updateDOMTransform(boundTarget || node, video, director.devicePixelRatio)
+    updateDOMTransform(boundTarget || node, video, director.visibleRect.scale, director.devicePixelRatio)
   }
 
   initElement() {
-    console.log(this)
     this.video = VideoPlayer.initElement()
     return this.video
   }
