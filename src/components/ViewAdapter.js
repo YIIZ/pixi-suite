@@ -25,7 +25,12 @@ export default class ViewAdapter extends Base {
 
   // call by director
   updateView = () => {
+    if (this.node.getView) {
+      const args = pick(this.node.getView(), ['width', 'height', 'fix', 'mode', 'orientation'])
+      Object.assign(this, args)
+    }
     const rect = this.handleOrientation(director)
+    //if (this.fix === 'auto') this.handleFixAuto(director, rect)
     if (this.fix === 'width') this.handleFixWidth(director, rect)
     if (this.fix === 'height') this.handleFixHeight(director, rect)
   }
@@ -49,6 +54,10 @@ export default class ViewAdapter extends Base {
     return { w, h }
   }
 
+  handleFixAuto(director, rect) {
+    const { maxWidth, maxHeight } = this
+  }
+
   handleFixWidth(director, { w, h }) {
     const { stage } = director.app
     const { width, height } = this
@@ -59,6 +68,7 @@ export default class ViewAdapter extends Base {
     this.visibleRect = Object.assign(this.visibleRect, {
       x: 0,
       y: -innerY,
+      scale,
       width: this.width,
       height: this.height + 2 * innerY,
     })
@@ -74,6 +84,7 @@ export default class ViewAdapter extends Base {
     this.visibleRect = Object.assign(this.visibleRect, {
       x: -innerX,
       y: 0,
+      scale,
       width: this.width + 2 * innerX,
       height: this.height,
     })
