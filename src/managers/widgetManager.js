@@ -1,5 +1,7 @@
-import { Ticker } from 'pixi.js'
+import { ticker as Ticker } from 'pixi.js'
 import director from './director'
+
+const { shared: ticker } = Ticker
 
 export const AlignFlag = {
   TOP: 1<<0,
@@ -28,7 +30,7 @@ class WidgetManager {
   constructor() {
     this.director = director
     director.on('resize', this.handleReize, this)
-    Ticker.shared.add(this.handleTick, this)
+    ticker.add(this.handleTick, this)
   }
 
   add(w) {

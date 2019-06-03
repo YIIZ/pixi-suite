@@ -1,4 +1,4 @@
-import { Point, Ticker } from 'pixi.js'
+import { Point, ticker as Ticker } from 'pixi.js'
 import { tween } from 'popmotion'
 import director from '../managers/director'
 
