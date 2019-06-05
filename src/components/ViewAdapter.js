@@ -10,6 +10,8 @@ export default class ViewAdapter extends Base {
   width = 750
   height = 1500
   fix = 'width'
+  offsetX = 0
+  offsetY = 0
   orientation = 'portrait' // auto, portrait, landscape
   mode = 'none' // TODO cover contain ?
 
@@ -17,7 +19,7 @@ export default class ViewAdapter extends Base {
 
   enable() {
     if (this.node.view) {
-      const args = pick(this.node.view, ['width', 'height', 'fix', 'mode', 'orientation'])
+      const args = pick(this.node.view, ['width', 'height', 'offsetX', 'offsetY', 'fix', 'mode', 'orientation'])
       Object.assign(this, args)
     }
     this.updateView()
@@ -26,7 +28,7 @@ export default class ViewAdapter extends Base {
   // call by director
   updateView = () => {
     if (this.node.getView) {
-      const args = pick(this.node.getView(), ['width', 'height', 'fix', 'mode', 'orientation'])
+      const args = pick(this.node.getView(), ['width', 'height', 'offsetX', 'offsetY', 'fix', 'mode', 'orientation'])
       Object.assign(this, args)
     }
     const rect = this.handleOrientation(director)
@@ -36,7 +38,7 @@ export default class ViewAdapter extends Base {
   }
 
   handleOrientation(director) {
-    const { width, height } = this
+    const { width, height, offsetX, offsetY } = this
     const { width: w, height: h, stage } = director.app
 
     stage.pivot.set(width / 2, height / 2)
@@ -60,14 +62,17 @@ export default class ViewAdapter extends Base {
 
   handleFixWidth(director, { w, h }) {
     const { stage } = director.app
-    const { width, height } = this
+    const { width, height, offsetX, offsetY } = this
     const scale = w / width
     stage.scale.set(scale, scale)
 
+    this.node.y = offsetY
+    this.node.x = offsetX
+
     const innerY = - (height - h / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {
-      x: 0,
-      y: -innerY,
+      x: -offsetX,
+      y: -innerY - offsetY,
       scale,
       width: this.width,
       height: this.height + 2 * innerY,
@@ -76,14 +81,17 @@ export default class ViewAdapter extends Base {
 
   handleFixHeight(director, { w, h }) {
     const { stage } = director.app
-    const { width, height } = this
+    const { width, height, offsetX, offsetY } = this
     const scale = h / height
     stage.scale.set(scale, scale)
 
+    this.node.y = offsetY
+    this.node.x = offsetX
+
     const innerX = - (width - w / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {
-      x: -innerX,
-      y: 0,
+      x: -innerX - offsetX,
+      y: -offsetY,
       scale,
       width: this.width + 2 * innerX,
       height: this.height,
