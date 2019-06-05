@@ -24,11 +24,11 @@ export const AlignMode = {
 class WidgetManager {
   widgets = []
   get defaultTarget() {
-    return this.director.viewAdapter.visibleRect
+    const { x, y, offsetX, offsetY, width, height } = director.viewAdapter.visibleRect
+    return { x: x - offsetX, y: y - offsetY, width, height }
   }
 
   constructor() {
-    this.director = director
     director.on('resize', this.handleReize, this)
     ticker.add(this.handleTick, this)
   }

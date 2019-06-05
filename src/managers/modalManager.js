@@ -67,7 +67,7 @@ class ModalManager {
     this.backgroundCount += 1
     if (this.background) return
 
-    const { x, y, width, height } = director.visibleRect
+    const { x, y, width, height, offsetX, offsetY } = director.visibleRect
     const background = new Sprite(Texture.WHITE)
     background.width = width
     background.height = height

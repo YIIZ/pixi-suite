@@ -71,8 +71,10 @@ export default class ViewAdapter extends Base {
 
     const innerY = - (height - h / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {
-      x: -offsetX,
-      y: -innerY - offsetY,
+      x: 0,
+      y: -innerY,
+      offsetX,
+      offsetY,
       scale,
       width: this.width,
       height: this.height + 2 * innerY,
@@ -90,8 +92,10 @@ export default class ViewAdapter extends Base {
 
     const innerX = - (width - w / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {
-      x: -innerX - offsetX,
-      y: -offsetY,
+      x: -innerX,
+      y: 0,
+      offsetX,
+      offsetY,
       scale,
       width: this.width + 2 * innerX,
       height: this.height,
