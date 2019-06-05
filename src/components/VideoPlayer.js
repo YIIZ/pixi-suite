@@ -8,44 +8,25 @@ export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
 
-  static initElement() {
-    if (VideoPlayer.$video) return VideoPlayer.$video
-    const video = document.createElement('video')
-    video.className = 'IIV'
-    video.style.position = 'absolute'
-    video.style.top = '0'
-    video.style.left = '0'
-    video.style.width = '1px'
-    video.style.height = '1px'
-    video.className = 'video'
-    video.setAttribute('preload', 'auto')
-    video.setAttribute('webkit-playsinline', '')
-    video.setAttribute('playsinline', '')
-    VideoPlayer.$video = video
-
-    const unlock = () => {
-      const { paused } = video
-      video.play()
-      if (paused) video.pause()
-      window.removeEventListener('touchend', unlock)
-    }
-    window.addEventListener('touchend', unlock)
-
+  static preload(option) {
+    const video = VideoPlayer.initElement(option)
     director.container.appendChild(video)
-    return video
-  }
-  static preload(src) {
-    const video = VideoPlayer.initElement()
-    video.src = src
-    video.videoSrc = src
-    VideoPlayer.video = video
+    return { option, video }
   }
 
   onEnable() {
-    this.initElement()
-    if (this.video.orginSrc !== this.node.videoSrc) {
-      this.video.src = this.node.videoSrc
+    let { player } = this.node
+    console.log(player)
+    if (!player) {
+      const option = this.node.video || { src: this.node.videoSrc }
+      player = { video: VideoPlayer.initElement(option) }
     }
+
+    this.video = player.video
+    if (!this.video.parentNode) {
+      director.container.appendChild(this.video)
+    }
+
     this.video.addEventListener('ended', this.handleEnded)
     if (this.node.x5 || (isQQ && isIOS)) {
       this.video.setAttribute('x5-playsinline', '')
@@ -64,15 +45,9 @@ export default class VideoPlayer extends Base {
     updateDOMTransform(boundTarget || node, video, director.visibleRect.scale, director.devicePixelRatio)
   }
 
-  initElement() {
-    this.video = VideoPlayer.initElement()
-    return this.video
-  }
-
   removeElement() {
     if (!this.video) return
     director.container.removeChild(this.video)
-    VideoPlayer.$video = null
     this.video = null
   }
 
@@ -103,5 +78,34 @@ export default class VideoPlayer extends Base {
       return
     }
     requestAnimationFrame(this.checkStart)
+  }
+
+  static initElement(option) {
+    const video = document.createElement('video')
+    video.className = 'IIV'
+    video.style.position = 'absolute'
+    video.style.top = '0'
+    video.style.left = '0'
+    video.style.width = '1px'
+    video.style.height = '1px'
+    video.className = 'video'
+    video.setAttribute('preload', 'auto')
+    video.setAttribute('webkit-playsinline', '')
+    video.setAttribute('playsinline', '')
+
+    const { src, loop = false, zIndex = 1 } = option
+    video.style.zIndex = zIndex
+    video.loop = loop
+    video.src = src
+
+    const unlock = () => {
+      const { paused } = video
+      video.play()
+      if (paused) video.pause()
+      window.removeEventListener('touchend', unlock)
+    }
+    window.addEventListener('touchend', unlock)
+
+    return video
   }
 }
