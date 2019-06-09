@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import { Sprite } from 'pixi.js'
 import { pick } from '../utils/obj'
 import Base from './Base'
 import director from '../managers/director'
@@ -8,7 +8,8 @@ export default class HTMLButton extends Base {
   onEnable() {
     this.initElement()
     this.elem.addEventListener('click', this.handleClick)
-    const sprite = this.node.children.find(v => v.btnImage)
+    let sprite = this.node.children.find(v => v.btnImage)
+    if (!sprite) sprite = this.node.children.find(v => v instanceof Sprite)
     sprite.alpha = 0
     // v4
     this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.source.src})`
