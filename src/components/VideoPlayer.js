@@ -7,6 +7,7 @@ import { isQQ, isIOS } from '../utils/os'
 export default class VideoPlayer extends Base {
   src = ''
   autoPlay = true
+  opacity = 1
 
   static preload(option) {
     const video = VideoPlayer.initElement(option)
@@ -52,7 +53,8 @@ export default class VideoPlayer extends Base {
   }
 
   updateOpacity(v) {
-    this.video.style.opacity = v
+    this.opacity = v
+    if (this.video) this.video.style.opacity = v
   }
 
   play() {
@@ -73,6 +75,7 @@ export default class VideoPlayer extends Base {
     this.inCheck = true
     if (this.video.currentTime > 0) {
       this.started = true
+      this.updateOpacity(this.opacity)
       this.updateTransform()
       this.node.emit('videostart')
       return
