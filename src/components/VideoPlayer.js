@@ -17,7 +17,6 @@ export default class VideoPlayer extends Base {
 
   onEnable() {
     let { player } = this.node
-    console.log(player)
     if (!player) {
       const option = this.node.video || { src: this.node.videoSrc }
       player = { video: VideoPlayer.initElement(option) }
@@ -96,10 +95,13 @@ export default class VideoPlayer extends Base {
     video.setAttribute('webkit-playsinline', '')
     video.setAttribute('playsinline', '')
 
-    const { src, loop = false, zIndex = 1 } = option
+    const { src, disableUnlock, poster = '', loop = false, zIndex = 1 } = option
     video.style.zIndex = zIndex
     video.loop = loop
     video.src = src
+    video.poster = poster
+
+    if (disableUnlock) return video
 
     const unlock = () => {
       const { paused } = video
