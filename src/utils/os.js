@@ -12,6 +12,10 @@ function detectWechat() {
   return /MicroMessenger/i.test(ua)
 }
 
+function detectWeibo() {
+  return /WeiBo/i.test(ua)
+}
+
 function detectQQ() {
   const REGEXP_IOS_QQ = new RegExp('(iPad|iPhone|iPod).*? (IPad)?QQ\\/([\\d\\.]+)')
   const REGEXP_ANDROID_QQ = new RegExp('\\bV1_AND_SQI?_([\\d\\.]+)(.*? QQ\\/([\\d\\.]+))?', 'ig')
@@ -23,10 +27,12 @@ export const isIOS = detectIOS()
 
 export const isWechat = detectWechat()
 export const isQQ = detectQQ()
+export const isWeibo = detectWeibo()
 
 export default {
   isQQ,
   isWechat,
+  isWeibo,
   isAndroid,
   isIOS,
 }
