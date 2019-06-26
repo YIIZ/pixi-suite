@@ -46,11 +46,10 @@ export default class Capture extends Base {
   }
 
   initCaptureElement() {
-    let img = document.querySelector('.capture')
-    if (!img) {
-      img = new Image()
-      director.container.appendChild(img)
-    }
+    if (this.img) return this.img
+
+    const img = new Image()
+    director.container.appendChild(img)
     img.className = 'capture'
     img.style.position = 'absolute'
     img.style.top = '0'
