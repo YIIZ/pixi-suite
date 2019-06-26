@@ -13,11 +13,11 @@ const style = { fontSize: 24, fill: '#ffffff' }
 
 export class TextToast extends Node {
   initChildren() {
-    const text = <Text y={30} anchor={center} text={this.title} style={style} />
+    const text = <Text name='desc' y={30} anchor={center} text={this.title} style={style} />
     const w = text.width + 80
     text.x = w / 2
     return (<>
-      <BG args={[w, 60]} />
+      <BG name='bg' args={[w, 60]} />
       {text}
     </>)
   }
@@ -27,9 +27,9 @@ export class WarningToast extends Node {
   icon = warning
   initChildren() {
     return (<>
-      <BG args={[300, 200]} />
+      <BG name='bg' args={[300, 200]} />
       <Sprite name='icon' x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
-      <Text x={150} y={167} anchor={center} text={this.title} style={style} />
+      <Text name='desc' x={150} y={167} anchor={center} text={this.title} style={style} />
     </>)
   }
 }
