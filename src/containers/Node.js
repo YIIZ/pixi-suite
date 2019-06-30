@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js'
+import { Container } from 'pixi.js'
 
-export default class Node extends PIXI.Container {
+export default class Node extends Container {
   static createChildren = createChildren
 
   components = []

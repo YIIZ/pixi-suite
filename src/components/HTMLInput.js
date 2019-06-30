@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js'
 import { pick } from '../utils/obj'
 import Base from './Base'
 import director from '../managers/director'

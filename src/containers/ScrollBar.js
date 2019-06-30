@@ -1,11 +1,10 @@
-import { mesh, extras } from 'pixi.js'
+import { NineSlicePlane } from 'pixi.js'
 import loader from '@teambun/loader'
 
 import Node from './Node'
 import ScrollBarCtrl from '../components/ScrollBarCtrl'
 import Widget from '../components/Widget'
 
-const { NineSlicePlane } = mesh
 const bg = loader.add(require('../../assets/scroll_v_bg.png'))
 const bar = loader.add(require('../../assets/scroll_v_bar.png'))
 

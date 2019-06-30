@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js'
+import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
 import Layout from './Layout'
 import ScrollBarCtrl from './ScrollBarCtrl.js'
 
-const { Texture: { WHITE } } = PIXI
+const { WHITE } = Texture
 
 export default class ScrollViewCtrl extends Base {
   content = null
@@ -19,7 +19,7 @@ export default class ScrollViewCtrl extends Base {
     this.view.interactive = true
     this.view.on('touchstart', this.handleTouchStart, this)
 
-    const m = new PIXI.Sprite(WHITE)
+    const m = new Sprite(WHITE)
     this.view.mask = m
     this.view.addChildAt(m, 0)
 

@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js'
 import Node from './Node'
 import ScrollBar from './ScrollBar.js'
 import ScrollBarCtrl from '../components/ScrollBarCtrl'

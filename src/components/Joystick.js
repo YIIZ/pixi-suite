@@ -1,11 +1,10 @@
-import { Point, ticker as Ticker } from 'pixi.js'
+import { Point } from 'pixi.js'
 import { tween } from 'popmotion'
 import director from '../managers/director'
 
 import Base from './Base'
 import * as v2 from '../utils/v2'
 
-const ticker = Ticker.shared
 const pointZero = { x: 0, y: 0 }
 
 const { renderer } = director.app
@@ -23,7 +22,7 @@ export default class Joystick extends Base {
   }
 
   onDisable() {
-    ticker.remove(this.postControl, this)
+    director.ticker.remove(this.postControl, this)
     this.pane.off('touchstart', this.handleDown, this)
     this.pane = null
     this.point = null
@@ -38,7 +37,7 @@ export default class Joystick extends Base {
     this.globalPos = new Point()
     this.pos = {}
 
-    ticker.add(this.postControl, this)
+    director.ticker.add(this.postControl, this)
     this.pane.on('touchmove', this.handleControl, this)
     this.pane.on('touchcancel', this.handleCancel, this)
     this.pane.on('touchendoutside', this.handleCancel, this)
@@ -86,7 +85,7 @@ export default class Joystick extends Base {
     this.backAction = tween({ from, to, duration: 400 })
     .start(v => this.point.position.copy(v))
 
-    ticker.remove(this.postControl, this)
+    director.ticker.remove(this.postControl, this)
     this.pane.off('touchmove', this.handleControl, this)
     this.pane.off('touchcancel', this.handleCancel, this)
     this.pane.off('touchendoutside', this.handleCancel, this)

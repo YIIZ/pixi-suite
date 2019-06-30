@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import { Graphics } from 'pixi.js'
 
 // https://stackoverflow.com/questions/26015497/how-to-resize-then-crop-an-image-with-canvas
 // https://stackoverflow.com/questions/17411991/html5-canvas-rotate-image
@@ -115,7 +115,7 @@ export const normalizeImage = async (file,
 }
 
 export const createRoundRect = (width, height, radious) => {
-  const g = new PIXI.Graphics()
+  const g = new Graphics()
   g.lineStyle(0)
   g.beginFill(0xffffff, 1)
   g.drawRoundedRect(0, 0, width, height, radious)

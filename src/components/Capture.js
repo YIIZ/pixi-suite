@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import { RenderTexture } from 'pixi.js'
 import Base from './Base'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
@@ -23,7 +23,7 @@ export default class Capture extends Base {
     const { node } = this
     const { scale, img } = this
     const { renderer } = director.app
-    const texture = PIXI.RenderTexture.create(width * scale, height * scale)
+    const texture = RenderTexture.create(width * scale, height * scale)
 
     const t1 = node.position.clone()
     const t2 = node.scale.clone()

@@ -1,3 +1,4 @@
+import { Point } from 'pixi.js'
 import Base from './Base'
 
 export default class Layout extends Base {
@@ -24,7 +25,7 @@ export default class Layout extends Base {
     // TODO custom direction
     const children = this.node.children
     const { spaceX, spaceY, top, right, bottom, left, width: w, height: h } = this
-    const cursor = new PIXI.Point(left, top)
+    const cursor = new Point(left, top)
     let yCursor = top
     let xCursor = left
     let newLineIndex = 0

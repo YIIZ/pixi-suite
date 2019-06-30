@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js'
+import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
 import StatusSwitch from './StatusSwitch'
 import { tween, physics } from 'popmotion'
 
-const { Sprite, Texture: { WHITE } } = PIXI
+const { WHITE } = Texture
 
 // FIXME Widget bug on resize
 export default class DrawerCtrl extends Base {

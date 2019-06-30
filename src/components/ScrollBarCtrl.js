@@ -1,3 +1,4 @@
+import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
 import { tween, physics } from 'popmotion'
 import { Deferred } from '../utils/obj.js'
@@ -47,7 +48,7 @@ export default class ScrollBarCtrl extends Base {
     this.bar.height = visibleLen / len * visibleLen
 
     if (!this.node.mask) {
-      const m = new PIXI.Sprite(PIXI.Texture.WHITE)
+      const m = new Sprite(Texture.WHITE)
       this.node.mask = m
       this.node.addChild(m)
     }

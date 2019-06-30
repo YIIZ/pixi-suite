@@ -1,13 +1,15 @@
-import * as PIXI from 'pixi.js'
+import { Application, Ticker } from 'pixi.js'
 import EventEmitter from 'eventemitter3'
 import ViewAdapter from '../components/ViewAdapter'
 
 class Director extends EventEmitter {
+  ticker = Ticker.shared
+
   init(container, params, devicePixelRatio=(window.devicePixelRatio || 1)) {
     this.container = container
     const view = container.querySelector('canvas')
     const _params = Object.assign({ view }, params)
-    const app = new PIXI.Application(_params)
+    const app = new Application(_params)
     this.app = app
     this.scenes = {}
     this.devicePixelRatio = devicePixelRatio

@@ -1,3 +1,4 @@
+import { Point } from 'pixi.js'
 import Base from './Base'
 import * as v2 from '../utils/v2'
 import TouchScale from './TouchScale'
@@ -148,9 +149,9 @@ export class EditorRemove extends EditorCmd {
 }
 
 export class EditorRotate extends EditorCmd {
-  center = new PIXI.Point()
-  startVec = new PIXI.Point()
-  currentVec = new PIXI.Point()
+  center = new Point()
+  startVec = new Point()
+  currentVec = new Point()
 
   handleTouchStart(evt) {
     super.handleTouchStart(evt)
@@ -184,8 +185,8 @@ export class EditorScale extends EditorCmd {
     node.pivot.copyFrom(item.position)
   }
 
-  center = new PIXI.Point()
-  scale = new PIXI.Point()
+  center = new Point()
+  scale = new Point()
 
   handleTouchStart(evt) {
     super.handleTouchStart(evt)
