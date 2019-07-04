@@ -41,7 +41,7 @@ class WidgetManager {
 
   handleReize() {
     this.widgets
-    .filter(v => v.alignMode & AlignMode.RESIZE)
+    .filter(v => v.node.widget.mode & AlignMode.RESIZE)
     .forEach(v => {
       v.update()
     })
@@ -49,7 +49,7 @@ class WidgetManager {
 
   handleTick() {
     const ts = this.widgets
-    .filter(v => v.alignMode & AlignMode.AWAYS)
+    .filter(v => v.node.widget.mode & AlignMode.AWAYS)
     .forEach(v => {
       v.update()
     })

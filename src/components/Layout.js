@@ -1,30 +1,39 @@
 import { Point } from 'pixi.js'
 import Base from './Base'
 
+const defaultLayout = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  align: 'left',
+  spaceX: 15,
+  spaceY: 15,
+  width: 0,
+  height: 0,
+}
+
 export default class Layout extends Base {
-  top = 0
-  right = 0
-  bottom = 0
-  left = 0
-  align = 'left'
-
-  spaceX = 15
-  spaceY = 15
-
-  width = 0
-  height = 0
-
   onEnable() {
     if (this.node.layout) {
-      Object.assign(this, this.node.layout)
+      this.node.layout = {...defaultLayout}
+    } else {
+      const { layout } = this.node
+      Object.keys(defaultLayout).map((k) => {
+        layout[k] = layout[k] || defaultLayout[k]
+      })
     }
     this.update()
+  }
+
+  onRemove() {
+    this.node.layout = null
   }
 
   update() {
     // TODO custom direction
     const children = this.node.children
-    const { spaceX, spaceY, top, right, bottom, left, width: w, height: h } = this
+    const { spaceX, spaceY, top, right, bottom, left, width: w, height: h } = this.node.layout
     const cursor = new Point(left, top)
     let yCursor = top
     let xCursor = left
@@ -54,7 +63,7 @@ export default class Layout extends Base {
 
   // FIXME child里如果有layout的话，需要child layout update完再次update
   updateAlign(breaks) {
-    const { align, node: { children } } = this
+    const { node: { align, children } } = this
     if (align === 'left') return
 
     const maxRight = breaks.reduce((m, v) => v.right > m ? v.right : m, 0)

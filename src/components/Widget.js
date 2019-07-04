@@ -1,31 +1,42 @@
 import Base from './Base'
 import widgetManager, { AlignFlag, AlignMode } from '../managers/widgetManager'
 
+const defaultConfig = {
+  top: 0,
+  right: 0,
+  left: 0,
+  bottom: 0,
+
+  flag: 0,
+  mode: AlignMode.RESIZE, // TODO support AWAYS
+
+  target: undefined,
+}
+
 export default class Widget extends Base {
   static AlignFlag = AlignFlag
   static AlignMode = AlignMode
 
-  top = 0
-  right = 0
-  left = 0
-  bottom = 0
-
-  alignFlag = 0
-  alignMode = AlignMode.RESIZE // TODO support AWAYS
-
-  target = null
 
   onEnable() {
-    if (!this.target) this.target = widgetManager.defaultTarget
-    if (this.node.widget) {
-      Object.assign(this, this.node.widget)
+    if (!this.node.widget) {
+      this.node.widget = { ...defaultConfig }
+    } else {
+      const { widget } = this.node
+      Object.keys(defaultConfig).map((k) => {
+        widget[k] = widget[k] || defaultConfig[k]
+      })
+      // compat for alignFlag, alignMode
+      if (widget.alignFlag) widget.flag = widget.alignFlag
+      if (widget.alignMode) widget.mode = widget.alignMode
     }
+
     widgetManager.add(this)
     this.update()
   }
 
   onDisable() {
-    this.target = null
+    this.node.widget = null
     widgetManager.remove(this)
   }
 
@@ -33,18 +44,18 @@ export default class Widget extends Base {
     // TODO update order
     // TODO position with parent
     // TODO handle anchor, pivot
-    const { target } = this
-    if (this.alignFlag & AlignFlag.BOTTOM) {
-      this.node.y = target.y + target.height - this.bottom - this.node.height
+    const { flag, target = widgetManager.defaultTarget, top, bottom, left, right } = this.node.widget
+    if (flag & AlignFlag.BOTTOM) {
+      this.node.y = target.y + target.height - bottom - this.node.height
     }
-    if (this.alignFlag & AlignFlag.TOP) {
-      this.node.y = target.y + this.top
+    if (flag & AlignFlag.TOP) {
+      this.node.y = target.y + top
     }
-    if (this.alignFlag & AlignFlag.RIGHT) {
-      this.node.x = target.x + target.width - this.right - this.node.width
+    if (flag & AlignFlag.RIGHT) {
+      this.node.x = target.x + target.width - right - this.node.width
     }
-    if (this.alignFlag & AlignFlag.LEFT) {
-      this.node.x = target.x + this.left
+    if (flag & AlignFlag.LEFT) {
+      this.node.x = target.x + left
     }
   }
 }
