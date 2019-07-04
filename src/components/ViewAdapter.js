@@ -66,8 +66,8 @@ export default class ViewAdapter extends Base {
     const scale = w / width
     stage.scale.set(scale, scale)
 
-    this.node.y = offsetY
-    this.node.x = offsetX
+    //stage.y += offsetY * scale
+    //stage.x += offsetX * scale
 
     const innerY = - (height - h / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {
@@ -87,8 +87,8 @@ export default class ViewAdapter extends Base {
     const scale = h / height
     stage.scale.set(scale, scale)
 
-    this.node.y = offsetY
-    this.node.x = offsetX
+    //stage.y += offsetY * scale
+    //stage.x += offsetX * scale
 
     const innerX = - (width - w / scale) / 2
     this.visibleRect = Object.assign(this.visibleRect, {

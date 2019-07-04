@@ -21,8 +21,7 @@ export const AlignMode = {
 class WidgetManager {
   widgets = []
   get defaultTarget() {
-    const { x, y, offsetX, offsetY, width, height } = director.viewAdapter.visibleRect
-    return { x: x - offsetX, y: y - offsetY, width, height }
+    return director.viewAdapter.visibleRect
   }
 
   constructor() {
