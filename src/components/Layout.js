@@ -15,12 +15,14 @@ const defaultLayout = {
 
 export default class Layout extends Base {
   onEnable() {
-    if (this.node.layout) {
+    if (!this.node.layout) {
       this.node.layout = {...defaultLayout}
     } else {
       const { layout } = this.node
       Object.keys(defaultLayout).map((k) => {
-        layout[k] = layout[k] || defaultLayout[k]
+        if (typeof layout[k] === 'undefined') {
+          layout[k] = layout[k] || defaultLayout[k]
+        }
       })
     }
     this.update()

@@ -22,11 +22,6 @@ export default class ScrollView extends Node {
     this.content = this.findChild('view/content')
     this.bar = this.findChild('bar')
 
-    if (this.layout) {
-      this.content.layout = this.layout
-      this.$layout = this.content.addComponent(Layout)
-    }
-
     const viewCtrl = this.addComponent(ScrollViewCtrl)
     this.viewCtrl = viewCtrl
     viewCtrl.view = this.view
@@ -35,6 +30,10 @@ export default class ScrollView extends Node {
   }
 
   onAdd() {
+    if (this.layout) {
+      this.content.layout = this.layout
+      this.$layout = this.content.addComponent(Layout)
+    }
     this.updateView()
   }
 

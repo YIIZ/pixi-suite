@@ -1,6 +1,5 @@
 import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
-import Layout from './Layout'
 import ScrollBarCtrl from './ScrollBarCtrl.js'
 
 const { WHITE } = Texture
@@ -23,8 +22,7 @@ export default class ScrollViewCtrl extends Base {
     this.view.mask = m
     this.view.addChildAt(m, 0)
 
-    const { viewSize, layout } = this.node
-    if (layout) this.setLayout(layout.w, layout.h)
+    const { viewSize } = this.node
     if (viewSize) this.setSize(viewSize.w, viewSize.h)
   }
 
@@ -34,21 +32,14 @@ export default class ScrollViewCtrl extends Base {
     this.view.mask = null
   }
 
-  setLayout(options) {
-    const layout = this.content.getComponent(Layout)
-    if (!layout) return
-    Object.assign(layout, options)
-    layout.update()
-  }
-
   get paddingX() {
-    const layout = this.content.getComponent(Layout)
+    const { layout } = this.content
     if (!layout) return 0
     return layout.left + layout.right
   }
 
   get paddingY() {
-    const layout = this.content.getComponent(Layout)
+    const { layout } = this.content
     if (!layout) return 0
     return layout.top + layout.bottom
   }
