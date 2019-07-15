@@ -60,7 +60,7 @@ export default class ItemTap extends Base {
       children[i].interactive = true
       const obj = interaction.hitTest(evt.data.global, children[i])
       if (obj) {
-        this.handleItemTap(evt, obj, i)
+        this.handleItemTap(evt, children[i], i)
         return
       }
     }
