@@ -41,9 +41,6 @@ export default class ScrollBarCtrl extends Base {
   // TODO where to update view ?
   updateView() {
     const { visibleLen, len, scrollable } = this
-    if (this.direction !== 'vertical') {
-      this.node.rotation =  Math.PI * -0.5
-    }
     this.bg.height = visibleLen
     this.bar.height = visibleLen / len * visibleLen
 
