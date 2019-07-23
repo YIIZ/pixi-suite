@@ -65,7 +65,7 @@ export default class Layout extends Base {
 
   // FIXME child里如果有layout的话，需要child layout update完再次update
   updateAlign(breaks) {
-    const { node: { align, children } } = this
+    const { node: { children, layout: { align } } } = this
     if (align === 'left') return
 
     const maxRight = breaks.reduce((m, v) => v.right > m ? v.right : m, 0)
