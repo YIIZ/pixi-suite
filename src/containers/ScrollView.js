@@ -6,6 +6,8 @@ import Widget from '../components/Widget'
 import Layout from '../components/Layout'
 
 export default class ScrollView extends Node {
+  direction = 'vertical'
+
   initChildren(children) {
     return (<>
       <Node name='view' scrollPart='view'>
@@ -13,7 +15,7 @@ export default class ScrollView extends Node {
           {children}
         </Node>
       </Node>
-      <ScrollBar name='bar' scrollPart='bar' />
+      <ScrollBar name='bar' scrollPart='bar' direction={this.direction} />
     </>)
   }
 
@@ -24,6 +26,7 @@ export default class ScrollView extends Node {
 
     const viewCtrl = this.addComponent(ScrollViewCtrl)
     this.viewCtrl = viewCtrl
+    viewCtrl.direction = this.direction
     viewCtrl.view = this.view
     viewCtrl.content = this.content
     viewCtrl.scroller = this.bar.getComponent(ScrollBarCtrl)

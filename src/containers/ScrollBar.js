@@ -10,6 +10,7 @@ const bar = loader.add(require('../../assets/scroll_v_bar.png'))
 
 export default class ScrollBar extends Node {
   scrollPart = 'bar'
+  direction = 'vertical'
 
   initChildren() {
     return (<>
@@ -21,7 +22,11 @@ export default class ScrollBar extends Node {
 
   onCreate() {
     const barCtrl = this.addComponent(ScrollBarCtrl)
+    barCtrl.direction = this.direction
     barCtrl.bg = this.findChild('bg')
     barCtrl.bar = this.findChild('bar')
+    if (this.direction === 'horizontal') {
+      this.rotation =  Math.PI * -0.5
+    }
   }
 }
