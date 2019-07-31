@@ -65,7 +65,7 @@ export default class ImageEditorCtrl extends Base {
 
   handleMultiTouchScale = (scale) => {
     if (this.editorHandle) return
-    EditorScale.edit(this.current, scale, this.node)
+    EditorScale.edit(this.current, this.node, new Point(scale, scale))
     this.updateBorder()
   }
 
@@ -172,14 +172,14 @@ export class EditorRotate extends EditorCmd {
 }
 
 export class EditorScale extends EditorCmd {
-  static edit(item, newScale, node) {
+  static edit(item, node, scale) {
     const rect = item.getLocalBounds()
-    const oldScale = item.scale.y
-    const height = newScale * rect.height
-    const width = newScale * rect.width;
-    if (Math.abs(width) < 60 && newScale < oldScale) return
-    if (Math.abs(height) < 60 && newScale < oldScale) return
-    item.scale.set(newScale * Math.sign(item.scale.x), newScale)
+    const oldScale = item.scale
+    const width = scale.x * rect.width
+    const height = scale.y * rect.height
+    if (Math.abs(width) < 60 && scale.x < oldScale.x) return
+    if (Math.abs(height) < 60 && scale.y < oldScale.y) return
+    item.scale.set(scale.x * Math.sign(item.scale.x), scale.y * Math.sign(item.scale.y))
     item.position.set(Math.abs(width) / 2, height / 2)
     item.pivot.set(rect.width / 2, rect.height / 2)
     node.pivot.copyFrom(item.position)
@@ -193,19 +193,33 @@ export class EditorScale extends EditorCmd {
     const { current } = this.editor
     this.center.copyFrom(current.toGlobal(current.pivot))
     const p = evt.data.global
-    this.startOffset = v2.distance(this.center, p)
-    this.startScale = current.scale.y
+    this.startOffset = v2.subtract(this.center, p)
+    this.startScale = current.scale.clone()
   }
 
   handleChange(evt) {
+    const { scale, startScale } = this
+    const { fixRatio } = this.node
     const { current, node } = this.editor
     const p = evt.data.global
-    const offset = v2.distance(this.center, p)
 
-    const rect = current.getLocalBounds()
+    const offset = v2.subtract(this.center, p)
 
-    const newScale = this.startScale * offset / this.startOffset
-    EditorScale.edit(current, newScale, node)
+    const { x: x0, y: y0 } = this.startOffset
+    const { x: x1, y: y1 } = offset
+    if (fixRatio) {
+      const d0 = Math.sqrt(x0 * x0 + y0 * y0)
+      const d1 = Math.sqrt(x1 * x1 + y1 * y1)
+      const scaleAll = d1 / d0
+      scale.set(startScale.x * scaleAll, startScale.y * scaleAll)
+    } else {
+      const scaleX = x1 / x0
+      const scaleY = y1 / y0
+      scale.set(startScale.x * scaleX, startScale.y * scaleY)
+    }
+    scale.x = Math.abs(scale.x)
+    scale.y = Math.abs(scale.y)
+    EditorScale.edit(current, node, scale)
   }
 
 }
