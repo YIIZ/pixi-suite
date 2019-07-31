@@ -65,3 +65,7 @@ export function distance(p1, p2) {
 export function gravity(p1, p2) {
   return new Point((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5)
 }
+
+export function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min) + min)
+}

@@ -13,13 +13,13 @@ export default class Toggle extends Base {
 
   handleEnd() {
     const ss = this.node.getComponent(StatusSwitch)
-    this.toggle(ss.status !== 'on')
+    this.toggle(ss.status !== 'on' ? 'on':'off')
   }
 
   toggle(v) {
     const ss = this.node.getComponent(StatusSwitch)
-    if (ss) ss.switch(v ? 'on' : 'off')
-    if (this.node.onToggle) this.node.onToggle(ss.status)
+    if (ss) ss.switch(v)
+    if (this.node.onToggle) this.node.onToggle(ss.status, this)
   }
 }
 
