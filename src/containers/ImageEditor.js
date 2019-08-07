@@ -7,12 +7,12 @@ import TouchScale from '../components/TouchScale'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
 
-const sRemove = loader.add(require('../../assets/remove.png'))
-const sRotate = loader.add(require('../../assets/rotate.png'))
-const sScale = loader.add(require('../../assets/scale.png'))
-const sFlip = loader.add(require('../../assets/flip.png'))
-const sCircle = loader.add(require('../../assets/circle.png'))
-const sBoard = loader.add(require('../../assets/border.png'))
+export const sRemove = loader.add(require('../../assets/remove.png'))
+export const sRotate = loader.add(require('../../assets/rotate.png'))
+export const sScale = loader.add(require('../../assets/scale.png'))
+export const sFlip = loader.add(require('../../assets/flip.png'))
+export const sCircle = loader.add(require('../../assets/circle.png'))
+export const sBoard = loader.add(require('../../assets/border.png'))
 
 const center = new Point(0.5, 0.5)
 
