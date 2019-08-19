@@ -23,19 +23,25 @@ class ModalManager {
     node.emit('modal.show')
     node.animate = typeof animate === 'string' ? animateTypes[animate] : animate
 
+    const handleComplete = () => {
+      node.modalAction = null
+      node.emit('modal.shown')
+    }
+
     if (node.animate && node.animate.show) {
-      node.animate.show(node)
+      node.animate.show(node, handleComplete)
+    } else {
+      handleComplete()
     }
 
     return node
   }
 
-  hide(node, option = {}) {
+  hide(node) {
     const index = this.modals.findIndex(v => v === node)
     if (index <0) return
     if (node.modalAction) return
 
-    const { animate } = option
     node.emit('modal.hide')
 
     const handleComplete = () => {
@@ -124,7 +130,7 @@ class ModalManager {
 
 const animateTypes = {
   bottomUpDown: {
-    show: (node) => {
+    show: (node, complete) => {
       const { height, y } = node
       node.alpha = 0
       node.y = y + height
@@ -138,16 +144,14 @@ const animateTypes = {
           node.y = y + (1 - v) * height
           node.alpha = v
         },
-        complete: v => {
-          node.modalAction = null
-          node.emit('modal.shown')
-        }
+        complete,
       })
     },
     hide: (node, complete) => {
+      const { height } = node
       node.modalAction = tween({
         from: { y: node.y, alpha: node.alpha },
-        to: { y: node.y + 200, alpha: 0 },
+        to: { y: node.y + height, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
       })
@@ -160,8 +164,43 @@ const animateTypes = {
       })
     }
   },
+  rightUpDown: {
+    show: (node, complete) => {
+      const { width, x } = node
+      node.alpha = 0
+      node.x = x + width
+      node.modalAction = tween({
+        from: 0,
+        to: 1,
+        duration: ModalManager.animationTime,
+      })
+      .start({
+        update: v => {
+          node.x = x + (1 - v) * width
+          node.alpha = v
+        },
+        complete,
+      })
+    },
+    hide: (node, complete) => {
+      const { width } = node
+      node.modalAction = tween({
+        from: { x: node.x, alpha: node.alpha },
+        to: { x: node.x + width, alpha: 0 },
+        duration: ModalManager.animationTime,
+        ease: easing.easeOut,
+      })
+      .start({
+        update: v => {
+          node.x = v.x
+          node.alpha = v.alpha
+        },
+        complete,
+      })
+    }
+  },
   scaleInUpOut: {
-    show: (node) => {
+    show: (node, complete) => {
       node.scale.set(0)
       node.alpha = 0
       node.modalAction = tween({
@@ -174,10 +213,7 @@ const animateTypes = {
           node.scale.set(v)
           node.alpha = v
         },
-        complete: v => {
-          node.modalAction = null
-          node.emit('modal.shown')
-        }
+        complete,
       })
     },
     hide: (node, complete) => {
