@@ -17,7 +17,7 @@ export default class Joystick extends Base {
     this.pane.interactive = true
     // FIXME 范围的计算
     //this.r = this.pane.width / 2 - this.point.width / 4
-    this.r = this.pane.width / 2 - this.point.width
+    this.r = this.pane.width / 2 - this.point.width / 4
     this.pane.on('touchstart', this.handleDown, this)
   }
 
@@ -77,9 +77,15 @@ export default class Joystick extends Base {
     if (this.node.onControl) {
       this.node.onControl(this.pos)
     } else {
-      const { x } = this.pos
-      if (x > 0) this.node.input.right = true
-      if (x < 0) this.node.input.left = true
+      const { x, y } = this.pos
+      this.node.input.right = false
+      this.node.input.left = false
+      this.node.input.top = false
+      this.node.input.bottom = false
+      if (x > 0.25) this.node.input.right = true
+      if (x < -0.25) this.node.input.left = true
+      if (y > 0.25) this.node.input.bottom = true
+      if (y < -0.25) this.node.input.top = true
     }
   }
 
