@@ -22,8 +22,14 @@ export default class Joystick extends Base {
   }
 
   onDisable() {
+    if (this.backAction) this.backAction.stop()
+    this.isControling = false
     director.ticker.remove(this.postControl, this)
     this.pane.off('touchstart', this.handleDown, this)
+    this.pane.off('touchmove', this.handleControl, this)
+    this.pane.off('touchcancel', this.handleCancel, this)
+    this.pane.off('touchendoutside', this.handleCancel, this)
+    this.pane.off('touchend', this.handleCancel, this)
     this.pane = null
     this.point = null
   }
@@ -47,7 +53,8 @@ export default class Joystick extends Base {
   }
 
   handleControl(evt) {
-    const touches = evt.data.originalEvent.touches
+    const touches = new Array(evt.data.originalEvent.touches)
+    if (!touches) console.log(evt)
 
     this.globalPos.copyFrom(evt.data.global)
     if (this.identifier !== evt.data.identifier) {

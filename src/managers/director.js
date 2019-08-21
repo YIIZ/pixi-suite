@@ -37,7 +37,8 @@ class Director extends EventEmitter {
     this.lastScene = lastScene
 
     const Scene = this.scenes[name]
-    this.scene = new Scene(this)
+    const scene = new Scene(this)
+    this.scene = scene
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
     this.viewAdapter.enable()
     this.scene.handleCreate()
@@ -46,10 +47,10 @@ class Director extends EventEmitter {
     if (transfer) {
       await transfer(lastScene, this.scene)
     }
-    this.scene.onShow('scene')
+    // FIXME 当上一个transfer未完成, 就执行loadScene, 导致冲突
+    if (this.scene === scene) this.scene.onShow('scene')
 
     if (!lastScene) return
-    lastScene.director = null
     stage.removeChild(lastScene)
     lastScene.destroy({ children: true })
   }
