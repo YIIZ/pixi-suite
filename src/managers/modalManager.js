@@ -39,7 +39,7 @@ class ModalManager {
 
   hide(node) {
     const index = this.modals.findIndex(v => v === node)
-    if (index <0) return
+    if (index < 0) return
     if (node.modalAction) return
 
     node.emit('modal.hide')
@@ -66,41 +66,49 @@ class ModalManager {
   }
 
   initContainer() {
-    this.container = director.app.stage.addChild(<Node name='modals' />)
+    this.container = director.app.stage.addChild(<Node name="modals" />)
   }
 
-  showBackground(node, backdrop) {
+  showBackground(node, arg) {
     this.backgroundCount += 1
-    if (this.background) return
+    let { background } = this
 
-    const { x, y, width, height, offsetX, offsetY } = director.visibleRect
-    const background = new Sprite(Texture.WHITE)
-    background.width = width
-    background.height = height
-    background.x = x
-    background.y = y
-    background.tint = 0x000000
-    background.alpha = 0
-    background.interactive = true
-    background.on('tap', (evt) => {
-      evt.stopPropagation()
-    })
-    this.background = background
+    const config = { alpha: this.backgroundAlpha, static: false }
+    if (typeof arg === 'string') {
+      config[arg] = true
+    } else if (typeof arg === 'object') {
+      Object.assign(config, arg)
+    }
 
-    if (backdrop !== 'static') {
-      background.on('tap', (evt) => {
+    if (!background) {
+      const { x, y, width, height, offsetX, offsetY } = director.visibleRect
+      background = new Sprite(Texture.WHITE)
+      background.width = width
+      background.height = height
+      background.x = x
+      background.y = y
+      background.tint = 0x000000
+      background.alpha = 0
+      background.interactive = true
+      background.on('tap', evt => {
+        evt.stopPropagation()
+      })
+      this.background = background
+      this.container.addChildAt(background, 0)
+    }
+
+    if (!config.static) {
+      background.on('tap', evt => {
         node.emit('modal.close')
         this.hide(node)
       })
     }
-    this.container.addChildAt(background, 0)
 
     tween({
-      from: 0,
-      to: this.backgroundAlpha,
+      from: Math.max(0, config.alpha),
+      to: Math.max(config.alpha, config.alpha),
       duration: 300,
-    })
-    .start((v) => background.alpha = v)
+    }).start(v => (background.alpha = v))
   }
 
   hideBackground() {
@@ -114,17 +122,15 @@ class ModalManager {
       from: background.alpha,
       to: 0,
       duration: 200,
-    })
-    .start({
+    }).start({
       update: v => {
         background.alpha = v
       },
       complete: () => {
         this.container.removeChild(background)
         background.destroy()
-      }
+      },
     })
-
   }
 }
 
@@ -138,8 +144,7 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      })
-      .start({
+      }).start({
         update: v => {
           node.y = y + (1 - v) * height
           node.alpha = v
@@ -154,15 +159,14 @@ const animateTypes = {
         to: { y: node.y + height, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      })
-      .start({
+      }).start({
         update: v => {
           node.y = v.y
           node.alpha = v.alpha
         },
         complete,
       })
-    }
+    },
   },
   rightUpDown: {
     show: (node, complete) => {
@@ -173,8 +177,7 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      })
-      .start({
+      }).start({
         update: v => {
           node.x = x + (1 - v) * width
           node.alpha = v
@@ -189,15 +192,14 @@ const animateTypes = {
         to: { x: node.x + width, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      })
-      .start({
+      }).start({
         update: v => {
           node.x = v.x
           node.alpha = v.alpha
         },
         complete,
       })
-    }
+    },
   },
   scaleInUpOut: {
     show: (node, complete) => {
@@ -207,8 +209,7 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      })
-      .start({
+      }).start({
         update: v => {
           node.scale.set(v)
           node.alpha = v
@@ -222,17 +223,15 @@ const animateTypes = {
         to: { y: node.y - 200, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      })
-      .start({
+      }).start({
         update: v => {
           node.y = v.y
           node.alpha = v.alpha
         },
         complete,
       })
-    }
+    },
   },
 }
-
 
 export default new ModalManager()
