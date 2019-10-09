@@ -99,6 +99,7 @@ class ModalManager {
 
     if (!config.static) {
       background.on('tap', evt => {
+        if (this.modals[this.modals.length - 1] !== node) return
         node.emit('modal.close')
         this.hide(node)
       })
