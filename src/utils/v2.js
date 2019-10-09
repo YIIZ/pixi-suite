@@ -1,6 +1,12 @@
 // https://github.com/cocos-creator/engine/blob/4f734a806d1fd7c4073fb064fddc961384fe67af/cocos2d/core/value-types/vec2.js#L526
 import { Point } from 'pixi.js'
 
+export function polar2cartesian(r, rad) {
+  const x = r * Math.cos(rad)
+  const y = r * Math.sin(rad)
+  return new Point(x, y)
+}
+
 export function singleAngle(p1, p2) {
   const ag = angle(p1, p2)
   return cross(p1, p2) < 0 ? -ag : ag
@@ -23,7 +29,7 @@ export function subtract(p1, p2) {
 }
 
 export function radianToDegree(r) {
-  const d = r / Math.PI * 180
+  const d = (r / Math.PI) * 180
   if (d < 0) return 360 + d
   return d
 }
@@ -38,7 +44,7 @@ export function angle(p1, p2) {
   }
 
   const dot = p1.x * p2.x + p1.y * p2.y
-  let theta = dot / (Math.sqrt(magSqr1 * magSqr2))
+  let theta = dot / Math.sqrt(magSqr1 * magSqr2)
   theta = clampf(theta, -1.0, 1.0)
   return Math.acos(theta)
 }
