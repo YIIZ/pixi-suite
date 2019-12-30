@@ -12,8 +12,7 @@ export default class Button extends Base {
   }
 
   handleDown() {
-    const ss = this.node.getComponent(StatusSwitch)
-    if (ss) ss.switch('on')
+    this.handleSwitch('on')
 
     this.node.on('touchcancel', this.handleCancel, this)
     this.node.on('touchendoutside', this.handleCancel, this)
@@ -21,12 +20,20 @@ export default class Button extends Base {
   }
 
   handleCancel(evt) {
-    const ss = this.node.getComponent(StatusSwitch)
-    if (ss) ss.switch('off')
+    this.handleSwitch('off')
 
     this.node.off('touchcancel', this.handleCancel, this)
     this.node.off('touchendoutside', this.handleCancel, this)
     this.node.off('touchend', this.handleClick, this)
+  }
+
+  handleSwitch(status) {
+    const ss = this.node.getComponent(StatusSwitch)
+    if (ss) {
+      ss.switch(status)
+    } else {
+      this.node.alpha = status === 'on' ? 0.5 : 1
+    }
   }
 
   handleClick(evt) {
@@ -34,4 +41,3 @@ export default class Button extends Base {
     if (this.node.onClick) this.node.onClick(evt)
   }
 }
-
