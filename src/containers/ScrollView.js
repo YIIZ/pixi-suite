@@ -9,14 +9,16 @@ export default class ScrollView extends Node {
   direction = 'vertical'
 
   initChildren(children) {
-    return (<>
-      <Node name='view' scrollPart='view'>
-        <Node name='content' scrollPart='content' >
-          {children}
+    return (
+      <>
+        <Node name="view" scrollPart="view">
+          <Node name="content" scrollPart="content">
+            {children}
+          </Node>
         </Node>
-      </Node>
-      <ScrollBar name='bar' scrollPart='bar' direction={this.direction} />
-    </>)
+        <ScrollBar name="bar" scrollPart="bar" direction={this.direction} />
+      </>
+    )
   }
 
   onCreate() {
@@ -30,6 +32,7 @@ export default class ScrollView extends Node {
     viewCtrl.view = this.view
     viewCtrl.content = this.content
     viewCtrl.scroller = this.bar.getComponent(ScrollBarCtrl)
+    if (this.disableBar) this.hideBar()
   }
 
   onAdd() {
