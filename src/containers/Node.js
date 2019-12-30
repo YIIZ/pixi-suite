@@ -33,7 +33,7 @@ export default class Node extends Container {
 
   get inStage() {
     let node = this
-    while(node) {
+    while (node) {
       if (node.isRoot) return true
       node = node.parent
     }
@@ -57,7 +57,9 @@ export default class Node extends Container {
 
   onInit() {}
 
-  initChildren(children) { return children }
+  initChildren(children) {
+    return children
+  }
 
   onCreate() {}
 
@@ -69,7 +71,7 @@ export default class Node extends Container {
     if (!this.inStage) return
     this.isAdded = true
 
-    this.components.forEach((c) => {
+    this.components.forEach(c => {
       c.onEnable()
     })
 
@@ -89,7 +91,7 @@ export default class Node extends Container {
 
   handleRemove() {
     this.isAdded = false
-    this.components.forEach((c) => {
+    this.components.forEach(c => {
       c.onDisable()
     })
     this.onRemove()
@@ -98,7 +100,7 @@ export default class Node extends Container {
   onRemove() {}
 
   findChild(namePath) {
-    const names =  namePath.split('/')
+    const names = namePath.split('/')
     let item = null
     let children = this.children
     let name = ''
@@ -116,7 +118,6 @@ export default class Node extends Container {
     }
     return item
   }
-
 }
 
 function createChildren(Item, props, ...children) {
@@ -128,6 +129,7 @@ function createChildren(Item, props, ...children) {
     delete props.args
     if (props.components) props.components = props.components.map(Comp => new Comp(item))
     Object.assign(item, props)
+    if (props.ref) props.ref(item)
   } else {
     item = new Item()
   }
