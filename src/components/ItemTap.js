@@ -5,11 +5,8 @@ import ScrollViewCtrl from './ScrollViewCtrl'
 
 export default class ItemTap extends Base {
   startPoint = new Point(0, 0)
-  handleItemTap = () => null
-
 
   onEnable() {
-    if (this.node.onItemTap) this.handleItemTap = this.node.onItemTap
     this.scrollViewCtrl = this.node.getComponent(ScrollViewCtrl)
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
@@ -20,7 +17,7 @@ export default class ItemTap extends Base {
   }
 
   // 部分Android touchmove 在手指不动时也会触发touchmove
-  isMove = (evt) => {
+  isMove = evt => {
     const { global } = evt.data
     return global.x !== this.startPoint.x || global.y !== this.startPoint.y
   }
@@ -65,5 +62,14 @@ export default class ItemTap extends Base {
       }
     }
   }
-}
 
+  // item  need select and unselect func
+  handleItemTap = (evt, item, index) => {
+    const { current } = this
+    if (current === item) return
+    if (current && current.unselect) current.unselect()
+    if (item.select) item.select()
+    this.current = item
+    if (this.node.onItemTap) this.node.onItemTap(evt, item, index)
+  }
+}
