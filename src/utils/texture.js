@@ -10,7 +10,7 @@ export const createRoundRect = (width, height, radious) => {
   ctx.fillStyle = 'white'
   ctx.moveTo(0, radious)
   ctx.arcTo(0, 0, radious, 0, radious)
-  ctx.lineTo(width-radious, 0)
+  ctx.lineTo(width - radious, 0)
   ctx.arcTo(width, 0, width, radious, radious)
   ctx.lineTo(width, height - radious)
   ctx.arcTo(width, height, width - radious, height, radious)
@@ -27,7 +27,7 @@ export const createCircleTexture = (radious = 100) => {
   canvas.height = radious
   const ctx = canvas.getContext('2d')
   ctx.fillStyle = 'white'
-  ctx.arc(radious/2, radious/2, radious/2, 0, Math.PI * 2, true)
+  ctx.arc(radious / 2, radious / 2, radious / 2, 0, Math.PI * 2, true)
   ctx.fill()
   return new Texture(new BaseTexture(new CanvasResource(canvas)))
 }
