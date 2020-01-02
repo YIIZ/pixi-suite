@@ -63,8 +63,14 @@ export default class ItemTap extends Base {
     }
   }
 
+  tapItem(i) {
+    const children = this.getChildren()
+    this.handleItemTap(null, children[i], i)
+  }
+
   // item  need select and unselect func
   handleItemTap = (evt, item, index) => {
+    if (item.disable) return
     const { current } = this
     if (current === item) return
     if (current && current.unselect) current.unselect()
