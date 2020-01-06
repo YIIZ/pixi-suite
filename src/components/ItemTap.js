@@ -19,7 +19,9 @@ export default class ItemTap extends Base {
   // 部分Android touchmove 在手指不动时也会触发touchmove
   isMove = evt => {
     const { global } = evt.data
-    return global.x !== this.startPoint.x || global.y !== this.startPoint.y
+    const dx = Math.abs(global.x - this.startPoint.x)
+    const dy = Math.abs(global.y - this.startPoint.y)
+    return dx > 5 || dy > 5
   }
 
   handleTouchStart(evt) {
