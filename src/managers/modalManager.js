@@ -40,7 +40,10 @@ class ModalManager {
   hide(node) {
     const index = this.modals.findIndex(v => v === node)
     if (index < 0) return
-    if (node.modalAction) return
+    if (node.modalAction) {
+      node.modalAction.stop()
+      node.modalAction = null
+    }
 
     node.emit('modal.hide')
 
