@@ -8,4 +8,5 @@ export default class Scene extends Node {
   }
 
   onShow(type) {}
+  beforeRemove(nextSceneName) {}
 }

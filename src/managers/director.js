@@ -5,7 +5,7 @@ import ViewAdapter from '../components/ViewAdapter'
 class Director extends EventEmitter {
   ticker = Ticker.shared
 
-  init(container, params, devicePixelRatio=(window.devicePixelRatio || 1)) {
+  init(container, params, devicePixelRatio = window.devicePixelRatio || 1) {
     this.container = container
     const view = container.querySelector('canvas')
     const _params = Object.assign({ view }, params)
@@ -35,6 +35,7 @@ class Director extends EventEmitter {
     const { stage } = this.app
     const lastScene = this.scene
     this.lastScene = lastScene
+    if (lastScene) lastScene.beforeRemove(name)
 
     const Scene = this.scenes[name]
     const scene = new Scene(this)
@@ -55,17 +56,17 @@ class Director extends EventEmitter {
     lastScene.destroy({ children: true })
   }
 
-   updateView() {
-     const { app, container } = this
-     //const { innerWidth, innerHeight, devicePixelRatio = 1 } = window
-     const { devicePixelRatio } = this
-     // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
-     const { clientWidth: innerWidth, clientHeight: innerHeight } = document.documentElement
-     container.style.width = app.view.style.width = innerWidth + 'px'
-     container.style.height = app.view.style.height = innerHeight + 'px'
-     app.width = app.view.width = innerWidth * devicePixelRatio
-     app.height = app.view.height = innerHeight * devicePixelRatio
-     app.renderer.resize(app.width, app.height)
+  updateView() {
+    const { app, container } = this
+    //const { innerWidth, innerHeight, devicePixelRatio = 1 } = window
+    const { devicePixelRatio } = this
+    // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
+    const { clientWidth: innerWidth, clientHeight: innerHeight } = document.documentElement
+    container.style.width = app.view.style.width = innerWidth + 'px'
+    container.style.height = app.view.style.height = innerHeight + 'px'
+    app.width = app.view.width = innerWidth * devicePixelRatio
+    app.height = app.view.height = innerHeight * devicePixelRatio
+    app.renderer.resize(app.width, app.height)
   }
 
   handleResize = () => {
@@ -79,9 +80,9 @@ class Director extends EventEmitter {
 
   resizeTo(width, height) {
     const { app } = this
-     app.width = app.view.width = width
-     app.height = app.view.height = height
-     app.renderer.resize(app.width, app.height)
+    app.width = app.view.width = width
+    app.height = app.view.height = height
+    app.renderer.resize(app.width, app.height)
     this.viewAdapter.updateView(this)
     this.emit('resize')
   }
@@ -90,7 +91,8 @@ class Director extends EventEmitter {
     let hiddenField = 'hidden'
     let visibilityEvent
 
-    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+    if (typeof document.hidden !== 'undefined') {
+      // Opera 12.10 and Firefox 18 and later support
       hiddenField = 'hidden'
       visibilityEvent = 'visibilitychange'
     } else if (typeof document.webkitHidden !== 'undefined') {
