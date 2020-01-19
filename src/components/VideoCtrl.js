@@ -35,7 +35,11 @@ export default class VideoCtrl extends Base {
       director.container.appendChild(player.elem)
     }
 
-    player.once('started', this.handleVideoStart, this)
+    if (player.started) {
+      this.handleVideoStart()
+    } else {
+      player.once('started', this.handleVideoStart, this)
+    }
     director.on('resize', this.updateTransform, this)
   }
 
@@ -43,6 +47,7 @@ export default class VideoCtrl extends Base {
     const { player } = this.node
 
     director.off('resize', this.updateTransform, this)
+    player.off('started', this.handleVideoStart, this)
 
     if (!player.reuse) {
       player.destroy()
@@ -53,7 +58,7 @@ export default class VideoCtrl extends Base {
     }
   }
 
- handleVideoStart() {
+  handleVideoStart() {
     this.node.player.setOpacity(1)
     this.updateTransform()
   }
@@ -181,15 +186,19 @@ class JSPlayer extends BasePlayer {
   }
 
   async init() {
-    const { elem: canvas, option: { src, poster, loop } } = this
+    const {
+      elem: canvas,
+      option: { src, poster, loop },
+    } = this
 
-    const { default: JSMpeg } = await import(/* webpackChunkName: 'jsmpeg' */ 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js')
-    console.log('init')
+    const { default: JSMpeg } = await import(
+      /* webpackChunkName: 'jsmpeg' */ 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js'
+    )
     const video = new JSMpeg.Player(src, {
       canvas,
       poster,
       loop: !!loop, // JSMpeg use loop !== false
-      videoBufferSize: 1024*1024*2,
+      videoBufferSize: 1024 * 1024 * 2,
       disableWebAssembly: false,
       onVideoDecode: this.handleVideoUpdate,
       onEnded: this.handleVideoEnd,
@@ -226,4 +235,3 @@ class JSPlayer extends BasePlayer {
     return canvas
   }
 }
-

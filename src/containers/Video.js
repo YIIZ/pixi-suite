@@ -64,7 +64,11 @@ export default class Video extends Node {
 
     //if (isIOS && player.type === 'navtive') enableInlineVideo(player.elem)
 
-    player.on('started', this.handleVideoStart, this)
+    if (player.started) {
+      this.handleVideoStart()
+    } else {
+      player.once('started', this.handleVideoStart, this)
+    }
     player.on('ended', this.handleVideoEnd, this)
     //if (useJSPlayer) vp.video.duration = 135.99
 
@@ -82,11 +86,12 @@ export default class Video extends Node {
 
   onRemove() {
     const { player } = this
+    player.off('started', this.handleVideoStart, this)
+    player.off('ended', this.handleVideoEnd, this)
 
     director.ticker.remove(this.handleTick, this)
     director.off('visibilitychange', this.handleVisibilityChange, this)
 
-    console.log(player)
     this.player = null
   }
 
