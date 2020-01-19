@@ -1,6 +1,6 @@
 import { Sprite, Text, Point, Texture } from 'pixi.js'
 
-import loader  from '@teambun/loader'
+import loader from '@teambun/loader'
 
 import { Node, Scene } from '../containers'
 import { director, toaster } from '../managers'
@@ -26,19 +26,21 @@ export default class Video extends Node {
     const skipTexture = this.skipTexture || btnSkip.texture
     return (
       <>
-        <Node name='poster'>
-          {children}
-        </Node>
-        <Node name='btn_audio' onToggle={this.handleMuteChange}
+        <Node name="poster">{children}</Node>
+        <Node
+          name="btn_audio"
+          onToggle={this.handleMuteChange}
           defaultStatus={this.audio || 'on'}
           widget={{ flag: Widget.AlignFlag.TOP_RIGHT, top: 40, right: 40 }}
           components={[Widget, Toggle, StatusSwitch]}
           renderable={muteable}
         >
-          <Sprite status='off' texture={audioOffTexture} />
-          <Sprite status='on' texture={audioOnTexture} />
+          <Sprite status="off" texture={audioOffTexture} />
+          <Sprite status="on" texture={audioOnTexture} />
         </Node>
-        <Node name='btn_skip' onClick={this.handleSkip}
+        <Node
+          name="btn_skip"
+          onClick={this.handleSkip}
           renderable={skipable}
           alpha={0}
           widget={{ alignFlag: Widget.AlignFlag.TOP_LEFT, top: 40, left: 40 }}
@@ -54,6 +56,7 @@ export default class Video extends Node {
     this.addComponent(VideoCtrl)
     this.poster = this.findChild('poster')
     this.btnSkip = this.findChild('btn_skip')
+    this.player.boundTarget = this.poster
   }
 
   onAdd() {
@@ -111,7 +114,7 @@ export default class Video extends Node {
     }
   }
 
-  handleMuteChange = (v) => {
+  handleMuteChange = v => {
     this.player.muted = v === 'off'
     this.audio = v
 
@@ -138,6 +141,3 @@ export default class Video extends Node {
 
   handleTick() {}
 }
-
-
-
