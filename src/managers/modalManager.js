@@ -8,7 +8,6 @@ class ModalManager {
   static animationTime = 300
   modals = []
   background = null
-  backgroundCount = 0
   backgroundAlpha = 0.6
   // !! scale alpha will be reset
   show(node, option = {}) {
@@ -73,7 +72,6 @@ class ModalManager {
   }
 
   showBackground(node, arg) {
-    this.backgroundCount += 1
     let { background } = this
 
     const config = { alpha: this.backgroundAlpha, static: false }
@@ -97,7 +95,9 @@ class ModalManager {
         evt.stopPropagation()
       })
       this.background = background
-      this.container.addChildAt(background, 0)
+      this.container.addChild(background)
+    } else {
+      this.container.setChildIndex(background, this.container.children.length - 1)
     }
 
     if (!config.static) {
@@ -116,9 +116,13 @@ class ModalManager {
   }
 
   hideBackground() {
-    this.backgroundCount -= 1
-    if (this.backgroundCount > 0 || !this.background) return
+    const { background, modals } = this
+    if (!background) return
 
+    modals.length === 0 ? this.removeBackground() : this.sinkBackground()
+  }
+
+  removeBackground() {
     const { background } = this
     this.background = null
 
@@ -135,6 +139,17 @@ class ModalManager {
         background.destroy()
       },
     })
+  }
+
+  sinkBackground() {
+    const { background, container } = this
+    const index = container.getChildIndex(background)
+    if (index < 0) return
+
+    const len = container.children.length
+    if (index === len - 1) {
+      container.setChildIndex(background, Math.max(0, len - 2))
+    }
   }
 }
 
