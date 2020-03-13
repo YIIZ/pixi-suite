@@ -10,6 +10,7 @@ export default class ItemTap extends Base {
     this.scrollViewCtrl = this.node.getComponent(ScrollViewCtrl)
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
+    this.reduplicative = this.node.reduplicative
   }
 
   onDisable() {
@@ -74,7 +75,7 @@ export default class ItemTap extends Base {
   handleItemTap = (evt, item, index) => {
     if (item.disable) return
     const { current } = this
-    if (current === item) return
+    if (current === item && !this.node.reduplicative) return
     if (current && current.unselect) current.unselect()
     if (item.select) item.select()
     this.current = item
