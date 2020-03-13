@@ -1,10 +1,17 @@
 import Base from './Base'
 import StatusSwitch from './StatusSwitch'
+import director from '../managers/director'
 
 export default class RadioGroup extends Base {
   onEnable() {
     this.node.interactive = true
     this.node.on('tap', this.handleClick, this)
+
+    const { defaultValue } = this.node
+    if (defaultValue) {
+      const index = this.node.children.findIndex(n => n.value === defaultValue)
+      this.changeTo(index)
+    }
   }
 
   onDisable() {
@@ -12,16 +19,20 @@ export default class RadioGroup extends Base {
   }
 
   handleClick(evt) {
-    const p = evt.data.getLocalPosition(this.node)
-    const node = this.node.children.find(c =>
-      c.x < p.x && c.width + c.x > p.x
-      && c.y < p.y && c.height + c.y > p.y
-    )
+    const { node } = this
+    const { children } = this.node
+    const { renderer } = director.app
+    const { interaction } = renderer.plugins
 
-    this.changeTo(node)
+    for (let i = children.length - 1; i >= 0; i--) {
+      children[i].interactive = true
+      const obj = interaction.hitTest(evt.data.global, children[i])
+      if (obj) return this.changeTo(i)
+    }
   }
 
-  changeTo(node) {
+  changeTo(index) {
+    const node = this.node.children[index]
     if (!node || this.current === node) return
     if (this.current) {
       const s1 = this.current.getComponent(StatusSwitch)
@@ -30,9 +41,10 @@ export default class RadioGroup extends Base {
     const s2 = node.getComponent(StatusSwitch)
     s2 && s2.switch('on')
     this.current = node
-    this.onChange(node)
+    this.onChange(node, index)
   }
 
-  onChange() {}
+  onChange(node, index) {
+    if (this.node.onChange) this.node.onChange(node, index)
+  }
 }
-

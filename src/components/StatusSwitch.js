@@ -7,17 +7,22 @@ export default class StatusSwitch extends Base {
     this.switch(this.node.defaultStatus || 'off')
   }
 
+  onDisable() {
+    this.on = null
+    this.off = null
+  }
+
   switch(status) {
+    const { off, on } = this
     if (!status) status = this.status === 'off' ? 'on' : 'off'
     if (status === 'on') {
-      this.off.visible = false
-      this.on.visible = true
+      if (off) off.visible = false
+      if (on) on.visible = true
       this.status = 'on'
     } else {
-      this.off.visible = true
-      this.on.visible = false
+      if (off) off.visible = true
+      if (on) on.visible = false
       this.status = 'off'
     }
   }
 }
-
