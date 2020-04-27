@@ -39,6 +39,25 @@ export default class Capture extends Base {
     director.on('resize', this.updateTransform, this)
   }
 
+  captureWx({ width, height } = this.node) {
+    const { node } = this
+    const { scale, img } = this
+    const { renderer } = director.app
+    const texture = RenderTexture.create(width * scale, height * scale)
+
+    const t1 = node.position.clone()
+    const t2 = node.scale.clone()
+    const t3 = node.pivot.clone()
+
+    node.setTransform(0, 0, scale, scale)
+    renderer.render(node, texture)
+    node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
+
+    return new Promise((success, fail) => {
+      renderer.extract.canvas(texture).toTempFilePath({ width, height, success, fail })
+    })
+  }
+
   updateTransform() {
     const { positionTarget, node, img } = this
     updateDOMTransform(positionTarget || node, img, director.visibleRect.scale, director.devicePixelRatio)
@@ -62,4 +81,3 @@ export default class Capture extends Base {
     this.img = img
   }
 }
-
