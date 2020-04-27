@@ -31,7 +31,7 @@ export default class Button extends Base {
     const ss = this.node.getComponent(StatusSwitch)
     if (ss) {
       ss.switch(status)
-    } else {
+    } else if (!this.node.clickstatic) {
       this.node.alpha = status === 'on' ? 0.5 : 1
     }
   }
