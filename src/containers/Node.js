@@ -3,7 +3,7 @@ import { Container } from 'pixi.js'
 export default class Node extends Container {
   static createChildren = createChildren
 
-  components = []
+  _components = []
   constructor() {
     super()
     this.on('added', this.handleAdd, this)
@@ -13,7 +13,7 @@ export default class Node extends Container {
   addComponent(Component) {
     // TODO check exist
     const c = new Component(this)
-    this.components.push(c)
+    this._components.push(c)
     if (this.inStage) c.onEnable()
     return c
   }
@@ -22,13 +22,13 @@ export default class Node extends Container {
     const c = this.getComponent(Component)
     if (!c) return
     c.onDisable()
-    const index = this.components.indexOf(c)
-    this.components.splice(index, 1)
+    const index = this._components.indexOf(c)
+    this._components.splice(index, 1)
     return c
   }
 
   getComponent(Component) {
-    return this.components.find(c => c instanceof Component)
+    return this._components.find(c => c instanceof Component)
   }
 
   get inStage() {
@@ -71,7 +71,7 @@ export default class Node extends Container {
     if (!this.inStage) return
     this.isAdded = true
 
-    this.components.forEach(c => {
+    this._components.forEach(c => {
       c.onEnable()
     })
 
@@ -91,7 +91,7 @@ export default class Node extends Container {
 
   handleRemove() {
     this.isAdded = false
-    this.components.forEach(c => {
+    this._components.forEach(c => {
       c.onDisable()
     })
     this.onRemove()
@@ -127,7 +127,7 @@ function createChildren(Item, props, ...children) {
   if (props) {
     item = props.args ? new Item(...props.args) : new Item()
     delete props.args
-    if (props.components) props.components = props.components.map(Comp => new Comp(item))
+    if (props.components) props._components = props.components.map(Comp => new Comp(item))
     Object.assign(item, props)
     if (props.ref) props.ref(item)
   } else {

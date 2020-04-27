@@ -2,12 +2,12 @@ import { Graphics, Texture, BaseTexture, resources } from 'pixi.js'
 
 const { CanvasResource } = resources
 
-export const createRoundRect = (width, height, radious) => {
+export const createRoundRect = (width, height, radious, fill) => {
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
   const ctx = canvas.getContext('2d')
-  ctx.fillStyle = 'white'
+  ctx.fillStyle = fill || 'white'
   ctx.moveTo(0, radious)
   ctx.arcTo(0, 0, radious, 0, radious)
   ctx.lineTo(width - radious, 0)
