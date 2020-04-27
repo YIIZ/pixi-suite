@@ -7,13 +7,13 @@ import { updateDOMTransform } from '../utils/dom'
 export default class HTMLButton extends Base {
   onEnable() {
     this.initElement()
-    this.elem.addEventListener('click', this.handleClick)
-    let sprite = this.node.children.find(v => v.btnImage)
-    if (!sprite) sprite = this.node.children.find(v => v instanceof Sprite)
-    sprite.alpha = 0
-    // v4
-    this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.source.src})`
-    //this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.resource.url})`
+    this.elem.addEventListener('click', this.handleClick, true)
+    //let sprite = this.node.children.find(v => v.btnImage)
+    //if (!sprite) sprite = this.node.children.find(v => v instanceof Sprite)
+    //sprite.alpha = 0
+    //// v4
+    //this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.source.src})`
+    ////this.elem.style.backgroundImage = `url(${sprite.texture.baseTexture.resource.url})`
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
@@ -34,7 +34,7 @@ export default class HTMLButton extends Base {
     this.elem.style.display = 'block'
   }
 
-  handleClick = (evt) => {
+  handleClick = evt => {
     if (this.node.onClick) {
       this.node.onClick(evt)
     }
@@ -46,17 +46,20 @@ export default class HTMLButton extends Base {
   }
 
   initElement(style) {
-    const elem = document.createElement('div')
-    Object.assign(elem.style, {
-      display: 'none',
-      zIndex: '4',
-      border: 'none',
-      webkitAppearance: 'none',
-      background: 'transparent',
-      backgroundSize: 'contain',
-    }, style)
-    director.container.appendChild(elem)
+    const elem = document.createElement('button')
+    Object.assign(
+      elem.style,
+      {
+        zIndex: '4',
+        border: 'none',
+        webkitAppearance: 'none',
+        background: 'transparent',
+        backgroundSize: 'contain',
+      },
+      style
+    )
+    const { elemContainer = director.container } = this.node
+    elemContainer.appendChild(elem)
     this.elem = elem
   }
 }
-
