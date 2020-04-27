@@ -8,7 +8,7 @@ export default class RadioGroup extends Base {
     this.node.on('tap', this.handleClick, this)
 
     const { defaultValue } = this.node
-    if (defaultValue) {
+    if (typeof defaultValue !== 'undefined') {
       const index = this.node.children.findIndex(n => n.value === defaultValue)
       this.changeTo(index)
     }
@@ -20,6 +20,8 @@ export default class RadioGroup extends Base {
 
   handleClick(evt) {
     const { node } = this
+    if (node.disable) return
+
     const { children } = this.node
     const { renderer } = director.app
     const { interaction } = renderer.plugins

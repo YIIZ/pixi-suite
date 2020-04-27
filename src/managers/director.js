@@ -31,7 +31,7 @@ class Director extends EventEmitter {
     this.scenes[key] = cls
   }
 
-  async loadScene(name, transfer) {
+  async loadScene(name, transfer, option) {
     const { stage } = this.app
     const lastScene = this.scene
     this.lastScene = lastScene
@@ -46,7 +46,7 @@ class Director extends EventEmitter {
     stage.addChildAt(this.scene, 0)
 
     if (transfer) {
-      await transfer(lastScene, this.scene)
+      await transfer(lastScene, this.scene, option)
     }
     // FIXME 当上一个transfer未完成, 就执行loadScene, 导致冲突
     if (this.scene === scene) this.scene.onShow('scene')

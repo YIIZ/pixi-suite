@@ -20,10 +20,11 @@ class ModalManager {
 
     node.interactive = true
     node.emit('modal.show')
-    node.animate = typeof animate === 'string' ? animateTypes[animate] : animate
+    node.animate = node.animate || (typeof animate === 'string' ? animateTypes[animate] : animate)
 
     const handleComplete = () => {
       node.modalAction = null
+      if (node.onShow) node.onShow()
       node.emit('modal.shown')
     }
 
@@ -251,6 +252,35 @@ const animateTypes = {
       })
     },
   },
+  fadeInOut: {
+    show: (node, complete) => {
+      node.alpha = 0
+      node.modalAction = tween({
+        from: 0,
+        to: 1,
+        duration: ModalManager.animationTime,
+      }).start({
+        update: v => {
+          node.alpha = v
+        },
+        complete,
+      })
+    },
+    hide: (node, complete) => {
+      node.modalAction = tween({
+        from: node.alpha,
+        to: 0,
+        duration: ModalManager.animationTime,
+        ease: easing.easeOut,
+      }).start({
+        update: v => {
+          node.alpha = v
+        },
+        complete,
+      })
+    },
+  },
 }
 
+ModalManager.animateTypes = animateTypes
 export default new ModalManager()

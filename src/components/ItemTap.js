@@ -57,6 +57,7 @@ export default class ItemTap extends Base {
 
     const children = this.getChildren()
     for (let i = children.length - 1; i >= 0; i--) {
+      if (children[i].disable) continue
       children[i].interactive = true
       const obj = interaction.hitTest(evt.data.global, children[i])
       if (obj) {
