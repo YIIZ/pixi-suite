@@ -35,7 +35,7 @@ export default class VideoCtrl extends Base {
       director.container.appendChild(player.elem)
     }
 
-    if (player.started) {
+    if (player.prepared) {
       this.handleVideoStart()
     } else {
       player.once('started', this.handleVideoStart, this)
@@ -49,7 +49,7 @@ export default class VideoCtrl extends Base {
     director.off('resize', this.updateTransform, this)
     player.off('started', this.handleVideoStart, this)
 
-    if (!player.reuse) {
+    if (!player.option.reuse) {
       player.destroy()
     } else {
       player.removeAllListeners()
@@ -71,9 +71,23 @@ export default class VideoCtrl extends Base {
 }
 
 class BasePlayer extends EventEmitter {
+  constructor(option) {
+    super()
+    this.option = option
+  }
+
+  get currentTime() {
+    return this.video.currentTime
+  }
+
+  set zIndex(v) {
+    if (!this.elem) return
+    this.elem.style.zIndex = v
+  }
+
   handleVideoUpdate = () => {
-    if (!this.started) {
-      this.started = true
+    if (!this.prepared) {
+      this.prepared = true
       this.emit('started')
     }
 
@@ -85,9 +99,6 @@ class BasePlayer extends EventEmitter {
   }
 
   async play() {
-    if (this.playing) return
-    this.playing = true
-
     await this.initPromise
     return this.video.play()
   }
@@ -96,15 +107,15 @@ class BasePlayer extends EventEmitter {
     if (!this.video) return
     if (this.video.paused) return
 
-    this.playing = false
     return this.video.pause()
   }
 
   stop() {
     if (!this.video) return
 
-    this.playing = false
-    return this.video.stop()
+    this.video.pause()
+    this.video.currentTime = 0
+    return
   }
 
   setOpacity(v) {
@@ -135,6 +146,10 @@ class NavtivePlayer extends BasePlayer {
 
   get muted() {
     return this.video.muted
+  }
+
+  get duration() {
+    return this.video.duration
   }
 
   destroy() {
@@ -170,9 +185,9 @@ class NavtivePlayer extends BasePlayer {
       const { paused } = video
       video.play()
       if (paused) video.pause()
-      window.removeEventListener('touchend', unlock)
+      document.body.removeEventListener('click', unlock)
     }
-    window.addEventListener('touchend', unlock)
+    document.body.addEventListener('click', unlock)
     return video
   }
 }
@@ -191,6 +206,7 @@ class JSPlayer extends BasePlayer {
       option: { src, poster, loop },
     } = this
 
+    // FIXME import的动态导入失效?
     const { default: JSMpeg } = await import(
       /* webpackChunkName: 'jsmpeg' */ 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js'
     )
@@ -214,6 +230,12 @@ class JSPlayer extends BasePlayer {
 
   get muted() {
     return this.video.volume === 0
+  }
+
+  get duration() {
+    const { video } = this.video
+    // FIXME timestamps数组长度仅限当前已载入的数据, 所以当video未载入完, duration不正确
+    return video.timestamps.length / video.frameRate
   }
 
   destroy() {

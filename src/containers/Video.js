@@ -20,34 +20,9 @@ export { shouldJSPlayer } from '../components/VideoCtrl'
 export default class Video extends Node {
   name = 'video'
   initChildren(children) {
-    const { muteable, skipable } = this
-    const audioOffTexture = this.audioOffTexture || btnAudioOff.texture
-    const audioOnTexture = this.audioOnTexture || btnAudioOn.texture
-    const skipTexture = this.skipTexture || btnSkip.texture
     return (
       <>
         <Node name="poster">{children}</Node>
-        <Node
-          name="btn_audio"
-          onToggle={this.handleMuteChange}
-          defaultStatus={this.audio || 'on'}
-          widget={{ flag: Widget.AlignFlag.TOP_RIGHT, top: 40, right: 40 }}
-          components={[Widget, Toggle, StatusSwitch]}
-          renderable={muteable}
-        >
-          <Sprite status="off" texture={audioOffTexture} />
-          <Sprite status="on" texture={audioOnTexture} />
-        </Node>
-        <Node
-          name="btn_skip"
-          onClick={this.handleSkip}
-          renderable={skipable}
-          alpha={0}
-          widget={{ alignFlag: Widget.AlignFlag.TOP_LEFT, top: 40, left: 40 }}
-          components={[Widget, Button]}
-        >
-          <Sprite texture={skipTexture} />
-        </Node>
       </>
     )
   }
@@ -55,8 +30,9 @@ export default class Video extends Node {
   onCreate() {
     this.addComponent(VideoCtrl)
     this.poster = this.findChild('poster')
-    this.btnSkip = this.findChild('btn_skip')
     this.player.boundTarget = this.poster
+
+    this.addSkipBtn()
   }
 
   onAdd() {
@@ -64,20 +40,24 @@ export default class Video extends Node {
 
     //if (isIOS && player.type === 'navtive') enableInlineVideo(player.elem)
 
-    if (player.started) {
+    if (player.prepared) {
       this.handleVideoStart()
     } else {
       player.once('started', this.handleVideoStart, this)
     }
+    player.on('timeupdate', this.handleVideoUpdate, this)
     player.on('ended', this.handleVideoEnd, this)
-    //if (useJSPlayer) vp.video.duration = 135.99
 
-    if (!this.disableLoading) {
+    if (this.loadingAnimation) {
       setTimeout(() => {
-        if (player.started) return
+        // 再次尝试播放? 是否因为unlock的pause暂停了?
+        // 另外pause也会触发timeupdate, 可能导致prepared为true, 所以在判断前执行
+        player.play()
+
+        if (player.prepared) return
         this.toast = toaster.show({ type: 'loading' })
         this.toast.findChild('bg').alpha = 0
-      }, 500)
+      }, this.loadingDelay || 100)
     }
 
     player.play()
@@ -89,7 +69,6 @@ export default class Video extends Node {
     player.off('started', this.handleVideoStart, this)
     player.off('ended', this.handleVideoEnd, this)
 
-    director.ticker.remove(this.handleTick, this)
     director.off('visibilitychange', this.handleVisibilityChange, this)
 
     this.player = null
@@ -144,5 +123,52 @@ export default class Video extends Node {
     }
   }
 
-  handleTick() {}
+  handleVideoUpdate = () => {
+    if (this.onVideoUpdate) {
+      this.onVideoUpdate()
+    }
+  }
+
+  addSkipBtn() {
+    const { skipable, skipTexture, skipWidget } = this
+    if (!skipable) return
+
+    const texture = skipTexture || btnSkip.texture
+    const widget = skipWidget || { alignFlag: Widget.AlignFlag.TOP_RIGHT, top: 65, right: 40 }
+    const btn = (
+      <Node
+        name="btn_skip"
+        onClick={this.handleSkip}
+        renderable={skipable}
+        alpha={0}
+        widget={widget}
+        components={[Widget, Button]}
+      >
+        <Sprite texture={texture} />
+      </Node>
+    )
+    this.btnSkip = btn
+    this.addChild(btn)
+  }
+
+  addAudioToggle() {
+    const { muteable } = this
+    if (!muteable) return
+
+    const btn = (
+      <Node
+        name="btn_audio"
+        onToggle={this.handleMuteChange}
+        defaultStatus={this.audio || 'on'}
+        widget={{ flag: Widget.AlignFlag.TOP_LEFT, top: 40, left: 40 }}
+        components={[Widget, Toggle, StatusSwitch]}
+        renderable={muteable}
+      >
+        <Sprite status="off" texture={audioOffTexture} />
+        <Sprite status="on" texture={audioOnTexture} />
+      </Node>
+    )
+    const audioOffTexture = this.audioOffTexture || btnAudioOff.texture
+    const audioOnTexture = this.audioOnTexture || btnAudioOn.texture
+  }
 }
