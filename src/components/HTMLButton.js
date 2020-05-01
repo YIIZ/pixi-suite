@@ -7,7 +7,7 @@ import { updateDOMTransform } from '../utils/dom'
 export default class HTMLButton extends Base {
   onEnable() {
     this.initElement()
-    this.elem.addEventListener('click', this.handleClick, true)
+    this.elem.addEventListener('click', this.handleClick)
     //let sprite = this.node.children.find(v => v.btnImage)
     //if (!sprite) sprite = this.node.children.find(v => v instanceof Sprite)
     //sprite.alpha = 0
