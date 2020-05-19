@@ -181,13 +181,14 @@ class NavtivePlayer extends BasePlayer {
 
     if (disableUnlock) return video
 
-    const unlock = () => {
+    const event = isAndroid ? 'touchend' : 'touchstart'
+    const unlock = async () => {
       const { paused } = video
-      video.play()
+      await video.play()
       if (paused) video.pause()
-      document.body.removeEventListener('click', unlock)
+      document.body.removeEventListener(event, unlock)
     }
-    document.body.addEventListener('click', unlock)
+    document.body.addEventListener(event, unlock)
     return video
   }
 }
@@ -207,9 +208,9 @@ class JSPlayer extends BasePlayer {
     } = this
 
     // FIXME import的动态导入失效?
-    const { default: JSMpeg } = await import(
-      /* webpackChunkName: 'jsmpeg' */ 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js'
-    )
+    //const { default: JSMpeg } = await import(
+    //[> webpackChunkName: 'jsmpeg' <] 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js'
+    //)
     const video = new JSMpeg.Player(src, {
       canvas,
       poster,
