@@ -2,9 +2,9 @@ import Base from './Base'
 
 export default class StatusSwitch extends Base {
   onEnable() {
-    this.off = this.node.children.find(c => c.status === 'off')
-    this.on = this.node.children.find(c => c.status === 'on')
-    this.switch(this.node.defaultStatus || 'off')
+    this.off = this.node.children.find((c) => c.status === 'off')
+    this.on = this.node.children.find((c) => c.status === 'on')
+    if (!this.status) this.switch(this.node.defaultStatus || 'off')
   }
 
   onDisable() {
