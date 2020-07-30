@@ -9,28 +9,34 @@ const { WHITE } = Texture
 const loading = loader.add(require('../../assets/loading.png'))
 const warning = loader.add(require('../../assets/warning.png'))
 const center = new Point(0.5, 0.5)
-const style = { fontSize: 24, fill: '#ffffff' }
+const style = { fontSize: 24, fill: '#ffffff', align: 'center' }
 
 export class TextToast extends Node {
   initChildren() {
-    const text = <Text name='desc' y={30} anchor={center} text={this.title} style={style} />
+    const text = <Text name="desc" y={30} anchor={center} text={this.title} style={style} />
     const w = text.width + 80
+    const h = text.height + 40
     text.x = w / 2
-    return (<>
-      <BG name='bg' args={[w, 60]} />
-      {text}
-    </>)
+    text.y = h / 2
+    return (
+      <>
+        <BG name="bg" args={[w, h]} />
+        {text}
+      </>
+    )
   }
 }
 
 export class WarningToast extends Node {
   icon = warning
   initChildren() {
-    return (<>
-      <BG name='bg' args={[300, 200]} />
-      <Sprite name='icon' x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
-      <Text name='desc' x={150} y={167} anchor={center} text={this.title} style={style} />
-    </>)
+    return (
+      <>
+        <BG name="bg" args={[300, 200]} />
+        <Sprite name="icon" x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
+        <Text name="desc" x={150} y={167} anchor={center} text={this.title} style={style} />
+      </>
+    )
   }
 }
 
@@ -43,9 +49,8 @@ export class LoadingToast extends WarningToast {
       to: Math.PI * 2,
       loop: Infinity,
       ease: (v) => Math.floor(v * 8) / 8, // stepped
-      duration: 800
-    })
-    .start(v => {
+      duration: 800,
+    }).start((v) => {
       icon.rotation = v
     })
   }
