@@ -10,8 +10,7 @@ export default class ScrollBarCtrl extends Base {
 
   maxOverstep = 100
 
-  onEnable() {
-  }
+  onEnable() {}
 
   onDisable() {
     if (this.action) this.action.stop()
@@ -42,7 +41,7 @@ export default class ScrollBarCtrl extends Base {
   updateView() {
     const { visibleLen, len, scrollable } = this
     this.bg.height = visibleLen
-    this.bar.height = visibleLen / len * visibleLen
+    this.bar.height = (visibleLen / len) * visibleLen
 
     if (!this.node.mask) {
       const m = new Sprite(Texture.WHITE)
@@ -52,7 +51,7 @@ export default class ScrollBarCtrl extends Base {
     this.node.visible = this.scrollable
     this.node.mask.width = this.bg.width
     this.node.mask.height = this.bg.height
-    this.relativeOffset = (- this.len) / this.visibleLen
+    this.relativeOffset = -this.len / this.visibleLen
     this.offset = Math.min(0, Math.max(this.minOffset, this.offset))
     this.bar.y = Math.max(0, Math.min(this.minOffset / this.relativeOffset, this.bar.y))
   }
@@ -81,13 +80,14 @@ export default class ScrollBarCtrl extends Base {
     this.lastTime = time
     this.last = v
 
-    const offset = this.offset = this.orignOffset + v - this.start
+    const offset = (this.offset = this.orignOffset + v - this.start)
     this.offset = offset
     if (offset > this.maxOffset) {
       this.offset = this.maxOffset
     } else if (offset < this.minOffset) {
       this.offset = this.minOffset
     }
+    this.node.emit('scrollmove', this.offset)
   }
 
   async handleEnd(v, time) {
@@ -100,7 +100,7 @@ export default class ScrollBarCtrl extends Base {
     await this.handleMomentum()
     await this.handleOverstep()
 
-    this.node.emit('scrollend')
+    this.node.emit('scrollend', this.offset)
   }
 
   // 弹性
@@ -114,7 +114,7 @@ export default class ScrollBarCtrl extends Base {
   // 冲力
   handleMomentum() {
     if (Math.abs(this.velocity) < 0.3) return
-    const deferred = new Deferred
+    const deferred = new Deferred()
 
     const velocity = this.velocity * 10
     this.velocity = 0
@@ -123,26 +123,25 @@ export default class ScrollBarCtrl extends Base {
       to: 0,
       duration: Math.abs(velocity) * 20,
     })
-    .pipe(v => this.offset + v)
-    .while(v => v < this.maxOffset && v > this.minOffset)
-    .start({
-      update: this.setter,
-      complete: deferred.resolve,
-    })
+      .pipe((v) => this.offset + v)
+      .while((v) => v < this.maxOffset && v > this.minOffset)
+      .start({
+        update: this.setter,
+        complete: deferred.resolve,
+      })
 
     return deferred.promise
   }
 
   autoScroll(to) {
-    const deferred = new Deferred
+    const deferred = new Deferred()
 
     const dis = this.offset - to
     this.action = tween({
       from: this.offset,
       to,
-      duration: Math.abs(dis) * 10
-    })
-    .start({ update: this.setter, complete: deferred.resolve })
+      duration: Math.abs(dis) * 10,
+    }).start({ update: this.setter, complete: deferred.resolve })
 
     return deferred.promise
   }
@@ -152,7 +151,7 @@ export default class ScrollBarCtrl extends Base {
     const offset = -1 * (len - visibleLen) * percent
     if (isAuto) {
       this.autoScroll(offset)
-    } else{
+    } else {
       this.setter(offset)
     }
   }
