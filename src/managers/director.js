@@ -35,10 +35,14 @@ class Director extends EventEmitter {
     const { stage } = this.app
     const lastScene = this.scene
     this.lastScene = lastScene
-    if (lastScene) lastScene.beforeRemove(name)
+    if (lastScene) {
+      lastScene.removing = true
+      lastScene.beforeRemove(name)
+    }
 
     const Scene = this.scenes[name]
     const scene = new Scene(this)
+    this.sceneName = name
     this.scene = scene
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
     this.viewAdapter.enable()
