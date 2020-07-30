@@ -12,6 +12,7 @@ export default class Node extends Container {
 
   addComponent(Component) {
     // TODO check exist
+    if (this.getComponent(Component)) return
     const c = new Component(this)
     this._components.push(c)
     if (this.inStage) c.onEnable()
@@ -19,16 +20,18 @@ export default class Node extends Container {
   }
 
   removeComponent(Component) {
-    const c = this.getComponent(Component)
-    if (!c) return
-    c.onDisable()
-    const index = this._components.indexOf(c)
-    this._components.splice(index, 1)
-    return c
+    const { _components } = this
+    for (var i = _components.length - 1; i >= 0; i--) {
+      const c = _components[i]
+      if (c instanceof Component) {
+        c.onDisable()
+        _components.splice(i, 1)
+      }
+    }
   }
 
   getComponent(Component) {
-    return this._components.find(c => c instanceof Component)
+    return this._components.find((c) => c instanceof Component)
   }
 
   get inStage() {
@@ -71,7 +74,7 @@ export default class Node extends Container {
     if (!this.inStage) return
     this.isAdded = true
 
-    this._components.forEach(c => {
+    this._components.forEach((c) => {
       c.onEnable()
     })
 
@@ -83,7 +86,7 @@ export default class Node extends Container {
 
   childrenHandleAdd() {
     if (!this.children) return
-    this.children.forEach(c => {
+    this.children.forEach((c) => {
       if (!c.handleAdd || c.isAdded) return
       c.handleAdd()
     })
@@ -91,7 +94,7 @@ export default class Node extends Container {
 
   handleRemove() {
     this.isAdded = false
-    this._components.forEach(c => {
+    this._components.forEach((c) => {
       c.onDisable()
     })
     this.onRemove()
@@ -127,7 +130,7 @@ function createChildren(Item, props, ...children) {
   if (props) {
     item = props.args ? new Item(...props.args) : new Item()
     delete props.args
-    if (props.components) props._components = props.components.map(Comp => new Comp(item))
+    if (props.components) props._components = props.components.map((Comp) => new Comp(item))
     Object.assign(item, props)
     if (props.ref) props.ref(item)
   } else {
