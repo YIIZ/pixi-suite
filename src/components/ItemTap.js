@@ -18,7 +18,7 @@ export default class ItemTap extends Base {
   }
 
   // 部分Android touchmove 在手指不动时也会触发touchmove
-  isMove = evt => {
+  isMove = (evt) => {
     const { global } = evt.data
     const dx = Math.abs(global.x - this.startPoint.x)
     const dy = Math.abs(global.y - this.startPoint.y)
@@ -74,7 +74,7 @@ export default class ItemTap extends Base {
 
   // item  need select and unselect func
   handleItemTap = (evt, item, index) => {
-    if (item.disable) return
+    if (!item || item.disable) return
     const { current } = this
     if (current === item && !this.node.reduplicative) return
     if (current && current.unselect) current.unselect()

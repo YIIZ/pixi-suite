@@ -18,6 +18,7 @@ export class TextToast extends Node {
     const h = text.height + 40
     text.x = w / 2
     text.y = h / 2
+    this.pivot = new Point(w / 2, h / 2)
     return (
       <>
         <BG name="bg" args={[w, h]} />
@@ -37,6 +38,10 @@ export class WarningToast extends Node {
         <Text name="desc" x={150} y={167} anchor={center} text={this.title} style={style} />
       </>
     )
+  }
+
+  onCreate() {
+    this.pivot = new Point(150, 100)
   }
 }
 

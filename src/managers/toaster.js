@@ -14,8 +14,9 @@ class ToastManager {
     if (!this.container) this.initContainer()
     const Toast = toasts[type]
     const { x, y, width, height } = director.visibleRect
-    const node = <Toast x={x + width/2 + this.offset.x} y={y + height/2 + this.offset.y} title={title} backdrop={true} />
-    node.pivot = new Point(node.width / 2, node.height / 2)
+    const node = (
+      <Toast x={x + width / 2 + this.offset.x} y={y + height / 2 + this.offset.y} title={title} backdrop={true} />
+    )
     if (backdrop) {
       this.showBackdrop(node, backdrop)
     }
@@ -36,7 +37,7 @@ class ToastManager {
   }
 
   initContainer() {
-    this.container = director.app.stage.addChild(<Node name='toasts' />)
+    this.container = director.app.stage.addChild(<Node name="toasts" />)
   }
 
   showBackdrop(node, backdropType) {
@@ -62,8 +63,7 @@ class ToastManager {
         from: 0,
         to: 0.5,
         duration: 300,
-      })
-      .start((v) => backdrop.alpha = v)
+      }).start((v) => (backdrop.alpha = v))
       this.backdrop = backdrop
     }
 
@@ -85,14 +85,13 @@ class ToastManager {
       from: backdrop.alpha,
       to: 0,
       duration: 200,
-    })
-    .start({
-      update: v => {
+    }).start({
+      update: (v) => {
         backdrop.alpha = v
       },
       complete: () => {
         backdrop.destroy()
-      }
+      },
     })
   }
 }
