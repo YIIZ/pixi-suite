@@ -53,7 +53,6 @@ export default class HTMLButton extends Base {
   }
 
   handleClick = (evt) => {
-    console.log('click')
     if (this.node.onClick) {
       this.node.onClick(evt)
     }
@@ -74,6 +73,7 @@ export default class HTMLButton extends Base {
         webkitAppearance: 'none',
         background: 'transparent',
         backgroundSize: 'contain',
+        outline: 0,
       },
       style
     )
