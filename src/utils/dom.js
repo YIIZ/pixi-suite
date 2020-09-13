@@ -10,8 +10,8 @@ export const updateDOMTransform = (node, elem, scale, devicePixelRatio = 2) => {
 
   Object.assign(elem.style, {
     position: 'absolute',
-    top: '0',
-    left: '0',
+    top: `${bd.y * domScale}px`,
+    left: `${bd.x * domScale}px`,
     width: `${bd.width * domScale}px`,
     height: `${bd.height * domScale}px`,
     webkitTransformOrigin: '0 0 0',

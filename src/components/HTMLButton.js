@@ -1,12 +1,14 @@
 import { Sprite } from 'pixi.js'
 import { pick } from '../utils/obj'
 import Base from './Base'
+import Button from './Button'
 import director from '../managers/director'
 import { updateDOMTransform } from '../utils/dom'
 
 export default class HTMLButton extends Base {
   onEnable() {
     this.initElement()
+    this.elem.addEventListener('touchstart', this.handleDown)
     this.elem.addEventListener('click', this.handleClick)
     //let sprite = this.node.children.find(v => v.btnImage)
     //if (!sprite) sprite = this.node.children.find(v => v instanceof Sprite)
@@ -34,7 +36,24 @@ export default class HTMLButton extends Base {
     this.elem.style.display = 'block'
   }
 
-  handleClick = evt => {
+  handleDown = (evt) => {
+    const btn = this.node.getComponent(Button)
+    if (btn) btn.handleSwitch('on')
+
+    this.elem.addEventListener('touchcancel', this.handleCancel)
+    this.elem.addEventListener('touchend', this.handleCancel)
+  }
+
+  handleCancel = (evt) => {
+    const btn = this.node.getComponent(Button)
+    if (btn) btn.handleSwitch('off')
+
+    this.elem.removeEventListener('touchcancel', this.handleCancel)
+    this.elem.removeEventListener('touchend', this.handleCancel)
+  }
+
+  handleClick = (evt) => {
+    console.log('click')
     if (this.node.onClick) {
       this.node.onClick(evt)
     }
