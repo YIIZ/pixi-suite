@@ -68,7 +68,6 @@ export default class Capture extends Base {
     if (this.img) return this.img
 
     const img = new Image()
-    director.container.appendChild(img)
     img.className = 'capture'
     img.style.position = 'absolute'
     img.style.top = '0'
@@ -78,6 +77,9 @@ export default class Capture extends Base {
     img.style.display = 'none'
     img.style.zIndex = '3'
     img.style.opacity = '0.0001'
+
+    const { elemContainer = director.container } = this.node
+    elemContainer.appendChild(img)
     this.img = img
   }
 }
