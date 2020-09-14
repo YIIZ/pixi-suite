@@ -13,7 +13,11 @@ export default class HTMLSelect extends Base {
       Object.assign(this, args)
     }
     const { style, className } = this
-    this.initElement(style)
+    if (this.node.elem) {
+      this.elem = this.node.elem
+    } else {
+      this.initElement(style)
+    }
     if (className) this.elem.setAttribute('class', className)
     this.elem.addEventListener('change', this.handleChange)
     this.elem.addEventListener('input', this.handleInput)
@@ -32,27 +36,35 @@ export default class HTMLSelect extends Base {
     director.off('resize', this.updateTransform, this)
   }
 
-  handleChange = evt => {
+  handleChange = (evt) => {
     if (this.node.onChange) {
       const value = this.elem.value
-      this.node.onChange(evt, this.options.find(v => v.id == value))
+      this.node.onChange(
+        evt,
+        value,
+        this.options.find((v) => v.id == value)
+      )
     }
   }
 
-  handleInput = evt => {
+  handleInput = (evt) => {
     if (this.node.onInput) {
       const value = this.elem.value
-      this.node.onInput(evt, this.options.find(v => v.id == value))
+      this.node.onInput(
+        evt,
+        value,
+        this.options.find((v) => v.id == value)
+      )
     }
   }
 
-  handleFocus = evt => {
+  handleFocus = (evt) => {
     if (this.node.onFocus) {
       this.node.onFocus(evt)
     }
   }
 
-  handleBlur = evt => {
+  handleBlur = (evt) => {
     if (this.node.onBlur) {
       this.node.onBlur(evt)
     }
@@ -60,7 +72,7 @@ export default class HTMLSelect extends Base {
 
   setOptions(data) {
     this.options = data
-    this.elem.innerHTML = data.map(v => `<option value="${v.id}">${v.name}</option>`).join('')
+    this.elem.innerHTML = data.map((v) => `<option value="${v.id}">${v.name}</option>`).join('')
   }
 
   readyonly(v) {
