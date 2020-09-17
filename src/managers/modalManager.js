@@ -10,9 +10,10 @@ class ModalManager {
   background = null
   backgroundAlpha = 0.6
   // !! scale alpha will be reset
-  show(node, option = {}) {
+  show(node, option = { backdrop: true, animate: 'scaleInUpOut' }) {
     if (!this.container) this.initContainer()
-    const { backdrop = true, animate = 'scaleInUpOut' } = option
+    node._modalOption = option
+    const { backdrop, animate } = option
     if (backdrop) this.showBackground(node, backdrop)
 
     this.modals.push(node)
@@ -59,13 +60,12 @@ class ModalManager {
       const isTopModal = index === this.modals.length - 1
       this.modals.splice(index, 1)
       node.modalAction = null
-      node.parent.removeChild(node)
 
       if (isTopModal) {
         const underNode = this.modals[this.modals.length - 1]
         if (underNode && underNode.onActive) underNode.onActive()
-        this.hideBackground()
       }
+      this.sinkBackground()
 
       node.emit('modal.hidden')
       node.destroy({ children: true })
@@ -88,16 +88,11 @@ class ModalManager {
       }
       node.emit('modal.hide')
 
-      const underNode = this.modals[i - 1]
-      if (underNode && underNode.onActive) underNode.onActive()
       modals.splice(i, 1)
-
-      node.modalAction = null
-      node.parent.removeChild(node)
-      this.hideBackground()
       node.emit('modal.hidden')
       node.destroy({ children: true })
     }
+    this.removeBackground()
   }
 
   initContainer() {
@@ -148,11 +143,31 @@ class ModalManager {
     }).start((v) => (background.alpha = v))
   }
 
-  hideBackground() {
-    const { background, modals } = this
+  sinkBackground() {
+    const { background, modals, container } = this
     if (!background) return
 
-    modals.length === 0 ? this.removeBackground() : this.sinkBackground()
+    if (modals.length === 0) return this.removeBackground()
+
+    let node
+    for (let i = modals.length - 1; i >= 0; i--) {
+      if (!modals[i]._modalOption.backdrop) continue
+      node = modals[i]
+      break
+    }
+
+    if (!node) return this.removeBackground()
+
+    const bIndex = container.getChildIndex(background)
+    const index = container.getChildIndex(node)
+
+    if (bIndex === index - 1) {
+      return
+    } else if (bIndex > index) {
+      container.setChildIndex(background, index)
+    } else {
+      container.setChildIndex(background, index - 1)
+    }
   }
 
   removeBackground() {
@@ -168,21 +183,9 @@ class ModalManager {
         background.alpha = v
       },
       complete: () => {
-        this.container.removeChild(background)
         background.destroy()
       },
     })
-  }
-
-  sinkBackground() {
-    const { background, container } = this
-    const index = container.getChildIndex(background)
-    if (index < 0) return
-
-    const len = container.children.length
-    if (index === len - 1) {
-      container.setChildIndex(background, Math.max(0, len - 2))
-    }
   }
 }
 
