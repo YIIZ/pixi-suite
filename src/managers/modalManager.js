@@ -55,13 +55,18 @@ class ModalManager {
       if (index < 0) {
         throw new Error('has removed')
       }
-      const underNode = this.modals[this.modals.length - 2]
-      if (underNode && underNode.onActive) underNode.onActive()
 
+      const isTopModal = index === this.modals.length - 1
       this.modals.splice(index, 1)
       node.modalAction = null
       node.parent.removeChild(node)
-      this.hideBackground()
+
+      if (isTopModal) {
+        const underNode = this.modals[this.modals.length - 1]
+        if (underNode && underNode.onActive) underNode.onActive()
+        this.hideBackground()
+      }
+
       node.emit('modal.hidden')
       node.destroy({ children: true })
     }
