@@ -4,14 +4,17 @@ import { Deferred } from '../utils/obj'
 import Node from '../containers/Node'
 import { tween, easing } from 'popmotion'
 
+const defaultOption = { backdrop: true, animate: 'scaleInUpOut' }
+
 class ModalManager {
   static animationTime = 300
   modals = []
   background = null
   backgroundAlpha = 0.6
   // !! scale alpha will be reset
-  show(node, option = { backdrop: true, animate: 'scaleInUpOut' }) {
+  show(node, option) {
     if (!this.container) this.initContainer()
+    option = Object.assign({}, defaultOption, option)
     node._modalOption = option
     const { backdrop, animate } = option
     if (backdrop) this.showBackground(node, backdrop)
