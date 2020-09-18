@@ -28,10 +28,10 @@ export default class HTMLSelect extends Base {
   }
 
   onDisable() {
-    if (this.elem) {
+    if (this.elem && this.elem !== this.node.elem) {
       this.elem.parentNode.removeChild(this.elem)
-      this.elem = null
     }
+    this.elem = null
     this.options = null
     director.off('resize', this.updateTransform, this)
   }
