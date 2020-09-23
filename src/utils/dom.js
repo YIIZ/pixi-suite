@@ -6,6 +6,7 @@ export const updateDOMTransform = (node, elem, scale, devicePixelRatio = 2) => {
   // scale 会影响input的placeholder
   const domScale = scale / devicePixelRatio
   const matrix = `matrix(${wt.a}, ${wt.b}, ${wt.c}, ${wt.d}, ${wt.tx * domScale}, ${wt.ty * domScale})`
+  // FIXME 当child里用了anchor时， localBounds计算不正确
   const bd = node.getLocalBounds()
 
   Object.assign(elem.style, {

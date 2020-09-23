@@ -261,16 +261,18 @@ const animateTypes = {
   },
   scaleInUpOut: {
     show: (node, complete) => {
+      const scaleTo = node.scale.x
+      const alphaTo = node.alpha
       node.scale.set(0)
       node.alpha = 0
       node.modalAction = tween({
-        from: 0,
-        to: 1,
+        from: { scale: 0, alpha: 0 },
+        to: { scale: scaleTo, alpha: alphaTo },
         duration: ModalManager.animationTime,
       }).start({
         update: (v) => {
-          node.scale.set(v)
-          node.alpha = v
+          node.scale.set(v.scale)
+          node.alpha = v.alpha
         },
         complete,
       })
