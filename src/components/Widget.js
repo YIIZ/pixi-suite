@@ -13,10 +13,11 @@ const defaultConfig = {
   target: undefined,
 }
 
+const anchorEdge = 'edge'
+
 export default class Widget extends Base {
   static AlignFlag = AlignFlag
   static AlignMode = AlignMode
-
 
   onEnable() {
     if (!this.node.widget) {
@@ -43,19 +44,23 @@ export default class Widget extends Base {
   update() {
     // TODO update order
     // TODO position with parent
-    // TODO handle anchor, pivot
-    const { flag, target = widgetManager.defaultTarget, top, bottom, left, right } = this.node.widget
+    const { flag, target = widgetManager.defaultTarget, top, bottom, left, right, anchor } = this.node.widget
+    const rect = this.node.getLocalBounds()
     if (flag & AlignFlag.BOTTOM) {
-      this.node.y = target.y + target.height - bottom - this.node.height
+      this.node.y = target.y + target.height - bottom
+      if (anchor === anchorEdge) this.node.y -= rect.bottom
     }
     if (flag & AlignFlag.TOP) {
       this.node.y = target.y + top
+      if (anchor === anchorEdge) this.node.y -= rect.top
     }
     if (flag & AlignFlag.RIGHT) {
-      this.node.x = target.x + target.width - right - this.node.width
+      this.node.x = target.x + target.width - right - rect.right
+      if (anchor === anchorEdge) this.node.x -= rect.right
     }
     if (flag & AlignFlag.LEFT) {
       this.node.x = target.x + left
+      if (anchor === anchorEdge) this.node.x -= rect.left
     }
   }
 }

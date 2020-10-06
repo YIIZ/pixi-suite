@@ -4,18 +4,31 @@ import director from './director'
 import { Deferred } from '../utils/obj'
 import { tween, easing, delay } from 'popmotion'
 
-import toasts from '../containers/Toast'
+import defaulToasts from '../containers/Toast'
+
+const toasts = {}
+Object.assign(toasts, defaulToasts)
+
+export const addToastType = (type, Class) => {
+  toasts[type] = Class
+}
 
 class ToastManager {
   backdropCount = 0
   offset = { x: 0, y: 0 }
 
-  show({ type, title, duration, backdrop }) {
+  show({ type, title, duration, backdrop, data }) {
     if (!this.container) this.initContainer()
     const Toast = toasts[type]
     const { x, y, width, height } = director.visibleRect
     const node = (
-      <Toast x={x + width / 2 + this.offset.x} y={y + height / 2 + this.offset.y} title={title} backdrop={true} />
+      <Toast
+        x={x + width / 2 + this.offset.x}
+        y={y + height / 2 + this.offset.y}
+        title={title}
+        backdrop={true}
+        data={data}
+      />
     )
     if (backdrop) {
       this.showBackdrop(node, backdrop)
