@@ -36,6 +36,10 @@ export default class Video extends Node {
   }
 
   onAdd() {
+    if (this.player.autoPlay) this.start()
+  }
+
+  start() {
     const { player } = this
 
     //if (isIOS && player.type === 'navtive') enableInlineVideo(player.elem)
@@ -98,7 +102,7 @@ export default class Video extends Node {
     }
   }
 
-  handleMuteChange = v => {
+  handleMuteChange = (v) => {
     this.player.muted = v === 'off'
     this.audio = v
 

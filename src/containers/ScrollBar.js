@@ -15,8 +15,8 @@ export default class ScrollBar extends Node {
   initChildren() {
     return (
       <>
-        <NineSlicePlane name="bg" args={[bg.texture, 3, 3, 3, 3]}></NineSlicePlane>
-        <NineSlicePlane name="bar" args={[bar.texture, 3, 3, 3, 3]} />
+        <NineSlicePlane ref={(r) => (this.$$bg = r)} args={[bg.texture, 3, 3, 3, 3]}></NineSlicePlane>
+        <NineSlicePlane ref={(r) => (this.$$bar = r)} args={[bar.texture, 3, 3, 3, 3]} />
       </>
     )
   }
@@ -24,8 +24,8 @@ export default class ScrollBar extends Node {
   onCreate() {
     const barCtrl = this.addComponent(ScrollBarCtrl)
     barCtrl.direction = this.direction
-    barCtrl.bg = this.findChild('bg')
-    barCtrl.bar = this.findChild('bar')
+    barCtrl.bg = this.$$bg
+    barCtrl.bar = this.$$bar
     if (this.direction === 'horizontal') {
       this.rotation = Math.PI * -0.5
     }

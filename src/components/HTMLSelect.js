@@ -8,16 +8,8 @@ export default class HTMLSelect extends Base {
   style = {}
 
   onEnable() {
-    if (this.node.selectOption) {
-      const args = pick(this.node.selectOption, ['className', 'style'])
-      Object.assign(this, args)
-    }
-    const { style, className } = this
-    if (this.node.elem) {
-      this.elem = this.node.elem
-    } else {
-      this.initElement(style)
-    }
+    const { htmlStyle, className } = this.node
+    this.initElement(htmlStyle)
     if (className) this.elem.setAttribute('class', className)
     this.elem.addEventListener('change', this.handleChange)
     this.elem.addEventListener('input', this.handleInput)
@@ -89,7 +81,12 @@ export default class HTMLSelect extends Base {
   }
 
   initElement(style) {
-    const elem = document.createElement('select')
+    let elem = this.node.elem
+    if (!elem) {
+      elem = document.createElement('select')
+      const { elemContainer = director.container } = this.node
+      elemContainer.appendChild(elem)
+    }
     Object.assign(
       elem.style,
       {
@@ -101,8 +98,6 @@ export default class HTMLSelect extends Base {
       },
       style
     )
-    const { elemContainer = director.container } = this.node
-    elemContainer.appendChild(elem)
     this.elem = elem
   }
 }

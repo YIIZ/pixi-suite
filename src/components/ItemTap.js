@@ -76,9 +76,16 @@ export default class ItemTap extends Base {
   handleItemTap = (evt, item, index) => {
     if (!item || item.disable) return
     const { current } = this
-    if (current === item && !this.node.reduplicative) return
-    if (current && current.unselect) current.unselect()
-    if (item.select) item.select()
+
+    if (item.select) {
+      if (this.node.multiple) {
+        item.selected ? item.unselect() : item.select()
+      } else {
+        if (current) current.unselect()
+        item.select()
+      }
+    }
+
     this.current = item
     if (this.node.onItemTap) this.node.onItemTap(evt, item, index)
   }
