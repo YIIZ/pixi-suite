@@ -1,4 +1,5 @@
 import { Sprite, Texture, Point } from 'pixi.js'
+import EventEmitter from 'eventemitter3'
 import director from './director'
 import { Deferred } from '../utils/obj'
 import Node from '../containers/Node'
@@ -6,7 +7,7 @@ import { tween, easing } from 'popmotion'
 
 const defaultOption = { backdrop: true, animate: 'scaleInUpOut' }
 
-class ModalManager {
+class ModalManager extends EventEmitter {
   static animationTime = 300
   modals = []
   background = null
@@ -24,6 +25,7 @@ class ModalManager {
 
     node.interactive = true
     node.emit('modal.show')
+    this.emit('modal.show', node)
     node.animate = node.animate || (typeof animate === 'string' ? animateTypes[animate] : animate)
 
     const handleComplete = () => {
@@ -33,6 +35,7 @@ class ModalManager {
       const underNode = this.modals[this.modals.length - 2]
       if (underNode && underNode.onUnactive) underNode.onUnactive()
       node.emit('modal.shown')
+      this.emit('modal.shown', node)
     }
 
     if (node.animate && node.animate.show) {
@@ -53,6 +56,7 @@ class ModalManager {
     }
 
     node.emit('modal.hide')
+    this.emit('modal.hide', node)
 
     const handleComplete = () => {
       const index = this.modals.findIndex((v) => v === node)
@@ -71,6 +75,7 @@ class ModalManager {
       this.sinkBackground()
 
       node.emit('modal.hidden')
+      this.emit('modal.hidden', node)
       node.destroy({ children: true })
     }
 
@@ -90,9 +95,11 @@ class ModalManager {
         node.modalAction = null
       }
       node.emit('modal.hide')
+      this.emit('modal.hide', node)
 
       modals.splice(i, 1)
       node.emit('modal.hidden')
+      this.emit('modal.hidden', node)
       node.destroy({ children: true })
     }
     this.removeBackground()
