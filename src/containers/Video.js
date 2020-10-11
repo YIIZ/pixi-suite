@@ -19,30 +19,21 @@ export { shouldJSPlayer } from '../components/VideoCtrl'
 
 export default class Video extends Node {
   name = 'video'
-  initChildren(children) {
-    return (
-      <>
-        <Node name="poster">{children}</Node>
-      </>
-    )
-  }
 
   onCreate() {
     this.addComponent(VideoCtrl)
-    this.poster = this.findChild('poster')
+    this.poster = this.children[0]
     this.player.boundTarget = this.poster
 
     this.addSkipBtn()
   }
 
   onAdd() {
-    if (this.player.autoPlay) this.start()
+    if (this.player.option.autoPlay) this.start()
   }
 
   start() {
     const { player } = this
-
-    //if (isIOS && player.type === 'navtive') enableInlineVideo(player.elem)
 
     if (player.prepared) {
       this.handleVideoStart()

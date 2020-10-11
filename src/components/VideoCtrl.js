@@ -6,7 +6,7 @@ import { updateDOMTransform } from '../utils/dom'
 import { isAndroid, isWeibo, isQQ, isIOS } from '../utils/os'
 
 export const shouldJSPlayer = isAndroid && !isWeibo && !location.search.match(/forcevideo/)
-const defaultOption = { type: shouldJSPlayer ? 'js' : 'navtive', zIndex: 1, loop: false }
+const defaultOption = { type: shouldJSPlayer ? 'js' : 'native', zIndex: 1, loop: false }
 
 export default class VideoCtrl extends Base {
   static preload(op) {
@@ -15,7 +15,7 @@ export default class VideoCtrl extends Base {
     if (option.type === 'js') {
       player = new JSPlayer(option)
     } else {
-      player = new NavtivePlayer(option)
+      player = new NativePlayer(option)
     }
     return player
   }
@@ -35,7 +35,7 @@ export default class VideoCtrl extends Base {
       director.container.appendChild(player.elem)
     }
 
-    if (player.prepared) {
+    if (player.prepared && player.option.autoPlay) {
       this.handleVideoStart()
     } else {
       player.once('started', this.handleVideoStart, this)
@@ -88,6 +88,9 @@ class BasePlayer extends EventEmitter {
   handleVideoUpdate = () => {
     if (!this.prepared) {
       this.prepared = true
+    }
+    if (!this.video.paused && !this.started) {
+      this.started = true
       this.emit('started')
     }
 
@@ -127,10 +130,10 @@ class BasePlayer extends EventEmitter {
   }
 }
 
-class NavtivePlayer extends BasePlayer {
+class NativePlayer extends BasePlayer {
   constructor(option) {
     super(option)
-    this.elem = this.video = NavtivePlayer.initElement(option)
+    this.elem = this.video = NativePlayer.initElement(option)
     if (option.x5 || (isQQ && isIOS)) {
       this.elem.setAttribute('x5-playsinline', 'true')
     }
@@ -208,9 +211,9 @@ class JSPlayer extends BasePlayer {
     } = this
 
     // FIXME import的动态导入失效?
-    //const { default: JSMpeg } = await import(
-    //[> webpackChunkName: 'jsmpeg' <] 'exports-loader?JSMpeg!../vendors/jsmpeg.min.js'
-    //)
+    const { JSMpeg } = await import(
+      /* webpackChunkName: 'jsmpeg' */ 'exports-loader?exports=JSMpeg!pixi-suite/src/vendors/jsmpeg.min.js'
+    )
     const video = new JSMpeg.Player(src, {
       canvas,
       poster,
