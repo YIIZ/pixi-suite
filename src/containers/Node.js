@@ -74,11 +74,13 @@ export default class Node extends Container {
     if (!this.inStage) return
     this.isAdded = true
 
+    // children enble first?
+    this.childrenHandleAdd()
+
     this._components.forEach((c) => {
       c.onEnable()
     })
 
-    this.childrenHandleAdd()
     this.onAdd()
   }
 
