@@ -23,6 +23,7 @@ class Director extends EventEmitter {
   get visibleRect() {
     return this.viewAdapter.visibleRect
   }
+
   get isRotated() {
     return this.app.stage.rotation != 0
   }
@@ -41,7 +42,7 @@ class Director extends EventEmitter {
     }
 
     const Scene = this.scenes[name]
-    const scene = new Scene(this)
+    const scene = new Scene(this, option)
     this.sceneName = name
     this.scene = scene
     this.viewAdapter = this.scene.getComponent(ViewAdapter)
