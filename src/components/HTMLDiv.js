@@ -7,14 +7,15 @@ import { updateDOMTransform } from '../utils/dom'
 
 export default class HTMLDiv extends Base {
   onEnable() {
-    this.node.renderable = false
     this.initElement(this.node.htmlStyle)
+    this.elem.addEventListener('click', this.handleClick)
     this.updateTransform()
     director.on('resize', this.updateTransform, this)
   }
 
   onDisable() {
     if (this.elem) {
+      this.elem.removeEventListener('click', this.handleClick)
       this.elem.parentNode.removeChild(this.elem)
       this.elem = null
     }
@@ -32,6 +33,12 @@ export default class HTMLDiv extends Base {
   updateTransform() {
     const { node, elem } = this
     updateDOMTransform(node, elem, director.visibleRect.scale, director.devicePixelRatio)
+  }
+
+  handleClick = (evt) => {
+    if (this.node.onClick) {
+      this.node.onClick(evt)
+    }
   }
 
   initElement(style) {
@@ -55,11 +62,10 @@ export default class HTMLDiv extends Base {
       style
     )
 
+    this.elem = elem
     const sp = this.node.children[0]
     if (sp && sp instanceof Sprite && sp.texture) {
       this.elem.style.backgroundImage = `url(${sp.texture.baseTexture.resource.source.src})`
     }
-
-    this.elem = elem
   }
 }

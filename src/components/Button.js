@@ -38,6 +38,7 @@ export default class Button extends Base {
 
   handleClick(evt) {
     this.handleCancel(evt)
+    this.node.emit('btnclick')
     if (this.node.onClick) this.node.onClick(evt)
   }
 }

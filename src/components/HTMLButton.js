@@ -22,9 +22,13 @@ export default class HTMLButton extends Base {
 
   onDisable() {
     if (this.elem) {
-      this.elem.parentNode.removeChild(this.elem)
-      this.elem = null
+      this.elem.removeEventListener('touchstart', this.handleDown)
+      this.elem.removeEventListener('click', this.handleClick)
     }
+    if (this.elem && this.elem !== this.node.elem) {
+      this.elem.parentNode.removeChild(this.elem)
+    }
+    this.elem = null
     director.off('resize', this.updateTransform, this)
   }
 
@@ -53,6 +57,7 @@ export default class HTMLButton extends Base {
   }
 
   handleClick = (evt) => {
+    this.node.emit('btnclick')
     if (this.node.onClick) {
       this.node.onClick(evt)
     }
@@ -64,7 +69,13 @@ export default class HTMLButton extends Base {
   }
 
   initElement(style) {
-    const elem = document.createElement('button')
+    let elem = this.node.elem
+    if (!elem) {
+      elem = document.createElement('button')
+      const { elemContainer = director.container } = this.node
+      elemContainer.appendChild(elem)
+    }
+
     Object.assign(
       elem.style,
       {
@@ -77,8 +88,7 @@ export default class HTMLButton extends Base {
       },
       style
     )
-    const { elemContainer = director.container } = this.node
-    elemContainer.appendChild(elem)
+
     this.elem = elem
   }
 }
