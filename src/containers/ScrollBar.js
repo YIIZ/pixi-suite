@@ -4,19 +4,20 @@ import loader from '@teambun/loader'
 import Node from './Node'
 import ScrollBarCtrl from '../components/ScrollBarCtrl'
 import Widget from '../components/Widget'
+import { createRoundRect } from '../utils/texture'
 
-const bg = loader.add(require('../../assets/scroll_v_bg.png'))
-const bar = loader.add(require('../../assets/scroll_v_bar.png'))
+let bg = null
 
 export default class ScrollBar extends Node {
   scrollPart = 'bar'
   direction = 'vertical'
 
   initChildren() {
+    if (!bg) bg = createRoundRect(8, 64, 4)
     return (
       <>
-        <NineSlicePlane ref={(r) => (this.$$bg = r)} args={[bg.texture, 3, 3, 3, 3]}></NineSlicePlane>
-        <NineSlicePlane ref={(r) => (this.$$bar = r)} args={[bar.texture, 3, 3, 3, 3]} />
+        <NineSlicePlane ref={(r) => (this.$$bg = r)} args={[bg, 3, 3, 3, 3]}></NineSlicePlane>
+        <NineSlicePlane ref={(r) => (this.$$bar = r)} args={[bg, 3, 3, 3, 3]} />
       </>
     )
   }

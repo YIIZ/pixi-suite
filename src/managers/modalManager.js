@@ -182,6 +182,7 @@ class ModalManager extends EventEmitter {
 
   removeBackground() {
     const { background } = this
+    if (!background) return
     this.background = null
 
     tween({
