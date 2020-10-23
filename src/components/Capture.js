@@ -13,7 +13,7 @@ export default class Capture extends Base {
 
   onDisable() {
     if (this.img) {
-      this.img.parentNode.removeChild(this.img)
+      if (this.img.parentNode) this.img.parentNode.removeChild(this.img)
       this.img = null
     }
     director.off('resize', this.updateTransform, this)
