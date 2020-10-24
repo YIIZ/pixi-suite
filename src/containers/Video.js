@@ -34,15 +34,6 @@ export default class Video extends Node {
 
   start() {
     const { player } = this
-
-    if (player.prepared) {
-      this.handleVideoStart()
-    } else {
-      player.once('started', this.handleVideoStart, this)
-    }
-    player.on('timeupdate', this.handleVideoUpdate, this)
-    player.on('ended', this.handleVideoEnd, this)
-
     if (this.loadingAnimation) {
       setTimeout(() => {
         // 再次尝试播放? 是否因为unlock的pause暂停了?
@@ -56,14 +47,12 @@ export default class Video extends Node {
     }
 
     player.play()
+    director.off('visibilitychange', this.handleVisibilityChange, this)
     director.on('visibilitychange', this.handleVisibilityChange, this)
   }
 
   onRemove() {
     const { player } = this
-    player.off('started', this.handleVideoStart, this)
-    player.off('ended', this.handleVideoEnd, this)
-
     director.off('visibilitychange', this.handleVisibilityChange, this)
 
     this.player = null
@@ -71,8 +60,9 @@ export default class Video extends Node {
 
   handleVisibilityChange(hidden) {
     if (hidden) {
+      this.visibilityPaused = this.player.video.paused
       this.player.pause()
-    } else {
+    } else if (!this.visibilityPaused) {
       this.player.play()
     }
   }
@@ -80,6 +70,7 @@ export default class Video extends Node {
   handleVideoStart() {
     const { toast, skipable, poster, btnSkip } = this
 
+    this.player.elem.style.display = 'block'
     poster.alpha = 0
     if (toast) toaster.hide(toast)
 

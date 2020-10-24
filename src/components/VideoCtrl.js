@@ -37,10 +37,11 @@ export default class VideoCtrl extends Base {
 
     if (player.prepared && player.option.autoPlay) {
       this.handleVideoStart()
-    } else {
-      player.once('started', this.handleVideoStart, this)
     }
     director.on('resize', this.updateTransform, this)
+    player.on('started', this.handleVideoStart, this)
+    player.on('timeupdate', this.handleVideoUpdate, this)
+    player.on('ended', this.handleVideoEnd, this)
   }
 
   onDisable() {
@@ -48,6 +49,8 @@ export default class VideoCtrl extends Base {
 
     director.off('resize', this.updateTransform, this)
     player.off('started', this.handleVideoStart, this)
+    player.off('timeupdate', this.handleVideoUpdate, this)
+    player.off('ended', this.handleVideoEnd, this)
 
     if (!player.option.reuse) {
       player.destroy()
@@ -59,8 +62,23 @@ export default class VideoCtrl extends Base {
   }
 
   handleVideoStart() {
-    this.node.player.setOpacity(1)
     this.updateTransform()
+    this.node.player.setOpacity(1)
+    if (this.node.handleVideoStart) {
+      this.node.handleVideoStart()
+    }
+  }
+
+  handleVideoUpdate = () => {
+    if (this.node.handleVideoUpdate) {
+      this.node.handleVideoUpdate()
+    }
+  }
+
+  handleVideoEnd = () => {
+    if (this.node.handleVideoEnd) {
+      this.node.handleVideoEnd()
+    }
   }
 
   updateTransform() {
@@ -98,6 +116,7 @@ class BasePlayer extends EventEmitter {
   }
 
   handleVideoEnd = () => {
+    this.started = false
     this.emit('ended')
   }
 
