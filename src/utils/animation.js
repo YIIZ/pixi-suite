@@ -21,7 +21,6 @@ export const fadeOut = (node, option, handler) => {
       } else if (handler === 'remove') {
         if (node.parent) node.parent.removeChild(node)
       } else {
-        console.log('destroy')
         node.destroy({ children: true })
       }
     },

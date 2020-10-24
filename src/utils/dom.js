@@ -1,4 +1,4 @@
-export const updateDOMTransform = (node, elem, scale, devicePixelRatio = 2) => {
+export const updateDOMTransform = (node, elem, scale, devicePixelRatio) => {
   node._recursivePostUpdateTransform()
 
   const wt = node.transform.worldTransform.clone()
@@ -22,7 +22,7 @@ export const updateDOMTransform = (node, elem, scale, devicePixelRatio = 2) => {
   })
 }
 
-export const toScreenBounds = (node, devicePixelRatio = 2) => {
+export const toScreenBounds = (node, devicePixelRatio) => {
   const { width, height, left, top } = node.getBounds()
   return {
     top: top / devicePixelRatio,

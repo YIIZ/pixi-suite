@@ -1,18 +1,20 @@
 import { Application, Ticker } from 'pixi.js'
 import EventEmitter from 'eventemitter3'
 import ViewAdapter from '../components/ViewAdapter'
+import { isIOS } from '../utils/os'
 
 class Director extends EventEmitter {
   ticker = Ticker.shared
 
   init(container, params, devicePixelRatio = window.devicePixelRatio || 1) {
     this.container = container
+    this.devicePixelRatio = Math.min(2, devicePixelRatio)
+
     const view = container.querySelector('canvas')
-    const _params = Object.assign({ view }, params)
+    const _params = Object.assign({ view, resolution: this.devicePixelRatio }, params)
     const app = new Application(_params)
     this.app = app
     this.scenes = {}
-    this.devicePixelRatio = devicePixelRatio
     app.stage.isRoot = true
 
     this.detectVisibility()
@@ -63,7 +65,7 @@ class Director extends EventEmitter {
 
   updateView() {
     const { app, container } = this
-    //const { innerWidth, innerHeight, devicePixelRatio = 1 } = window
+    //const { innerWidth, innerHeight  } = window
     const { devicePixelRatio } = this
     // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
     const { clientWidth: innerWidth, clientHeight: innerHeight } = document.documentElement
@@ -74,8 +76,10 @@ class Director extends EventEmitter {
     app.renderer.resize(app.width, app.height)
   }
 
-  handleResize = () => {
+  handleResize = async () => {
     if (this.disableResize) return
+
+    if (isIOS) await new Promise((r) => setTimeout(r, 120))
     this.updateView()
 
     if (!this.viewAdapter) return
