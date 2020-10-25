@@ -54,20 +54,13 @@ class ModalManager extends EventEmitter {
       node.modalAction.stop()
       node.modalAction = null
     }
+    const isTopModal = index === this.modals.length - 1
+    this.modals.splice(index, 1)
 
     node.emit('modal.hide')
     this.emit('modal.hide', node)
 
     const handleComplete = () => {
-      const index = this.modals.findIndex((v) => v === node)
-      if (index < 0) {
-        throw new Error('has removed')
-      }
-
-      const isTopModal = index === this.modals.length - 1
-      this.modals.splice(index, 1)
-      node.modalAction = null
-
       if (isTopModal) {
         const underNode = this.modals[this.modals.length - 1]
         if (underNode && underNode.onActive) underNode.onActive()

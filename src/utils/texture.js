@@ -31,5 +31,3 @@ export const createCircleTexture = (radious = 100) => {
   ctx.fill()
   return new Texture(new BaseTexture(new CanvasResource(canvas)))
 }
-
-export const CIRCLE = createCircleTexture()
