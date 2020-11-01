@@ -120,7 +120,7 @@ export default class Video extends Node {
     if (!skipable) return
 
     const texture = skipTexture || btnSkip.texture
-    const widget = skipWidget || { alignFlag: Widget.AlignFlag.TOP_RIGHT, top: 65, right: 40 }
+    const widget = skipWidget || { alignFlag: Widget.AlignFlag.TOP_RIGHT, top: 50, right: 50 }
     const btn = (
       <Node
         name="btn_skip"
