@@ -24,6 +24,8 @@ export default class HTMLButton extends Base {
     if (this.elem) {
       this.elem.removeEventListener('touchstart', this.handleDown)
       this.elem.removeEventListener('click', this.handleClick)
+      this.elem.removeEventListener('touchcancel', this.handleCancel)
+      this.elem.removeEventListener('touchend', this.handleCancel)
     }
     if (this.elem && this.elem !== this.node.elem) {
       this.elem.parentNode.removeChild(this.elem)
