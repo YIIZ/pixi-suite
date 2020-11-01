@@ -11,7 +11,7 @@ class Director extends EventEmitter {
     this.devicePixelRatio = Math.min(2, devicePixelRatio)
 
     const view = container.querySelector('canvas')
-    const _params = Object.assign({ view, resolution: this.devicePixelRatio }, params)
+    const _params = Object.assign({ view }, params)
     const app = new Application(_params)
     this.app = app
     this.scenes = {}
