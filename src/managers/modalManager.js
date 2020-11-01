@@ -100,6 +100,7 @@ class ModalManager extends EventEmitter {
 
   initContainer() {
     this.container = director.app.stage.addChild(<Node name="modals" />)
+    director.on('resize', this.handleResize)
   }
 
   showBackground(node, arg) {
@@ -190,6 +191,16 @@ class ModalManager extends EventEmitter {
         background.destroy()
       },
     })
+  }
+
+  handleResize = () => {
+    const { background } = this
+    if (!background) return
+    const { x, y, width, height, offsetX, offsetY } = director.visibleRect
+    background.width = width
+    background.height = height
+    background.x = x
+    background.y = y
   }
 }
 
