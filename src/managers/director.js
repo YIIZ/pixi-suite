@@ -19,7 +19,17 @@ class Director extends EventEmitter {
 
     this.detectVisibility()
     this.updateView()
-    window.addEventListener('resize', this.handleResize)
+    //window.addEventListener('resize', this.handleResize)
+    this.ticker.add(this.tick)
+  }
+
+  tick = () => {
+    const { size } = this
+    if (!size) return
+    const { clientWidth, clientHeight } = document.documentElement
+    if (size.width != clientWidth || size.height != clientHeight) {
+      this.handleResize()
+    }
   }
 
   get visibleRect() {
@@ -63,24 +73,29 @@ class Director extends EventEmitter {
     lastScene.destroy({ children: true })
   }
 
-  updateView() {
+  updateView(size) {
     const { app, container } = this
     //const { innerWidth, innerHeight  } = window
     const { devicePixelRatio } = this
     // innerWidth 在设备旋转后，值不正确，clientWidth会剔除掉scrollbar的宽度
-    const { clientWidth: innerWidth, clientHeight: innerHeight } = document.documentElement
-    container.style.width = app.view.style.width = innerWidth + 'px'
-    container.style.height = app.view.style.height = innerHeight + 'px'
-    app.width = app.view.width = innerWidth * devicePixelRatio
-    app.height = app.view.height = innerHeight * devicePixelRatio
+    if (!size) {
+      const { clientWidth, clientHeight } = document.documentElement
+      size = { width: clientWidth, height: clientHeight }
+    }
+    this.size = size
+    const { width, height } = size
+    container.style.width = app.view.style.width = width + 'px'
+    container.style.height = app.view.style.height = height + 'px'
+    app.width = app.view.width = width * devicePixelRatio
+    app.height = app.view.height = height * devicePixelRatio
     app.renderer.resize(app.width, app.height)
+    console.log('updateView', width, height)
   }
 
-  handleResize = async () => {
+  handleResize = async (size) => {
     if (this.disableResize) return
 
-    if (isIOS) await new Promise((r) => setTimeout(r, 120))
-    this.updateView()
+    this.updateView(size)
 
     if (!this.viewAdapter) return
     this.viewAdapter.updateView(this)
