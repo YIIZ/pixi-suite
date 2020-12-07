@@ -1,7 +1,7 @@
 import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
 import StatusSwitch from './StatusSwitch'
-import { tween, physics } from 'popmotion'
+import { tween } from '@teambun/motion'
 
 const { WHITE } = Texture
 
@@ -62,9 +62,10 @@ export default class DrawerCtrl extends Base {
       from: this.orginOffset,
       // FIXME better calc position of to
       to: this._content.x + this._content.width - this.handler.width,
-      duration: 500
+      duration: 500,
     })
-    .start(this.updateView)
+      .onUpdate(this.updateView)
+      .start()
   }
 
   unfold() {
@@ -75,13 +76,13 @@ export default class DrawerCtrl extends Base {
     this.action = tween({
       from: this._content.x,
       to: this.orginOffset,
-      duration: 500
+      duration: 500,
     })
-    .start(this.updateView)
+      .onUpdate(this.updateView)
+      .start()
   }
 
   updateView = (offset) => {
     this._content.x = offset
   }
 }
-

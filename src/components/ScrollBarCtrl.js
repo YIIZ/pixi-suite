@@ -1,6 +1,6 @@
 import { Sprite, Texture } from 'pixi.js'
 import Base from './Base'
-import { tween, physics } from 'popmotion'
+import { tween } from '@teambun/motion'
 import { Deferred } from '../utils/obj.js'
 
 export default class ScrollBarCtrl extends Base {
@@ -118,18 +118,24 @@ export default class ScrollBarCtrl extends Base {
 
     const velocity = this.velocity * 10
     this.velocity = 0
-    this.action = tween({
+    const action = tween({
       from: velocity,
       to: 0,
       duration: Math.abs(velocity) * 20,
     })
-      .pipe((v) => this.offset + v)
-      .while((v) => v < this.maxOffset && v > this.minOffset)
-      .start({
-        update: this.setter,
-        complete: deferred.resolve,
+      .onUpdate((v) => {
+        v = this.offset + v
+        if (v < this.maxOffset && v > this.minOffset) {
+          this.setter(v)
+        } else {
+          action?.stop()
+          deferred.resolve()
+        }
       })
+      .onComplete(deferred.resolve)
+      .start()
 
+    this.action = action
     return deferred.promise
   }
 
@@ -140,20 +146,29 @@ export default class ScrollBarCtrl extends Base {
     this.action = tween({
       from: this.offset,
       to,
-      duration: Math.abs(dis) * 10,
-    }).start({ update: this.setter, complete: deferred.resolve })
+      duration: 500,
+    })
+      .onUpdate(this.setter)
+      .onComplete(() => {
+        deferred.resolve()
+      })
+      .start()
 
     return deferred.promise
   }
 
-  scrollTo(percent, isAuto) {
-    const { visibleLen, len, scrollable } = this
-    const offset = -1 * (len - visibleLen) * percent
+  scrollTo(offset, isAuto) {
     if (isAuto) {
       this.autoScroll(offset)
     } else {
       this.setter(offset)
     }
+  }
+
+  scrollPercent(percent, isAuto) {
+    const { visibleLen, len, scrollable } = this
+    const offset = -1 * (len - visibleLen) * percent
+    this.scrollTo(offset, isAuto)
   }
 
   reset() {

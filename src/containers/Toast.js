@@ -1,5 +1,5 @@
 import { Graphics, Sprite, Text, Point, Texture } from 'pixi.js'
-import { tween, easing } from 'popmotion'
+import { tween } from '@teambun/motion'
 import loader from '@teambun/loader'
 
 import Node from './Node'
@@ -55,9 +55,11 @@ export class LoadingToast extends WarningToast {
       loop: Infinity,
       ease: (v) => Math.floor(v * 8) / 8, // stepped
       duration: 800,
-    }).start((v) => {
-      icon.rotation = v
     })
+      .onUpdate((v) => {
+        icon.rotation = v
+      })
+      .start()
   }
 
   onRemove() {

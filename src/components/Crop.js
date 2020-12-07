@@ -1,4 +1,4 @@
-import { tween } from 'popmotion'
+import { tween } from '@teambun/motion'
 import { Point } from 'pixi.js'
 import Base from './Base'
 import * as v2 from '../utils/v2'
@@ -13,14 +13,17 @@ export default class Crop extends Base {
   minRect = { x: 0, y: 0, w: 750, h: 750 }
 
   onEnable() {
-    this.viewportRatio = 1 / director.app.stage.scale.x * director.devicePixelRatio
+    this.viewportRatio = (1 / director.app.stage.scale.x) * director.devicePixelRatio
     this.node.interactive = true
     this.node.on('touchstart', this.handleTouchStart, this)
   }
 
   onDisable() {
-    const { target, target: { cropValue } } = this
-    if(this.action) this.action.stop()
+    const {
+      target,
+      target: { cropValue },
+    } = this
+    if (this.action) this.action.stop()
     if (cropValue) {
       target.rotation = cropValue.rotation
       target.scale.set(cropValue.scale)
@@ -31,7 +34,7 @@ export default class Crop extends Base {
 
   // FIXME 多指触控会有两次start, end
   handleTouchStart(evt) {
-    if(this.action) this.action.stop()
+    if (this.action) this.action.stop()
 
     const { touches } = evt.data.originalEvent
     if (!touches) return
@@ -83,7 +86,7 @@ export default class Crop extends Base {
 
   handleScale(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches && (touches.length > 1)
+    const isMulti = touches && touches.length > 1
     if (!isMulti) return
 
     const { target } = this
@@ -101,7 +104,7 @@ export default class Crop extends Base {
 
   handleRotate(evt) {
     const { touches } = evt.data.originalEvent
-    const isMulti = touches && (touches.length > 1)
+    const isMulti = touches && touches.length > 1
     if (!isMulti) return
 
     const { target } = this
@@ -130,7 +133,7 @@ export default class Crop extends Base {
 
     const isLandscape = Math.abs(cropValue.rotation % a180) > 0.01
 
-    const minScale = isLandscape ? Math.max(w/height, h/width) : Math.max(w/width, h/height)
+    const minScale = isLandscape ? Math.max(w / height, h / width) : Math.max(w / width, h / height)
     if (target.scale.x < minScale) {
       cropValue.scale = minScale
     }
@@ -139,7 +142,7 @@ export default class Crop extends Base {
     const h1 = cropValue.scale * height
     if (isLandscape) {
       cropValue.x = Math.min((h1 - w) / 2, Math.abs(x)) * Math.sign(x)
-      cropValue.y = Math.min((w1- h) / 2, Math.abs(y)) * Math.sign(y)
+      cropValue.y = Math.min((w1 - h) / 2, Math.abs(y)) * Math.sign(y)
     } else {
       cropValue.x = Math.min((w1 - w) / 2, Math.abs(x)) * Math.sign(x)
       cropValue.y = Math.min((h1 - h) / 2, Math.abs(y)) * Math.sign(y)
@@ -147,11 +150,12 @@ export default class Crop extends Base {
     target.cropValue = cropValue
 
     this.action = tween({ from: { x, y, rotation, scale: target.scale.x }, to: cropValue, duration: 300 })
-    .start(v => {
-      target.scale.set(v.scale)
-      target.rotation = v.rotation
-      target.position.set(v.x, v.y)
-    })
+      .onUpdate((v) => {
+        target.scale.set(v.scale)
+        target.rotation = v.rotation
+        target.position.set(v.x, v.y)
+      })
+      .start()
   }
 
   handleTouchEnd(evt) {
@@ -163,4 +167,3 @@ export default class Crop extends Base {
     this.handleAmend()
   }
 }
-

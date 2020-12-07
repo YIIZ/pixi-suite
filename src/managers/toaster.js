@@ -2,7 +2,7 @@ import { Sprite, Texture, Point } from 'pixi.js'
 import Node from '../containers/Node'
 import director from './director'
 import { Deferred } from '../utils/obj'
-import { tween, easing, delay } from 'popmotion'
+import { tween, delay } from '@teambun/motion'
 
 import defaulToasts from '../containers/Toast'
 
@@ -36,7 +36,7 @@ class ToastManager {
     this.container.addChild(node)
     node.deferred = new Deferred()
     if (duration) {
-      delay(duration).start({ complete: () => this.hide(node) })
+      delay(duration).then(() => this.hide(node))
     }
     return node
   }
@@ -76,7 +76,9 @@ class ToastManager {
         from: 0,
         to: 0.5,
         duration: 300,
-      }).start((v) => (backdrop.alpha = v))
+      })
+        .onUpdate((v) => (backdrop.alpha = v))
+        .start()
       this.backdrop = backdrop
     }
 
@@ -98,14 +100,10 @@ class ToastManager {
       from: backdrop.alpha,
       to: 0,
       duration: 200,
-    }).start({
-      update: (v) => {
-        backdrop.alpha = v
-      },
-      complete: () => {
-        backdrop.destroy()
-      },
     })
+      .onUpdate((v) => (backdrop.alpha = v))
+      .onComplete(() => backdrop.destroy())
+      .start()
   }
 }
 

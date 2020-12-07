@@ -1,4 +1,4 @@
-import { tween, easing } from 'popmotion'
+import { tween, easing } from '@teambun/motion'
 
 export default ($out, $in, option = {}) => {
   return new Promise((resolve, reject) => {
@@ -10,12 +10,10 @@ export default ($out, $in, option = {}) => {
     if (indexIn > indexOut) stage.swapChildren($in, $out)
 
     tween(arg)
-    .start({
-      update: v => {
+      .onUpdate((v) => {
         $out.x = v
-      },
-      complete: resolve,
-    })
+      })
+      .onComplete(resolve)
+      .start()
   })
 }
-

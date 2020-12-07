@@ -3,7 +3,7 @@ import EventEmitter from 'eventemitter3'
 import director from './director'
 import { Deferred } from '../utils/obj'
 import Node from '../containers/Node'
-import { tween, easing } from 'popmotion'
+import { tween, easing } from '@teambun/motion'
 
 const defaultOption = { backdrop: true, animate: 'scaleInUpOut' }
 
@@ -144,7 +144,9 @@ class ModalManager extends EventEmitter {
       from: Math.max(0, config.alpha),
       to: Math.max(config.alpha, config.alpha),
       duration: 300,
-    }).start((v) => (background.alpha = v))
+    })
+      .onUpdate((v) => (background.alpha = v))
+      .start()
   }
 
   sinkBackground() {
@@ -183,14 +185,12 @@ class ModalManager extends EventEmitter {
       from: background.alpha,
       to: 0,
       duration: 200,
-    }).start({
-      update: (v) => {
-        background.alpha = v
-      },
-      complete: () => {
-        background.destroy()
-      },
     })
+      .onUpdate((v) => {
+        background.alpha = v
+      })
+      .onComplete(() => background.destroy())
+      .start()
   }
 
   handleResize = () => {
@@ -214,13 +214,13 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.y = y + (1 - v) * height
           node.alpha = v
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
     hide: (node, complete) => {
       const { height } = node
@@ -229,13 +229,13 @@ const animateTypes = {
         to: { y: node.y + height, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.y = v.y
           node.alpha = v.alpha
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
   },
   rightUpDown: {
@@ -247,13 +247,13 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.x = x + (1 - v) * width
           node.alpha = v
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
     hide: (node, complete) => {
       const { width } = node
@@ -262,13 +262,13 @@ const animateTypes = {
         to: { x: node.x + width, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.x = v.x
           node.alpha = v.alpha
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
   },
   scaleInUpOut: {
@@ -281,13 +281,13 @@ const animateTypes = {
         from: { scale: 0, alpha: 0 },
         to: { scale: scaleTo, alpha: alphaTo },
         duration: ModalManager.animationTime,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.scale.set(v.scale)
           node.alpha = v.alpha
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
     hide: (node, complete) => {
       node.modalAction = tween({
@@ -295,13 +295,13 @@ const animateTypes = {
         to: { y: node.y - 200, alpha: 0 },
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      }).start({
-        update: (v) => {
+      })
+        .onUpdate((v) => {
           node.y = v.y
           node.alpha = v.alpha
-        },
-        complete,
-      })
+        })
+        .onComplete(complete)
+        .start()
     },
   },
   fadeInOut: {
@@ -311,12 +311,12 @@ const animateTypes = {
         from: 0,
         to: 1,
         duration: ModalManager.animationTime,
-      }).start({
-        update: (v) => {
-          node.alpha = v
-        },
-        complete,
       })
+        .onUpdate((v) => {
+          node.alpha = v
+        })
+        .onComplete(complete)
+        .start()
     },
     hide: (node, complete) => {
       node.modalAction = tween({
@@ -324,12 +324,12 @@ const animateTypes = {
         to: 0,
         duration: ModalManager.animationTime,
         ease: easing.easeOut,
-      }).start({
-        update: (v) => {
-          node.alpha = v
-        },
-        complete,
       })
+        .onUpdate((v) => {
+          node.alpha = v
+        })
+        .onComplete(complete)
+        .start()
     },
   },
 }

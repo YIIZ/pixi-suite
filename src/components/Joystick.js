@@ -1,5 +1,5 @@
 import { Point, UPDATE_PRIORITY } from 'pixi.js'
-import { tween } from 'popmotion'
+import { tween } from '@teambun/motion'
 import director from '../managers/director'
 
 import Base from './Base'
@@ -58,7 +58,7 @@ export default class Joystick extends Base {
 
     this.globalPos.copyFrom(evt.data.global)
     if (this.identifier !== evt.data.identifier) {
-      const touch = touches.find(t => t.identifier === identifier)
+      const touch = touches.find((t) => t.identifier === identifier)
       interaction.mapPositionToPoint(this.globalPos, touch.clientX, touch.clientY)
     }
 
@@ -74,7 +74,7 @@ export default class Joystick extends Base {
     }
 
     this.updatePosition(pos)
-    this.pos.x =  pos.x / r
+    this.pos.x = pos.x / r
     this.pos.y = pos.y / r
     this.pos.dis = dis / r
   }
@@ -109,8 +109,7 @@ export default class Joystick extends Base {
     this.point.dis = null
     const from = { x: this.point.x, y: this.point.y }
     const to = { x: 0, y: 0 }
-    this.backAction = tween({ from, to, duration: 400 })
-    .start(this.updatePosition)
+    this.backAction = tween({ from, to, duration: 400 }).onUpdate(this.updatePosition).start()
 
     director.ticker.remove(this.postControl, this)
     this.pane.off('touchmove', this.handleControl, this)
@@ -120,6 +119,4 @@ export default class Joystick extends Base {
 
     if (this.node.onLoose) this.node.onLoose()
   }
-
 }
-

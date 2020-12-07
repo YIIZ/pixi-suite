@@ -1,20 +1,22 @@
-import { tween, easing } from 'popmotion'
+import { tween, easing } from '@teambun/motion'
 
 export const fadeIn = (node, option) => {
   node.alpha = 0
-  const action = tween({ from: 0, to: 1, duration: 400 }).start((v) => {
-    if (node._destroyed) return action.stop()
-    node.alpha = v
-  })
+  const action = tween({ from: 0, to: 1, duration: 400 })
+    .onUpdate((v) => {
+      if (node._destroyed) return action.stop()
+      node.alpha = v
+    })
+    .start()
 }
 
 export const fadeOut = (node, option, handler) => {
-  const action = tween({ from: node.alpha, to: 0, duration: 300 }).start({
-    update: (v) => {
+  const action = tween({ from: node.alpha, to: 0, duration: 300 })
+    .onUpdate((v) => {
       if (node._destroyed) return action.stop()
       node.alpha = v
-    },
-    complete: () => {
+    })
+    .onComplete(() => {
       if (node._destroyed) return
       if (typeof handler === 'function') {
         handler(node)
@@ -23,6 +25,6 @@ export const fadeOut = (node, option, handler) => {
       } else {
         node.destroy({ children: true })
       }
-    },
-  })
+    })
+    .start()
 }
