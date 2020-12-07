@@ -72,10 +72,10 @@ export default class ItemTap extends Base {
     this.handleItemTap(null, children[i], i)
   }
 
-  // item  need select and unselect func
-  handleItemTap = (evt, item, index) => {
-    if (!item || item.disable) return
+  changeItem(i) {
     const { current } = this
+    const children = this.getChildren()
+    const item = children[i]
 
     if (item.select) {
       if (this.node.multiple) {
@@ -87,6 +87,14 @@ export default class ItemTap extends Base {
     }
 
     this.current = item
+  }
+
+  // item  need select and unselect func
+  handleItemTap = (evt, item, index) => {
+    if (!item || item.disable) return
+
+    this.changeItem(index)
+
     if (this.node.onItemTap) this.node.onItemTap(evt, item, index)
   }
 }

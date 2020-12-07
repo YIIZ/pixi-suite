@@ -16,8 +16,8 @@ export default class ScrollBar extends Node {
     if (!bg) bg = createRoundRect(8, 64, 4)
     return (
       <>
-        <NineSlicePlane ref={(r) => (this.$$bg = r)} args={[bg, 3, 3, 3, 3]}></NineSlicePlane>
-        <NineSlicePlane ref={(r) => (this.$$bar = r)} args={[bg, 3, 3, 3, 3]} />
+        <NineSlicePlane ref={(r) => (this.$$bg = r)} args={[bg, 3, 3, 3, 3]} visible={false}></NineSlicePlane>
+        <NineSlicePlane ref={(r) => (this.$$bar = r)} args={[bg, 3, 3, 3, 3]} tint={0} alpha={0.5} />
       </>
     )
   }
@@ -27,6 +27,7 @@ export default class ScrollBar extends Node {
     barCtrl.direction = this.direction
     barCtrl.bg = this.$$bg
     barCtrl.bar = this.$$bar
+    this.barCtrl = barCtrl
     if (this.direction === 'horizontal') {
       this.rotation = Math.PI * -0.5
     }

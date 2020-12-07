@@ -32,7 +32,7 @@ export default class HTMLDiv extends Base {
 
   updateTransform() {
     const { node, elem } = this
-    updateDOMTransform(node, elem, director.visibleRect.scale, director.devicePixelRatio)
+    updateDOMTransform(node.positionTarget || node, elem, director.visibleRect.scale, director.devicePixelRatio)
   }
 
   handleClick = (evt) => {
@@ -57,6 +57,7 @@ export default class HTMLDiv extends Base {
         webkitAppearance: 'none',
         background: 'transparent',
         backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
         outline: 0,
       },
       style
