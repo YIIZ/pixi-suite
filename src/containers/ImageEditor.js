@@ -2,7 +2,13 @@ import { Point, Sprite, NineSlicePlane } from 'pixi.js'
 import loader from '@teambun/loader'
 
 import Node from './Node'
-import ImageEditorCtrl, { EditorCmd, EditorRemove, EditorRotate, EditorScale, EditorFlip } from '../components/ImageEditorCtrl'
+import ImageEditorCtrl, {
+  EditorCmd,
+  EditorRemove,
+  EditorRotate,
+  EditorScale,
+  EditorFlip,
+} from '../components/ImageEditorCtrl'
 import TouchScale from '../components/TouchScale'
 import Widget from '../components/Widget'
 import Layout from '../components/Layout'
@@ -22,10 +28,12 @@ export default class Editor extends Node {
   borderTint = 0xffffff
 
   initChildren() {
-    return (<>
-      <Node name='body' />
-      <NineSlicePlane name='border' tint={this.borderTint} args={[sBoard.texture, 8, 8, 8, 8]} />
-    </>)
+    return (
+      <>
+        <Node name="body" />
+        <NineSlicePlane name="border" tint={this.borderTint} args={[sBoard.texture, 8, 8, 8, 8]} />
+      </>
+    )
   }
 
   onCreate() {
@@ -49,9 +57,15 @@ export default class Editor extends Node {
 
     if (removeable) {
       const remove = (
-        <Node name='remove' x={-20} y={-20} widget={{ target, mode, flag: TOP_LEFT, left: margin, top: margin }} components={[EditorRemove, Widget]}>
+        <Node
+          name="remove"
+          x={-20}
+          y={-20}
+          widget={{ target, mode, flag: TOP_LEFT, left: margin, top: margin }}
+          components={[EditorRemove, Widget]}
+        >
           <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
-          <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sRemove.texture} />
+          <Sprite x={size / 2} y={size / 2} tint={this.iconTint} anchor={center} texture={sRemove.texture} />
         </Node>
       )
       remove.getComponent(EditorCmd).init(editorCtrl)
@@ -60,9 +74,13 @@ export default class Editor extends Node {
 
     if (rotateable) {
       const rotate = (
-        <Node name='rotate' widget={{ target, mode, flag: TOP_RIGHT, right: margin, top: margin }} components={[EditorRotate, Widget]}>
+        <Node
+          name="rotate"
+          widget={{ target, mode, flag: TOP_RIGHT, right: margin, top: margin }}
+          components={[EditorRotate, Widget]}
+        >
           <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
-          <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sRotate.texture} />
+          <Sprite x={size / 2} y={size / 2} tint={this.iconTint} anchor={center} texture={sRotate.texture} />
         </Node>
       )
       rotate.getComponent(EditorCmd).init(editorCtrl)
@@ -71,9 +89,14 @@ export default class Editor extends Node {
 
     if (scaleable) {
       const scale = (
-        <Node name='scale' widget={{ target, mode, flag: BOTTOM_LEFT, left: margin, bottom: margin }} fixRatio={fixRatio} components={[EditorScale, Widget]}>
+        <Node
+          name="scale"
+          widget={{ target, mode, flag: BOTTOM_LEFT, left: margin, bottom: margin }}
+          fixRatio={fixRatio}
+          components={[EditorScale, Widget]}
+        >
           <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
-          <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sScale.texture} />
+          <Sprite x={size / 2} y={size / 2} tint={this.iconTint} anchor={center} texture={sScale.texture} />
         </Node>
       )
       scale.getComponent(EditorCmd).init(editorCtrl)
@@ -82,9 +105,13 @@ export default class Editor extends Node {
 
     if (flipable) {
       const flip = (
-        <Node name='flip' widget={{ target, mode, flag: BOTTOM_RIGHT, right: margin, bottom: margin }} components={[EditorFlip, Widget]}>
+        <Node
+          name="flip"
+          widget={{ target, mode, flag: BOTTOM_RIGHT, right: margin, bottom: margin }}
+          components={[EditorFlip, Widget]}
+        >
           <Sprite width={size} height={size} tint={this.circleTint} texture={sCircle.texture} />
-          <Sprite x={size/2} y={size/2} tint={this.iconTint} anchor={center} texture={sFlip.texture} />
+          <Sprite x={size / 2} y={size / 2} tint={this.iconTint} anchor={center} texture={sFlip.texture} />
         </Node>
       )
       flip.getComponent(EditorCmd).init(editorCtrl)
