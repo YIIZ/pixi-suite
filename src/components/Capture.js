@@ -19,17 +19,18 @@ export default class Capture extends Base {
     director.off('resize', this.updateTransform, this)
   }
 
-  capture({ width, height } = this.node) {
+  capture({ x = 0, y = 0, width, height }) {
     const { node } = this
     const { scale, img } = this
     const { renderer } = director.app
+    // TODO reuse renderer?
     const texture = RenderTexture.create(width * scale, height * scale)
 
     const t1 = node.position.clone()
     const t2 = node.scale.clone()
     const t3 = node.pivot.clone()
 
-    node.setTransform(0, 0, scale, scale)
+    node.setTransform(x, y, scale, scale)
     renderer.render(node, texture)
     node.setTransform(t1.x, t1.y, t2.x, t2.y, 0, 0, 0, t3.x, t3.y)
 
