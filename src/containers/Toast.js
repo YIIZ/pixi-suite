@@ -7,9 +7,18 @@ import Node from './Node'
 const { WHITE } = Texture
 
 const loading = loader.add(require('../../assets/loading.png'))
-const warning = loader.add(require('../../assets/warning.png'))
+const success = loader.add(require('../../assets/success.png'))
+const warning = loader.add(require('../../assets/error.png'))
 const center = new Point(0.5, 0.5)
-const style = { fontSize: 24, fill: '#ffffff', align: 'center' }
+const style = {
+  fontSize: 24,
+  lineHeight: 32,
+  fill: '#ffffff',
+  align: 'center',
+  breakWords: true,
+  wordWrap: true,
+  wordWrapWidth: 240,
+}
 
 export class TextToast extends Node {
   initChildren() {
@@ -33,9 +42,9 @@ export class WarningToast extends Node {
   initChildren() {
     return (
       <>
-        <BG name="bg" args={[300, 200]} />
-        <Sprite name="icon" x={150} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
-        <Text name="desc" x={150} y={167} anchor={center} text={this.title} style={style} />
+        <BG name="bg" args={[300, 210]} />
+        <Sprite name="icon" x={148} y={this.title ? 80 : 100} anchor={center} texture={this.icon.texture} />
+        <Text name="desc" x={150} y={170} anchor={center} text={this.title} style={style} />
       </>
     )
   }
@@ -43,6 +52,10 @@ export class WarningToast extends Node {
   onCreate() {
     this.pivot = new Point(150, 100)
   }
+}
+
+export class SuccessToast extends WarningToast {
+  icon = success
 }
 
 export class LoadingToast extends WarningToast {
@@ -82,5 +95,6 @@ class BG extends Graphics {
 export default {
   text: TextToast,
   warning: WarningToast,
+  success: SuccessToast,
   loading: LoadingToast,
 }
