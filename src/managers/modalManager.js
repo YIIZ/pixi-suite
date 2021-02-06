@@ -205,6 +205,10 @@ class ModalManager extends EventEmitter {
 }
 
 const animateTypes = {
+  none: {
+    show: (node, complete) => complete(),
+    hide: (node, complete) => complete(),
+  },
   bottomUpDown: {
     show: (node, complete) => {
       const { height, y } = node
