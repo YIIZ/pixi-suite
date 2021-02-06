@@ -77,6 +77,8 @@ export default class ItemTap extends Base {
     const children = this.getChildren()
     const item = children[i]
 
+    if (item === current) return
+
     if (item.select) {
       if (this.node.multiple) {
         item.selected ? item.unselect() : item.select()
