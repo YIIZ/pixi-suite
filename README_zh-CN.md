@@ -1,33 +1,32 @@
 # PIXI Suite
-pixi-suite is an animation development framework based on [pixi.js](https://pixijs.com/), adding JSX syntax support, entity-component architecture, encapsulating commonly used components, such as ScrollView, Modal, VideoCtrl, Widget, Toast.
+pixi-suite是一个基于pixi.js的H5开发框架，添加JSX语法支持，entity-component的架构，封装了常用组件，
+如ScrollView，Modal，VideoCtrl，Widget，toast等，方便复用和拓展组件，便于迅速开发H5。
 
-[中文](./README_zh-CN.md)
-
-### File structure
+### 文件结构说明
 - managers
-  Global singletons managed various functions
+  全局单例，各种管理功能
 - containers
-  compositions of nodes and components,  only responsible for combining the Views and Components that a control needs
+  控件的组合，只负责把某控件需要的view和component组合起来
 - components
-  The logic of various components
+  单个功能的逻辑
 
-### Node Lifecycle
+### Node生命周期
 - `initChildren(children)`
-  return all children nodes
+  类实例化后, 返回需要创建的子元素
 - `onCreate()`
-  Callback after the node is created
+  元素创建成功后的回调
 - `onAdd()`
-  Callback after the node is added to the stage, all components will execute `onEnble`
+  在被添加到stage后, components都已执行了onEnble
 - `onRemove()`
-  Callback after the node is removed from the stage
+  移除出stage
 
-### Component Lifecycle
-- onEnble()
-  When the attached node is added to the stage
-- onDisable()
-  When the attached node is removed from the stage
+### Component生命周期
+- `onEnble()`
+  对应的node被添加到stage
+- `onDisable()`
+  对应node被移除出stage
 
-### Use case
+### 用法案例
 
 main.js
 ```javascript
@@ -46,15 +45,14 @@ export default class Main extends Scene {
     return (
       <>
         <Sprite texture={WHITE} width={750} height={1500} />
-        {/*Component Button make the node clickable，it will call the onClick function*/}
-        {/*Component Widget enable the node to automatically position themselves according to the screen*/}
+        {/*components添加Button使得具有按钮功能， 添加Widget使得控件可以自动根据屏幕定位*/}
         <Node
           x={375}
           widget={{ flag: Widget.BOTTOM, bottom: 120 }}
           onClick={this.handleClick}
           components={[Button, Widget]}
         >
-          <Text text="Show the Modal" anchor={center} />
+          <Text text="点击显示弹窗" anchor={center} />
         </Node>
       </>
     )
@@ -84,7 +82,7 @@ export default class SelectModal extends Node {
     return (
       <>
         <Sprite texture={WHITE} width={300} height={400} />
-        {/*ScrollViewIt is a scrollable container. Adding the component ItemTap can enable the container to listen for child element click events*/}
+        {/*ScrollView是可滑动的固定可视范围组件， 添加ItemTap后有了委托监听子元素点击事件的功能*/}
         <ScrollView
           ref={(r) => (this.$$sv = r)}
           viewSize={{ w: 200, h: 300 }}
@@ -100,7 +98,7 @@ export default class SelectModal extends Node {
   }
 
   handleItemTap = (evt, item) => {
-    toaster.show({ type: 'text', title: 'select item：' + item.data, duration: 3000 })
+    toaster.show({ type: 'text', title: '选择了item：' + item.data, duration: 3000 })
     modalManager.hide(this)
   }
 }
@@ -111,11 +109,11 @@ app.js
 ```javascript
 director.init(document.querySelector('.main'), { transparent: true })
 
-// Register scenes
+// 注册H5的各个场景
 director.addScene('Loading', require('./scenes/Loading').default)
 director.addScene('Main', require('./scenes/Main').default)
 
-// Load the fisrt Loading scene
+// 先进入加载场景
 director.loadScene('Loading')
 ```
 
