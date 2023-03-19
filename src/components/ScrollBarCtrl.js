@@ -143,10 +143,12 @@ export default class ScrollBarCtrl extends Base {
     const deferred = new Deferred()
 
     const dis = this.offset - to
+    const duration = Math.abs(dis * 0.8) + 200
+
     this.action = tween({
       from: this.offset,
       to,
-      duration: 500,
+      duration,
     })
       .onUpdate(this.setter)
       .onComplete(() => {
