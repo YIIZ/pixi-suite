@@ -37,6 +37,7 @@ export default class Capture extends Base {
     img.src = renderer.extract.canvas(texture).toDataURL(this.format || 'image/jpeg')
 
     this.updateTransform()
+    img.style.display = 'block'
     director.on('resize', this.updateTransform, this)
   }
 
@@ -62,7 +63,6 @@ export default class Capture extends Base {
   updateTransform() {
     const { positionTarget, node, img } = this
     updateDOMTransform(positionTarget || node, img, director.visibleRect.scale, director.devicePixelRatio)
-    img.style.display = 'block'
   }
 
   initCaptureElement() {
